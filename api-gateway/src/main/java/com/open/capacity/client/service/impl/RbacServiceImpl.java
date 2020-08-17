@@ -51,10 +51,10 @@ public class RbacServiceImpl implements RbacService {
 				String clientId = athentication.getOAuth2Request().getClientId();
 				Map map = sysClientService.getClient(clientId);
 				if (map == null) {
-					return false;
+					hasPermission = false ;
 				} else {
 					List<Map> list = sysClientService.listByClientId(Long.valueOf(String.valueOf(map.get("id"))));
-					boolean flag = list.stream().anyMatch(item -> antPathMatcher.match(String.valueOf(item.get("path")), request.getRequestURI()));
+					hasPermission = list.stream().anyMatch(item -> antPathMatcher.match(String.valueOf(item.get("path")), request.getRequestURI()));
 				}
 			}
 		}
