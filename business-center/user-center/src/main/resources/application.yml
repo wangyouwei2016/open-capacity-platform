@@ -129,7 +129,6 @@ hystrix:
 
     
     
-    
 logging:
   level:
     com.open.capacity: INFO 
