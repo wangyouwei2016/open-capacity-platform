@@ -11,6 +11,7 @@
   <properties>
   		<xss-version>1.5.5</xss-version>
   		<chaos-monkey>2.1.1</chaos-monkey>
+  		<zxing-version>3.3.3</zxing-version>
 		<orika-version>1.5.2</orika-version>
 		<modelmapper-version>2.3.3</modelmapper-version>
 		
@@ -110,6 +111,13 @@
 			<artifactId>hutool-all</artifactId>
 			<version>${hutool.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${zxing-version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
@@ -120,12 +128,6 @@
 			<optional>true</optional>
 		</dependency>
 		
-		 
-        <dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>${fastjson.version}</version>
-		</dependency>
 		
 		<dependency>
 			<groupId>org.modelmapper</groupId>

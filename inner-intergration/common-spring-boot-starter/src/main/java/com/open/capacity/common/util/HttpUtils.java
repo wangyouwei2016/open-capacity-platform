@@ -14,7 +14,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +27,7 @@ public class HttpUtils {
 
 	/**
 	 * get方法
+	 * 
 	 * @param url
 	 * @return
 	 */
@@ -48,7 +49,7 @@ public class HttpUtils {
 			if (httpResponse.getStatusLine().getStatusCode() == 200) {
 
 				String jsonResult = EntityUtils.toString(httpResponse.getEntity());
-				map = JSON.parseObject(jsonResult, map.getClass());
+				map = GsonBuilder.build().fromJson(jsonResult, map.getClass());
 			}
 
 		} catch (Exception e) {
@@ -65,11 +66,13 @@ public class HttpUtils {
 
 	/**
 	 * 封装post
+	 * 
 	 * @return
 	 */
 	public static String doPost(String url, String data, int timeout) {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		// 超时设置
+
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(timeout) // 连接超时
 				.setConnectionRequestTimeout(timeout)// 请求超时
 				.setSocketTimeout(timeout).setRedirectsEnabled(true) // 允许自动重定向
