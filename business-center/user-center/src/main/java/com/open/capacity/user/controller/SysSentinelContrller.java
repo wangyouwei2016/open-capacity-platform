@@ -12,15 +12,48 @@ import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.open.capacity.common.web.Result;
+import com.open.capacity.sentinel.flow.FlowHelper;
+import com.open.capacity.sentinel.flow.FlowType;
+import com.open.capacity.sentinel.flow.Flower;
+import com.open.capacity.sentinel.flow.common.TimeUtil;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@Api(tags = "SentinelTest")
-public class SysSentinelTest {
+@Api(tags = "Sentinel测试")
+public class SysSentinelContrller {
 
+	private FlowHelper flowHelper = new FlowHelper(FlowType.Minute);
+
+    @GetMapping("/test")
+    public Result<Flower> testApi() {
+        try{
+            long startTime = TimeUtil.currentTimeMillis();
+            // 业务逻辑
+            Thread.sleep(1000);
+            // 计算耗时
+            long rt = TimeUtil.currentTimeMillis() - startTime;
+            flowHelper.incrSuccess(rt);
+            Flower flower = flowHelper.getFlow(FlowType.Minute);
+            System.out.println("总请求数:"+flower.total());
+            System.out.println("成功请求数:"+flower.totalSuccess());
+            System.out.println("异常请求数:"+flower.totalException());
+            System.out.println("平均请求耗时:"+flower.avgRt());
+            System.out.println("最大请求耗时:"+flower.maxRt());
+            System.out.println("最小请求耗时:"+flower.minRt());
+            System.out.println("平均请求成功数(每毫秒):"+flower.successAvg());
+            System.out.println("平均请求异常数(每毫秒):"+flower.exceptionAvg());
+            
+            
+            return Result.succeed("ok");
+        }catch (Exception e){
+            flowHelper.incrException();
+            return Result.failed("ko");
+        }
+    }
 	/**
 	 * 流控规则
 	 * @return
