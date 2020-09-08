@@ -111,8 +111,14 @@ security:
 
 #设置最大超时时间
 ribbon:  
-   ReadTimeout: 16000  
-   ConnectTimeout: 16000 
+  eager-load:
+    enabled: true
+  ServerListRefreshInterval: 10  #刷新服务列表源的间隔时间
+  OkToRetryOnAllOperations: true
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 1
+  ReadTimeout: 16000  
+  ConnectTimeout: 16000 
 
 #设置最大容错超时时间
 hystrix:

@@ -142,16 +142,14 @@ security:
 
 #设置最大超时时间
 ribbon:  
-  httpclient:
-    enabled: false
-  okhttp:
-    enabled: true  
-  ReadTimeout: 90000  
-  ConnectTimeout: 90000 
+  eager-load:
+    enabled: true
+  ServerListRefreshInterval: 10  #刷新服务列表源的间隔时间
   OkToRetryOnAllOperations: true
   MaxAutoRetries: 1
   MaxAutoRetriesNextServer: 1
-
+  ReadTimeout: 16000  
+  ConnectTimeout: 16000 
 
 #设置最大容错超时时间
 hystrix:
@@ -162,8 +160,7 @@ hystrix:
           enabled: true
         isolation:
           thread:
-            timeoutInMilliseconds: 90000
-
+            timeoutInMilliseconds: 16000 
 
     
 logging:
