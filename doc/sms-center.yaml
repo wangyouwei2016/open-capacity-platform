@@ -125,6 +125,8 @@ security:
 
 #设置最大超时时间
 ribbon:  
+  eager-load:
+    enabled: true
   ServerListRefreshInterval: 10  #刷新服务列表源的间隔时间
   OkToRetryOnAllOperations: true
   MaxAutoRetries: 1

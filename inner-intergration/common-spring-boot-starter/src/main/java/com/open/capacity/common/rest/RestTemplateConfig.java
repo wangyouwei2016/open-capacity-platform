@@ -1,9 +1,9 @@
 package com.open.capacity.common.rest;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -36,11 +36,13 @@ public class RestTemplateConfig {
 //		同路由的并发数
 		pollingConnectionManager.setDefaultMaxPerRoute(1000);
 
-		HttpClientBuilder httpClientBuilder = HttpClients.custom();
-		httpClientBuilder.setConnectionManager(pollingConnectionManager);
-//		  重试次数，默认是3次，没有开启
-//		httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, true));
-		HttpClient httpClient = httpClientBuilder.build();
+		HttpClient httpClient = HttpClients.custom()
+				.setConnectionManager(pollingConnectionManager)
+				.evictIdleConnections(30, TimeUnit.SECONDS)
+//				.setRetryHandler(new DefaultHttpRequestRetryHandler(3, true)) //重试次数，默认是3次，没有开启
+//				.setKeepAliveStrategy(DefaultConnectionKeepAliveStrategy.INSTANCE) //使用请求Keep-Alive的值，没有的话永久有效
+				.setKeepAliveStrategy(new CustomConnectionKeepAliveStrategy()) // 自定义
+				.disableAutomaticRetries().build();
 
 		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(
 				httpClient);
@@ -64,4 +66,8 @@ public class RestTemplateConfig {
 		        );
 		return restTemplate;
 	}
+	
+	 
+
+	
 }

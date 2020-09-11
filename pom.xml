@@ -42,6 +42,7 @@
 		~ Author: owen gitgeek (624191343@qq.com) ~ -->
 
 	<properties>
+		<jmh.version>1.23</jmh.version>
 		<java.version>1.8</java.version>
 		<core.version>2.0.1</core.version>
 		<log4j2.version>2.1</log4j2.version>
@@ -99,7 +100,7 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
-
+		<!-- 测试框架 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -141,6 +142,17 @@
 				<groupId>org.springframework.security.oauth</groupId>
 				<artifactId>spring-security-oauth2</artifactId>
 				<version>${security-oauth2.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openjdk.jmh</groupId>
+				<artifactId>jmh-core</artifactId>
+				<version>${jmh.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjdk.jmh</groupId>
+				<artifactId>jmh-generator-annprocess</artifactId>
+				<version>${jmh.version}</version>
 			</dependency>
 
 			<!-- 公共实体类模块 -->
@@ -217,6 +229,9 @@
 						<target>${java.version}</target>
 						<source>${java.version}</source>
 						<encoding>UTF-8</encoding>
+						<compilerArgs>
+        				  <arg>-parameters</arg>
+        				</compilerArgs>	
 					</configuration>
 				</plugin>
 				<plugin>
@@ -269,13 +284,6 @@
 				<filtering>false</filtering>
 			</resource>
 
-			<resource>
-				<directory>src/main/proto</directory>
-				<includes>
-					<include>**/*.proto</include>
-				</includes>
-				<filtering>false</filtering>
-			</resource>
 		</resources>
 	</build>
 

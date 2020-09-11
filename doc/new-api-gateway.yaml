@@ -186,15 +186,15 @@ swagger:
 ribbon:
   eureka:
     enabled: true
-  ReadTimeout: 60000
-  ConnectTimeout: 60000
+  ReadTimeout: 90000
+  ConnectTimeout: 90000
   MaxAutoRetries: 0
   MaxAutoRetriesNextServer: 1
   OkToRetryOnAllOperations: false
 
 
 #设置最大容错超时时间
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 90000
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 900000
 
 feign:
   sentinel:

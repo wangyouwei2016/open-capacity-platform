@@ -158,7 +158,7 @@ ribbon:
 
 
 #设置最大容错超时时间
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 90000
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 900000
 
 
 
