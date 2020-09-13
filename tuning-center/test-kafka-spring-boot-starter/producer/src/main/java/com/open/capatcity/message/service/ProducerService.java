@@ -18,10 +18,10 @@ public class ProducerService {
 		this.source = source;
 	}
 
-	public void sendMsg(final Map msg) {
+	public boolean sendMsg(final Map msg) {
 
 		MessageChannel messageChannel = source.output();
-		messageChannel.send(MessageBuilder.withPayload(msg)
+		return messageChannel.send(MessageBuilder.withPayload(msg)
 				.setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON).build());
 	}
 }

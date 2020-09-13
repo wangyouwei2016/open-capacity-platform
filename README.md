@@ -5,7 +5,7 @@
 <p align="center"> 
  <img src="https://img.shields.io/circleci/project/vuejs/vue/dev.svg" alt="Build Status">
   <img src="https://img.shields.io/badge/Spring%20Cloud-Hoxton.SR2.RELEASE-blue.svg" alt="Coverage Status">
-  <img src="https://img.shields.io/badge/Spring%20Boot-2.2.2.RELEASE-blue.svg" alt="Downloads">
+  <img src="https://img.shields.io/badge/Spring%20Boot-2.2.9.RELEASE-blue.svg" alt="Downloads">
 </p>
 
 

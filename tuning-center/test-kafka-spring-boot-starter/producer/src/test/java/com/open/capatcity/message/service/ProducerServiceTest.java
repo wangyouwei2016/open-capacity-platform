@@ -29,7 +29,8 @@ public class ProducerServiceTest {
 		
 		Map map = new HashMap();
 		map.put("msg", "hello");
-		producerService.sendMsg(map);
+		boolean flag = producerService.sendMsg(map);
+		System.out.println(flag);
 	}
 
 	
