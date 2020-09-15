@@ -63,7 +63,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hibernate-validator.verion>6.0.18.Final</hibernate-validator.verion>
 		<flowable.version>6.4.1</flowable.version>
-		<spring-cloud-dependencies.version>Hoxton.SR2</spring-cloud-dependencies.version>
+		<spring-cloud-dependencies.version>Hoxton.SR8</spring-cloud-dependencies.version>
 		<spring-cloud-alibaba-dependencies.version>2.2.0.RELEASE</spring-cloud-alibaba-dependencies.version>
 
 
