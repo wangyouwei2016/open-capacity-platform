@@ -1,11 +1,17 @@
 package com.open.capacity.redis.util;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.GeoResults;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -675,4 +681,61 @@ public class RedisUtil {
         return ret;
     }
 
+    /**
+          * 添加经纬度信息 
+     * map.put("北京" ,new Point(116.405285 ,39.904989)) //redis 命令：geoadd cityGeo 116.405285 39.904989 "北京"
+     */
+    public Long addGeoPoint(String key ,  Map<Object, Point> map) {
+    	return  redisTemplate.opsForGeo().add(key, map);
+    }
+    
+    /**
+         * 查找指定key的经纬度信息
+     * redis命令：geopos cityGeo 北京
+     * @param key
+     * @param member
+     * @return
+     */
+    public Point geoGetPoint(String key , String member) {
+        List<Point> lists = redisTemplate.opsForGeo().position(key, member) ;
+        return lists.get(0);
+    }
+    
+    /**
+         * 返回两个地方的距离，可以指定单位
+     * redis命令：geodist cityGeo 北京 上海
+     * @param key
+     * @param srcMember
+     * @param targetMember
+     * @return
+     */
+    public Distance geoDistance(String key, String srcMember , String targetMember ) {
+        Distance distance = redisTemplate.opsForGeo().distance(key, srcMember, targetMember ,Metrics.KILOMETERS);
+        return distance;
+    }
+    /**
+         * 根据指定的地点查询半径在指定范围内的位置
+     * redis命令：georadiusbymember cityGeo 北京 100 km WITHDIST WITHCOORD ASC COUNT 5
+     * @param key
+     * @param member
+     * @param distance
+     * @return
+     */
+    public GeoResults geoRadiusByMember(String key, String member ,  double distance ) {
+    	return 	redisTemplate.opsForGeo().radius(key, member,  new Distance(distance,Metrics.KILOMETERS )) ;
+    }
+    
+    /**
+         * 根据给定的经纬度，返回半径不超过指定距离的元素
+     * redis命令：georadius cityGeo 116.405285 39.904989 100 km WITHDIST WITHCOORD ASC COUNT 5
+     * @param key
+     * @param circle
+     * @param distance
+     * @return
+     */
+    public GeoResults geoRadiusByCircle(String key, Circle circle ,  double distance ) {
+    	
+    	return 	redisTemplate.opsForGeo().radius(key, circle,  new Distance(distance,Metrics.KILOMETERS )) ;
+    }
+    
 }
