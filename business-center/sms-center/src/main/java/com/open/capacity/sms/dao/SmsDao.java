@@ -25,7 +25,7 @@ import com.open.capacity.sms.model.Sms;
 public interface SmsDao {
 
 	@Options(useGeneratedKeys = true, keyProperty = "id")
-	@Insert("insert into sys_sms(phone, signName, templateCode, params, day, createTime, updateTime) "
+	@Insert("insert into sys_sms(phone, sign_name, template_code, params, day, create_time, update_time) "
 			+ "values(#{phone}, #{signName}, #{templateCode}, #{params}, #{day}, #{createTime}, #{updateTime})")
 	int save(Sms sms);
 

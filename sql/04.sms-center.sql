@@ -7,21 +7,21 @@ SET FOREIGN_KEY_CHECKS=0;
 #
 DROP TABLE IF EXISTS `sys_sms`;
 CREATE TABLE `sys_sms` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `phone` varchar(16) NOT NULL COMMENT '手机号码',
-  `signName` varchar(128) DEFAULT NULL,
-  `templateCode` varchar(128) DEFAULT NULL,
+  `sign_name` varchar(128) DEFAULT NULL COMMENT '短信签名',
+  `template_code` varchar(128) DEFAULT NULL COMMENT '短信模板代码',
   `params` varchar(500) DEFAULT NULL COMMENT '参数',
-  `bizId` varchar(128) DEFAULT NULL COMMENT '阿里云返回的',
+  `biz_id` varchar(128) DEFAULT NULL COMMENT '阿里云返回的',
   `code` varchar(64) DEFAULT NULL COMMENT '阿里云返回的code',
   `message` varchar(128) DEFAULT NULL COMMENT '阿里云返回的',
   `day` date NOT NULL COMMENT '日期',
-  `createTime` datetime NOT NULL,
-  `updateTime` datetime NOT NULL,
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `phone` (`phone`),
   KEY `day` (`day`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COMMENT='发短信记录';
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COMMENT='发短信记录';
 
 #
 # Data for table "sys_sms"
