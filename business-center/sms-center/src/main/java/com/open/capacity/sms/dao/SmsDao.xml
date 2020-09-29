@@ -7,13 +7,13 @@
 		update sys_sms
 		<set>
 			<if test="signName != null and signName != ''">
-				signName = #{signName,jdbcType=VARCHAR},
+				sign_name = #{signName,jdbcType=VARCHAR},
 			</if>
 			<if test="templateCode != null and templateCode != ''">
-				templateCode = #{templateCode,jdbcType=VARCHAR},
+				template_code = #{templateCode,jdbcType=VARCHAR},
 			</if>
 			<if test="bizId != null and bizId != ''">
-				bizId = #{bizId,jdbcType=VARCHAR},
+				biz_id = #{bizId,jdbcType=VARCHAR},
 			</if>
 			<if test="code != null and code != ''">
 				code = #{code,jdbcType=VARCHAR},
@@ -22,7 +22,7 @@
 				message = #{message,jdbcType=VARCHAR},
 			</if>
 			<if test="updateTime != null">
-				updateTime = #{updateTime,jdbcType=TIMESTAMP},
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
@@ -46,6 +46,6 @@
 	<select id="findList" resultType="com.open.capacity.sms.model.Sms">
 		select * from sys_sms t
 		<include refid="where" />
-		order by t.createTime desc
+		order by t.create_time desc
 	</select>
 </mapper>
