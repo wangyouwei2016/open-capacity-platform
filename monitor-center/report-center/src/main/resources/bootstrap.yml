@@ -12,6 +12,3 @@ spring:
         namespace: adb19121-cfe9-4aa6-bb9f-a1fa18fdbd3e  #命名空间 代指某个环境
   application:
     name: report-center
-seata:
-  service:
-    grouplist: 114.67.115.7:8091
