@@ -1,5 +1,6 @@
 package com.open.capacity.api.feign;
 
+import com.open.capacity.api.config.NotBreakerConfiguration;
 import com.open.capacity.common.web.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-@FeignClient("fescar-user")
+@FeignClient(value = "fescar-user",configuration = NotBreakerConfiguration.class)
 public interface UserFeignClient {
 
 

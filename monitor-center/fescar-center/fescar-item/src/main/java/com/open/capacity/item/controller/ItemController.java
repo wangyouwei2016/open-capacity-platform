@@ -1,5 +1,6 @@
 package com.open.capacity.item.controller;
 
+import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.item.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class ItemController {
     private ItemService itemService;
 
     @RequestMapping("/deductInventory")
-    public Result deductInventory(@NotNull String productId, HttpServletRequest request) throws IllegalAccessException {
+    public Result deductInventory(@NotNull String productId, HttpServletRequest request) throws ServiceException {
         return  itemService.deductInventory(productId);
     }
 

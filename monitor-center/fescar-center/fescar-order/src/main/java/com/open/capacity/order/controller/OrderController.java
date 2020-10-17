@@ -18,7 +18,7 @@ public class OrderController {
     private OrderService orderService;
 
     @RequestMapping("/create")
-    public Result create(@NotNull String userId, @NotNull String productId, HttpServletRequest request) throws IllegalAccessException {
+    public Result create(@NotNull String userId, @NotNull String productId, HttpServletRequest request) {
         String orderId = orderService.create(userId,productId);
         return Result.succeed(orderId);
     }

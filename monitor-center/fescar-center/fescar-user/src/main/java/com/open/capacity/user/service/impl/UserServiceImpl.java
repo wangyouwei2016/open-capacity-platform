@@ -3,6 +3,7 @@ package com.open.capacity.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.user.dao.OcpTqlMapper;
 import com.open.capacity.user.entity.OcpTql;
@@ -15,7 +16,7 @@ public class UserServiceImpl extends ServiceImpl<OcpTqlMapper, OcpTql> implement
 
 
     @Override
-    public Result deductionAmount(String userId)  throws IllegalAccessException{
+    public Result deductionAmount(String userId)  throws ServiceException{
 
         //模拟超时异常，全局事务回滚
 //        try {
@@ -33,7 +34,7 @@ public class UserServiceImpl extends ServiceImpl<OcpTqlMapper, OcpTql> implement
         if (i >= 0){
             ocpTql.setMoney(i);
         }else {
-            throw new IllegalAccessException("资金不足");
+            throw new ServiceException("资金不足");
         }
         return Result.succeedWith(baseMapper.updateById(ocpTql),0,null);
     }

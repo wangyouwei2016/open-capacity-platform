@@ -1,5 +1,6 @@
 package com.open.capacity.user.controller;
 
+import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.web.Result;
 import com.open.capacity.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/deductionAmount")
-    public Result deductionAmount(@NotNull String userId, HttpServletRequest request) throws IllegalAccessException {
+    public Result deductionAmount(@NotNull String userId, HttpServletRequest request) throws ServiceException {
         return  userService.deductionAmount(userId);
     }
 
