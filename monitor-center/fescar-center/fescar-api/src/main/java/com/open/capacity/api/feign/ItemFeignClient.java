@@ -1,6 +1,7 @@
 package com.open.capacity.api.feign;
 
 import com.open.capacity.api.config.NotBreakerConfiguration;
+import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.web.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ public interface ItemFeignClient {
      * @return
      */
     @RequestMapping(value = "/deductInventory", method = RequestMethod.GET)
-    Result deductInventory(@RequestParam("productId") String productId) throws IllegalAccessException;
+    Result deductInventory(@RequestParam("productId") String productId) throws ServiceException;
 
 
 
