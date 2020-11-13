@@ -30,7 +30,7 @@ import java.util.concurrent.TimeoutException;
 public class FastBuildRabbitMqConsumer {
 
     private ConnectionFactory connectionFactory;
-    
+
     public FastBuildRabbitMqConsumer(ConnectionFactory connectionFactory){
         this.connectionFactory = connectionFactory;
     }
@@ -54,7 +54,7 @@ public class FastBuildRabbitMqConsumer {
             Channel channel;
             {channel = connection.createChannel(false);}
 
-           
+
 			@Override
             public DetailResponse consume() {
                 try {
@@ -125,7 +125,9 @@ public class FastBuildRabbitMqConsumer {
         Channel channel = connection.createChannel(false);
 
         if (type.equals("direct")) {
-            channel.exchangeDeclare(exchange, "direct", true, false, null);
+            if (!"".equals(exchange)) {
+                channel.exchangeDeclare(exchange, "direct", true, false, null);
+            }
         } else if (type.equals("topic")) {
             channel.exchangeDeclare(exchange, "topic", true, false, null);
         }
