@@ -3,6 +3,7 @@ package com.open.capacity.rabbitmq.producer;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -15,6 +16,7 @@ import com.open.capacity.rabbitmq.common.FastOcpRabbitMqConstants;
 import com.rabbitmq.client.Channel;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Coder编程
@@ -27,10 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FastBuildRabbitMqProducer {
-
+    @Autowired
+    private AmqpAdmin amqpAdmin;
     private ConnectionFactory connectionFactory;
 
-    public FastBuildRabbitMqProducer(ConnectionFactory connectionFactory){
+    public FastBuildRabbitMqProducer(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
@@ -45,13 +48,15 @@ public class FastBuildRabbitMqProducer {
 
     /**
      * 发送消息
-     * @param exchange    消息交换机
-     * @param routingKey  消息路由key
-     * @param queue       消息队列
-     * @param type        消息类型
-     * return
+     *
+     * @param exchange   消息交换机
+     * @param routingKey 消息路由key
+     * @param queue      消息队列
+     * @param type       消息类型
+     *                   return
      */
-    private MessageSender buildMessageSender(final String exchange, final String routingKey, final String queue, final String type)throws IOException {
+    private MessageSender buildMessageSender(final String exchange, final String routingKey, final String queue,
+                                             final String type) throws IOException {
         Connection connection = connectionFactory.createConnection();
         //1
         if (type.equals("direct")) {
@@ -88,7 +93,9 @@ public class FastBuildRabbitMqProducer {
         });
 
         return new MessageSender() {
-            {retryCache.setSender(this);}
+            {
+                retryCache.setSender(this);
+            }
 
             @Override
             public DetailResponse send(Object message) {
@@ -105,14 +112,12 @@ public class FastBuildRabbitMqProducer {
                     rabbitTemplate.correlationConvertAndSend(messageWithTime.getMessage(),
                             new CorrelationData(String.valueOf(messageWithTime.getId())));
                 } catch (Exception e) {
-                    return new DetailResponse(false, "","");
+                    return new DetailResponse(false, "", "");
                 }
-                return new DetailResponse(true, "","");
+                return new DetailResponse(true, "", "");
             }
         };
     }
-
-
 
 
     private void buildQueue(String exchange, String routingKey,
@@ -120,7 +125,10 @@ public class FastBuildRabbitMqProducer {
         Channel channel = connection.createChannel(false);
 
         if (type.equals("direct")) {
-            channel.exchangeDeclare(exchange, "direct", true, false, null);
+            //exchange为空的direct交换机为DirectExchange.DEFAULT，mq自动创建，重复创建如果参数不一致会报错
+            if (!"".equals(exchange)) {
+                channel.exchangeDeclare(exchange, "direct", true, false, null);
+            }
         } else if (type.equals("topic")) {
             channel.exchangeDeclare(exchange, "topic", true, false, null);
         }
@@ -129,6 +137,8 @@ public class FastBuildRabbitMqProducer {
         channel.queueBind(queue, exchange, routingKey);
         try {
             channel.close();
+            //调用频率较高时，connection自动关闭来不及，会导致连接超出上限
+            connection.close();
         } catch (TimeoutException e) {
             log.info("close channel time out ", e);
         }
@@ -138,7 +148,6 @@ public class FastBuildRabbitMqProducer {
         Channel channel = connection.createChannel(false);
         channel.exchangeDeclare(exchange, "topic", true, false, null);
     }
-
 
 
 }

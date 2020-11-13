@@ -2,7 +2,6 @@ package com.open.capacity.rabbitmq.comsumer;
 
 import com.open.capacity.rabbitmq.common.DetailResponse;
 import com.open.capacity.rabbitmq.common.FastOcpRabbitMqConstants;
-import com.open.capacity.rabbitmq.producer.MessageProcess;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.GetResponse;

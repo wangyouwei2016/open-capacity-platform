@@ -1,4 +1,4 @@
-package com.open.capacity.rabbitmq.producer;
+package com.open.capacity.rabbitmq.comsumer;
 
 
 

@@ -5,6 +5,10 @@ import com.open.capacity.rabbitmq.common.DetailResponse;
 import com.rabbitmq.client.Channel;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -33,7 +37,7 @@ public class RabbitMQBuildMessageProducer {
     }
 
     public MessageProducer buildMessageSender(final String exchange, final String routingKey,
-                                            final String queue, final String type) throws IOException {
+                                              final String queue, final String type) throws IOException {
 
         final Connection connection = connectionFactory.createConnection();
         if (type.equals(Constants.DIRECT_TYPE)) {
@@ -67,7 +71,6 @@ public class RabbitMQBuildMessageProducer {
         });
 
 
-
         return new MessageProducer() {
             @Override
             public DetailResponse send(Object message) {
@@ -82,7 +85,10 @@ public class RabbitMQBuildMessageProducer {
         Channel channel = connection.createChannel(false);
 
         if (type.equals(Constants.DIRECT_TYPE)) {
-            channel.exchangeDeclare(exchange, Constants.DIRECT_TYPE, true, false, null);
+            //exchange为空的direct交换机为DirectExchange.DEFAULT，mq自动创建，重复创建如果参数不一致会报错
+            if (!"".equals(exchange)) {
+                channel.exchangeDeclare(exchange, Constants.DIRECT_TYPE, true, false, null);
+            }
         } else if (type.equals(Constants.TOPIC_TYPE)) {
             channel.exchangeDeclare(exchange, Constants.TOPIC_TYPE, true, false, null);
         }
@@ -92,6 +98,8 @@ public class RabbitMQBuildMessageProducer {
 
         try {
             channel.close();
+            //调用频率较高时，connection自动关闭来不及，会导致连接超出上限
+            connection.close();
         } catch (TimeoutException e) {
             log.info("close channel time out ", e);
         }

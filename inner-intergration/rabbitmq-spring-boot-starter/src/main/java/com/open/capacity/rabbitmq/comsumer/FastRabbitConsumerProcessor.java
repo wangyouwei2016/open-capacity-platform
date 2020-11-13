@@ -7,7 +7,6 @@ import cn.hutool.json.JSONUtil;
 import com.open.capacity.rabbitmq.annotation.FastRabbitListener;
 import com.open.capacity.rabbitmq.common.DetailResponse;
 import com.open.capacity.rabbitmq.config.RabbitMQAutoConfigure;
-import com.open.capacity.rabbitmq.producer.MessageProcess;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.aop.support.AopUtils;
