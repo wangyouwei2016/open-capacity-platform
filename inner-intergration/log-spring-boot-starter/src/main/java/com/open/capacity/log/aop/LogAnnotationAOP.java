@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  * blog: https://blog.51cto.com/13005375 
  * code: https://gitee.com/owenwangwen/open-capacity-platform
  */
-@Slf4j 
+@Slf4j
 @Aspect
 @Order(-1) // 保证该AOP在@Transactional之前执行
 public class LogAnnotationAOP {
@@ -51,7 +51,7 @@ public class LogAnnotationAOP {
 	
 	@Autowired
 	private TaskExecutor taskExecutor;
-	
+
  
 
 	@Around("@annotation(ds)")

@@ -2,11 +2,9 @@ package com.open.capacity.log.dto;
 
 import java.util.Optional;
 
-import org.slf4j.MDC;
 
 import com.github.structlog4j.IToLog;
 import com.open.capacity.common.auth.details.LoginAppUser;
-import com.open.capacity.common.constant.TraceConstant;
 import com.open.capacity.common.util.SysUserUtil;
 import com.open.capacity.common.util.TokenUtil;
 import com.open.capacity.log.util.TraceUtil;

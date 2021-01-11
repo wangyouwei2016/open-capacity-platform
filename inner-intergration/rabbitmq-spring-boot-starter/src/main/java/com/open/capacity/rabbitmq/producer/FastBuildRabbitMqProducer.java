@@ -141,6 +141,8 @@ public class FastBuildRabbitMqProducer {
             connection.close();
         } catch (TimeoutException e) {
             log.info("close channel time out ", e);
+        } finally {
+            //关闭连接资源
         }
     }
 

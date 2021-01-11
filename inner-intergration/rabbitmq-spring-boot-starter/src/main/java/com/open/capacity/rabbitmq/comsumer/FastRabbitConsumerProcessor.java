@@ -43,14 +43,11 @@ public class FastRabbitConsumerProcessor implements BeanPostProcessor {
         if (!this.nonAnnotatedClasses.contains(targetClass)) {
             //扫描bean内带有Scheduled注解的方法
             Map<Method, Set<FastRabbitListener>> annotatedMethods = MethodIntrospector.selectMethods(targetClass,
-                    new MethodIntrospector.MetadataLookup<Set<FastRabbitListener>>() {
-                        @Override
-                        public Set<FastRabbitListener> inspect(Method method) {
-                            Set<FastRabbitListener> annotatedMethod =
-                                    AnnotatedElementUtils.getMergedRepeatableAnnotations(method,
-                                            FastRabbitListener.class, null);
-                            return (!annotatedMethod.isEmpty() ? annotatedMethod : null);
-                        }
+                    (MethodIntrospector.MetadataLookup<Set<FastRabbitListener>>) method -> {
+                        Set<FastRabbitListener> annotatedMethod =
+                                AnnotatedElementUtils.getMergedRepeatableAnnotations(method,
+                                        FastRabbitListener.class, null);
+                        return (!annotatedMethod.isEmpty() ? annotatedMethod : null);
                     });
             if (annotatedMethods.isEmpty()) {
                 //如果这个class没有注解的方法，缓存下来，因为一个class可能有多个bean
@@ -108,8 +105,7 @@ public class FastRabbitConsumerProcessor implements BeanPostProcessor {
                             new MessageProcess<Object>() {
                                 @Override
                                 public DetailResponse process(Object message) {
-                                    Method invocableMethod = AopUtils.selectInvocableMethod(method,
-                                            bean.getClass());
+                                    Method invocableMethod = AopUtils.selectInvocableMethod(method, bean.getClass());
                                     try {
                                         if (message instanceof byte[]) {
                                             invocableMethod.invoke(bean,

@@ -1,5 +1,6 @@
 package com.open.capacity.common.selector;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 
