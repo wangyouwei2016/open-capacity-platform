@@ -300,18 +300,18 @@ public class XxlJobServiceImpl implements XxlJobService {
 		int jobLogSuccessCount = xxlJobLogDao.triggerCountByHandleCode(ReturnT.SUCCESS_CODE);
 
 		// executor count
-		Set<String> executerAddressSet = new HashSet<String>();
+		Set<String> executorAddressSet = new HashSet<String>();
 		List<XxlJobGroup> groupList = xxlJobGroupDao.findAll();
 
 		if (CollectionUtils.isNotEmpty(groupList)) {
 			for (XxlJobGroup group: groupList) {
 				if (CollectionUtils.isNotEmpty(group.getRegistryList())) {
-					executerAddressSet.addAll(group.getRegistryList());
+					executorAddressSet.addAll(group.getRegistryList());
 				}
 			}
 		}
 
-		int executorCount = executerAddressSet.size();
+		int executorCount = executorAddressSet.size();
 
 		Map<String, Object> dashboardMap = new HashMap<String, Object>();
 		dashboardMap.put("jobInfoCount", jobInfoCount);

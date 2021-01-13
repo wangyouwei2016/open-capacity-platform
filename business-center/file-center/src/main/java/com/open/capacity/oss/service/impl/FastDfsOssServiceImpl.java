@@ -26,6 +26,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,13 +44,13 @@ import java.util.Objects;
 @Slf4j
 public class FastDfsOssServiceImpl extends AbstractFileService {
 
-	@Autowired
+	@Resource
 	private FileDao fileDao;
 
-	@Autowired
+	@Resource
 	private FileExtendDao fileExtendDao;
 
-	@Autowired
+	@Resource
     private FastFileStorageClient storageClient;
 
 	@Override

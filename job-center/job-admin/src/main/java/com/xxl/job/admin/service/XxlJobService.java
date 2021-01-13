@@ -9,86 +9,86 @@ import java.util.Map;
 
 /**
  * core job action for xxl-job
- * 
+ *
  * @author xuxueli 2016-5-28 15:30:33
  */
 public interface XxlJobService {
 
-	/**
-	 * page list
-	 *
-	 * @param start
-	 * @param length
-	 * @param jobGroup
-	 * @param jobDesc
-	 * @param executorHandler
-	 * @param filterTime
-	 * @return
-	 */
-	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime);
+    /**
+     * page list
+     *
+     * @param start
+     * @param length
+     * @param jobGroup
+     * @param jobDesc
+     * @param executorHandler
+     * @param filterTime
+     * @return
+     */
+    Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime);
 
-	/**
-	 * add job
-	 *
-	 * @param jobInfo
-	 * @return
-	 */
-	public ReturnT<String> add(XxlJobInfo jobInfo);
+    /**
+     * add job
+     *
+     * @param jobInfo
+     * @return
+     */
+    ReturnT<String> add(XxlJobInfo jobInfo);
 
-	/**
-	 * update job
-	 *
-	 * @param jobInfo
-	 * @return
-	 */
-	public ReturnT<String> update(XxlJobInfo jobInfo);
+    /**
+     * update job
+     *
+     * @param jobInfo
+     * @return
+     */
+    ReturnT<String> update(XxlJobInfo jobInfo);
 
-	/**
-	 * remove job
-	 *
-	 * @param id
-	 * @return
-	 */
-	public ReturnT<String> remove(int id);
+    /**
+     * remove job
+     *
+     * @param id
+     * @return
+     */
+    ReturnT<String> remove(int id);
 
-	/**
-	 * pause job
-	 *
-	 * @param id
-	 * @return
-	 */
-	public ReturnT<String> pause(int id);
+    /**
+     * pause job
+     *
+     * @param id
+     * @return
+     */
+    ReturnT<String> pause(int id);
 
-	/**
-	 * resume job
-	 *
-	 * @param id
-	 * @return
-	 */
-	public ReturnT<String> resume(int id);
+    /**
+     * resume job
+     *
+     * @param id
+     * @return
+     */
+    ReturnT<String> resume(int id);
 
-	/**
-	 * trigger job
-	 *
-	 * @param id
-	 * @return
-	 */
-	public ReturnT<String> triggerJob(int id);
+    /**
+     * trigger job
+     *
+     * @param id
+     * @return
+     */
+    ReturnT<String> triggerJob(int id);
 
-	/**
-	 * dashboard info
-	 *
-	 * @return
-	 */
-	public Map<String,Object> dashboardInfo();
+    /**
+     * dashboard info
+     *
+     * @return
+     */
+    Map<String, Object> dashboardInfo();
 
-	/**
-	 * chart info
-	 *
-	 * @param startDate
-	 * @param endDate
-	 * @return
-	 */
-	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
+    /**
+     * chart info
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate);
 
 }
