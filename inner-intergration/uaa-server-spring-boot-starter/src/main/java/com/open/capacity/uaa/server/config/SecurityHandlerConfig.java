@@ -18,11 +18,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
-import org.springframework.security.oauth2.common.exceptions.InvalidScopeException;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.common.exceptions.RedirectMismatchException;
-import org.springframework.security.oauth2.common.exceptions.UnsupportedResponseTypeException;
+import org.springframework.security.oauth2.common.exceptions.*;
 import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
@@ -124,6 +120,8 @@ public class SecurityHandlerConfig {
 				OAuth2Exception oAuth2Exception;
 				if (e.getMessage() != null && BAD_MSG.equals( e.getMessage())) {
 					oAuth2Exception = new InvalidGrantException("用户名或密码错误", e);
+				} else if (e instanceof InvalidTokenException){
+					oAuth2Exception = new InvalidTokenException(e.getMessage(),e);
 				}else if (e instanceof InvalidGrantException) {
 					oAuth2Exception = new InvalidGrantException(e.getMessage(), e);
 				}else if (e instanceof InternalAuthenticationServiceException) {
