@@ -99,10 +99,10 @@ mybatis-plus:
 
 
 security:
-  ignored: /oauth/user/token , /oauth/client/token , /login  ,  /user/login   , /doc.html ,/user/logout ,/document.html
+  ignored: /oauth/user/token , /oauth/client/token , /login  ,  /user/login   , /doc.html ,/user/logout ,/document.html,/oauth/refresh/token
   validcode: true
   oauth2:
-    ignored: /oauth/user/token , /oauth/client/token   ,/user/logout ,/document.html 
+    ignored: /oauth/user/token , /oauth/client/token   ,/user/logout ,/document.html ,/oauth/refresh/token
     resource:
       filter-order: 3
     token:

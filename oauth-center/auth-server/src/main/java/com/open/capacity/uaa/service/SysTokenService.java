@@ -19,7 +19,7 @@ public interface SysTokenService {
 			String validCode);
 	
 	//刷新
-	public OAuth2AccessToken getRefreshTokenInfo(String access_token)  ;
+	public OAuth2AccessToken getRefreshTokenInfo(String refresh_token,String clientId,String clientSecret)  ;
 	//token list
 	public PageResult<Map<String, String>>  getTokenList(Map<String, Object> params) ;
 	

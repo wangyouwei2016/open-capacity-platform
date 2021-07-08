@@ -170,17 +170,18 @@ public class OAuth2Controller {
 	}
 	
 	@ApiOperation(value = "access_token刷新token")
-	@PostMapping(value = "/oauth/refresh/token", params = "access_token")
+	@PostMapping(value = "/oauth/refresh/token", params = "refresh_token")
 	@LogAnnotation(module = "auth-server", recordRequestParam = false)
-	public void refreshTokenInfo(String access_token) {
+	public void refreshTokenInfo(String refresh_token) {
 		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
 				.getRequestAttributes();
 		HttpServletRequest request = servletRequestAttributes.getRequest();
 		HttpServletResponse response = servletRequestAttributes.getResponse();
 
 		try {
-
-			OAuth2AccessToken oAuth2AccessToken = sysTokenService.getRefreshTokenInfo(access_token);
+			String clientId = request.getHeader("client_id");
+			String clientSecret = request.getHeader("client_secret");
+			OAuth2AccessToken oAuth2AccessToken = sysTokenService.getRefreshTokenInfo(refresh_token,clientId,clientSecret);
 
 			ResponseUtil.renderJson(response, oAuth2AccessToken);
 
