@@ -83,16 +83,17 @@ spring:
 #  zipkin:
 #    base-url: http://127.0.0.1:11008  
   #elasticsearch服务配置
+  elasticsearch:
+    rest:
+      uris:
+      - http://192.168.11.130:9200     
   data:
     elasticsearch:
-      cluster-name:  elasticsearch
-      cluster-nodes: 47.99.88.28:9300
-      repositories:
-        enabled: true
-      properties:
-        transport:
-          tcp:  
-            connect_timeout: 120s       
+      client:
+        reactive:
+          endpoints : 192.168.11.130:9200
+          socket-timeout: 3000
+          connection-timeout: 3000 
 # 设置连接超时时间
 ##spring.data.elasticsearch.properties.transport.tcp.connect_timeout=120s
 #  http:

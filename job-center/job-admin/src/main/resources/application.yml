@@ -60,6 +60,7 @@ spring:
   thymeleaf: 
     cache: false
   freemarker:
+    suffix: .ftl
     cache: false
     settings:
       template_update_delay: 0

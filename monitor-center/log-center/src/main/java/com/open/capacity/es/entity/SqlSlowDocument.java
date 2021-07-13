@@ -9,7 +9,7 @@ import java.util.Date;
  * ELK收集mysql慢查询日志数据，映射es中的mysql-slowlog-*
  */
 @Data
-@Document(indexName = "mysql-slowlog-*", type = "doc")
+@Document(indexName = "mysql-slowlog-*", type = "_doc")
 public class SqlSlowDocument {
     @Id
     private String id;

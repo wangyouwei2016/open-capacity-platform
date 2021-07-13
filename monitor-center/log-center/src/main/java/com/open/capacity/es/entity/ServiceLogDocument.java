@@ -12,7 +12,7 @@ import lombok.Data;
  * 日志对象，映射es中的索引ocp-log-*
  */
 @Data
-@Document(indexName = "ocp-log-*", type = "doc")
+@Document(indexName = "ocp-log-*", type = "_doc")
 public class ServiceLogDocument {
     @Id
     private String id;

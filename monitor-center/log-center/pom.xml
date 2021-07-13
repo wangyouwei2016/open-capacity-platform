@@ -35,6 +35,11 @@
 			<groupId>com.open.capacity</groupId>
 			<artifactId>redis-spring-boot-starter</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>elasticsearch-rest-high-level-client</artifactId>
+		</dependency>
 
 		<!-- 日志存储位置 -->
 		<dependency>
