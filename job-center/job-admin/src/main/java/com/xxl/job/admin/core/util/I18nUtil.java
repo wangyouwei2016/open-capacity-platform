@@ -1,11 +1,6 @@
 package com.xxl.job.admin.core.util;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -13,7 +8,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-import com.xxl.job.core.util.JacksonUtil;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * i18n util
@@ -30,7 +29,8 @@ public class I18nUtil {
         }
         try {
             // build i18n prop
-            String i18nFile = "i18n/message.properties";
+            String i18n = XxlJobAdminConfig.getAdminConfig().getI18n();
+            String i18nFile = MessageFormat.format("i18n/message_{0}.properties", i18n);
 
             // load prop
             Resource resource = new ClassPathResource(i18nFile);
@@ -59,7 +59,7 @@ public class I18nUtil {
      * @return
      */
     public static String getMultString(String... keys) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
 
         Properties prop = loadI18nProp();
         if (keys!=null && keys.length>0) {

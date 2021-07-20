@@ -9,30 +9,6 @@
 	<artifactId>job-center</artifactId>
 	<packaging>pom</packaging>
 
-
-	<properties>
-		<javax.servlet-api.version>4.0.1</javax.servlet-api.version>
-		<jsp-api.version>2.2</jsp-api.version>
-		<spring.version>5.0.5.RELEASE</spring.version>
-		<jackson.version>2.9.4</jackson.version>
-		<aspectjweaver.version>1.8.13</aspectjweaver.version>
-		<freemarker.version>2.3.23</freemarker.version>
-		<junit.version>4.12</junit.version>
-		<jetty-server.version>9.2.24.v20180105</jetty-server.version>
-		<hessian.version>4.0.51</hessian.version>
-		<httpclient.version>4.5.5</httpclient.version>
-		<commons-exec.version>1.3</commons-exec.version>
-		<commons-collections4.version>4.1</commons-collections4.version>
-		<commons-lang3.version>3.7</commons-lang3.version>
-		<commons-email.version>1.5</commons-email.version>
-		<c3p0.version>0.9.5.2</c3p0.version>
-		<mysql-connector-java.version>5.1.45</mysql-connector-java.version>
-		<mybatis-spring.version>1.3.1</mybatis-spring.version>
-		<mybatis.version>3.4.5</mybatis.version>
-		<groovy-all.version>2.4.13</groovy-all.version>
-		<quartz.version>2.3.0</quartz.version>
-
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -45,4 +21,70 @@
 		<module>job-core</module>
 		<module>job-demo</module>
 	</modules>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.test.skip>true</maven.test.skip>
+
+		<netty-all.version>4.1.48.Final</netty-all.version>
+		<gson.version>2.8.6</gson.version>
+
+		<spring.version>5.2.5.RELEASE</spring.version>
+		<spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+
+		<mybatis-spring-boot-starter.version>2.1.2</mybatis-spring-boot-starter.version>
+		<mysql-connector-java.version>8.0.19</mysql-connector-java.version>
+
+		<slf4j-api.version>1.7.30</slf4j-api.version>
+		<junit.version>4.13</junit.version>
+		<javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+
+		<groovy.version>3.0.3</groovy.version>
+
+		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+		<maven-war-plugin.version>3.2.3</maven-war-plugin.version>
+	</properties>
+
+	<build>
+		<plugins>
+		</plugins>
+	</build>
+
+
+	<licenses>
+		<license>
+			<name>GNU General Public License version 3</name>
+			<url>https://opensource.org/licenses/GPL-3.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>XXL</id>
+			<name>xuxueli</name>
+			<email>931591021@qq.com</email>
+			<url>https://github.com/xuxueli</url>
+		</developer>
+	</developers>
+
+	<distributionManagement>
+        <repository>
+            <id>ocp-releases</id>
+            <name>ocp Release Repository</name>
+            <url>http://10.88.1.131:82/repository/maven-releases/</url>
+        </repository>
+ 
+        <snapshotRepository>
+            <id>ocp-snapshots</id>
+            <name>ocp Snapshot Repository</name>
+            <url>http://10.88.1.131:82/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement> 
+	
 </project>

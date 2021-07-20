@@ -1,41 +1,29 @@
 $(function() {
 
 	// init code editor
-	/*var codeEditor = CodeMirror.fromTextArea(document.getElementById("glueSource"), {
-		mode : "text/x-java",
-		lineNumbers : true,
-		matchBrackets : true
-	});*/
-
 	var codeEditor;
-	function initIde(glueType, glueSource) {
-		var ideMode = "text/x-java";
-		if ('GLUE_GROOVY'==glueType){
-			ideMode = "text/x-java";
-		} else if ('GLUE_SHELL'==glueType){
-			ideMode = "text/x-sh";
-		} else if ('GLUE_PYTHON'==glueType){
-			ideMode = "text/x-python";
+	function initIde(glueSource) {
+		if (codeEditor == null) {
+            codeEditor = CodeMirror(document.getElementById("ideWindow"), {
+                mode : ideMode,
+                lineNumbers : true,
+                matchBrackets : true,
+                value: glueSource
+            });
+		} else {
+            codeEditor.setValue(glueSource);
 		}
-
-		codeEditor = CodeMirror(document.getElementById("ideWindow"), {
-			mode : ideMode,
-			lineNumbers : true,
-			matchBrackets : true,
-			value: glueSource
-		});
 	}
 
-	initIde(glueType, $("#version_now").val());
+	initIde($("#version_now").val());
 
 	// code change
 	$(".source_version").click(function(){
-		var glueType = $(this).attr('glueType');
 		var sourceId = $(this).attr('version');
 		var temp = $( "#" + sourceId ).val();
 
-		codeEditor.setValue('');
-		initIde(glueType, temp);
+		//codeEditor.setValue('');
+		initIde(temp);
 	});
 
 	// code source save
@@ -50,16 +38,18 @@ $(function() {
 		
 		if (!glueRemark) {
 			layer.open({
-				title: '系统提示',
-				content: '请输入备注',
+				title: I18n.system_tips,
+                btn: [ I18n.system_ok],
+				content: I18n.system_please_input + I18n.jobinfo_glue_remark ,
 				icon: '2'
 			});
 			return;
 		}
 		if (glueRemark.length <4 || glueRemark.length > 100) {
 			layer.open({
-				title: '系统提示',
-				content: '备注长度应该在4至100之间',
+				title: I18n.system_tips ,
+                btn: [ I18n.system_ok ],
+				content: I18n.jobinfo_glue_remark_limit ,
 				icon: '2'
 			});
 			return;
@@ -77,8 +67,9 @@ $(function() {
 			success : function(data){
 				if (data.code == 200) {
 					layer.open({
-						title: '系统提示',
-						content: '保存成功',
+						title: I18n.system_tips,
+                        btn: [ I18n.system_ok ],
+						content: (I18n.system_save + I18n.system_success) ,
 						icon: '1',
 						end: function(layero, index){
 							//$(window).unbind('beforeunload');
@@ -87,8 +78,9 @@ $(function() {
 					});
 				} else {
 					layer.open({
-						title: '系统提示',
-						content: (data.msg || "保存失败"),
+						title: I18n.system_tips,
+                        btn: [ I18n.system_ok ],
+						content: (data.msg || (I18n.system_save + I18n.system_fail) ),
 						icon: '2'
 					});
 				}

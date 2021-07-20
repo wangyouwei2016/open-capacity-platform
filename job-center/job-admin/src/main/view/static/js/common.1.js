@@ -2,23 +2,24 @@ $(function(){
 
 	// logout
 	$("#logoutBtn").click(function(){
-		layer.confirm('确认注销登录?', {icon: 3, title:'系统提示'}, function(index){
+		layer.confirm( I18n.logout_confirm , {
+			icon: 3,
+			title: I18n.system_tips ,
+            btn: [ I18n.system_ok, I18n.system_cancel ]
+		}, function(index){
 			layer.close(index);
 
 			$.post(base_url + "/logout", function(data, status) {
 				if (data.code == "200") {
-					layer.open({
-						title: '系统提示',
-						content: '注销成功',
-						icon: '1',
-						end: function(layero, index){
-							window.location.href = base_url + "/toLogin";
-						}
-					});
+                    layer.msg( I18n.logout_success );
+                    setTimeout(function(){
+                        window.location.href = base_url + "/";
+                    }, 500);
 				} else {
 					layer.open({
-						title: '系统提示',
-						content: (data.msg || "操作失败"),
+						title: I18n.system_tips ,
+                        btn: [ I18n.system_ok ],
+						content: (data.msg || I18n.logout_fail),
 						icon: '2'
 					});
 				}
@@ -64,14 +65,14 @@ $(function(){
 		}
 	});
 	$(slideToTop).click(function () {
-		$("body").animate({
+		$("html,body").animate({		// firefox ie not support body, chrome support body. but found that new version chrome not support body too.
 			scrollTop: 0
 		}, 100);
 	});
 
-	// 左侧菜单状态，js + 后端 + cookie方式（新）
+	// left menu status v: js + server + cookie
 	$('.sidebar-toggle').click(function(){
-		var xxljob_adminlte_settings = $.cookie('xxljob_adminlte_settings');	// 左侧菜单展开状态[xxljob_adminlte_settings]：on=展开，off=折叠
+		var xxljob_adminlte_settings = $.cookie('xxljob_adminlte_settings');	// on=open，off=close
 		if ('off' == xxljob_adminlte_settings) {
             xxljob_adminlte_settings = 'on';
 		} else {
@@ -79,12 +80,77 @@ $(function(){
 		}
 		$.cookie('xxljob_adminlte_settings', xxljob_adminlte_settings, { expires: 7 });	//$.cookie('the_cookie', '', { expires: -1 });
 	});
-	// 左侧菜单状态，js + cookie方式（遗弃）
+
+	// left menu status v1: js + cookie
 	/*
 	 var xxljob_adminlte_settings = $.cookie('xxljob_adminlte_settings');
 	 if (xxljob_adminlte_settings == 'off') {
-	 $('body').addClass('sidebar-collapse');
+	 	$('body').addClass('sidebar-collapse');
 	 }
 	 */
+
+
+    // update pwd
+    $('#updatePwd').on('click', function(){
+        $('#updatePwdModal').modal({backdrop: false, keyboard: false}).modal('show');
+    });
+    var updatePwdModalValidate = $("#updatePwdModal .form").validate({
+        errorElement : 'span',
+        errorClass : 'help-block',
+        focusInvalid : true,
+        rules : {
+            password : {
+                required : true ,
+                rangelength:[4,50]
+            }
+        },
+        messages : {
+            password : {
+                required : '请输入密码'  ,
+                rangelength : "密码长度限制为4~50"
+            }
+        },
+        highlight : function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+        },
+        success : function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+        errorPlacement : function(error, element) {
+            element.parent('div').append(error);
+        },
+        submitHandler : function(form) {
+            $.post(base_url + "/user/updatePwd",  $("#updatePwdModal .form").serialize(), function(data, status) {
+                if (data.code == 200) {
+                    $('#updatePwdModal').modal('hide');
+
+                    layer.msg( I18n.change_pwd_suc_to_logout );
+                    setTimeout(function(){
+                        $.post(base_url + "/logout", function(data, status) {
+                            if (data.code == 200) {
+                                window.location.href = base_url + "/";
+                            } else {
+                                layer.open({
+                                    icon: '2',
+                                    content: (data.msg|| I18n.logout_fail)
+                                });
+                            }
+                        });
+                    }, 500);
+                } else {
+                    layer.open({
+                        icon: '2',
+                        content: (data.msg|| I18n.change_pwd + I18n.system_fail )
+                    });
+                }
+            });
+        }
+    });
+    $("#updatePwdModal").on('hide.bs.modal', function () {
+        $("#updatePwdModal .form")[0].reset();
+        updatePwdModalValidate.resetForm();
+        $("#updatePwdModal .form .form-group").removeClass("has-error");
+    });
 	
 });
