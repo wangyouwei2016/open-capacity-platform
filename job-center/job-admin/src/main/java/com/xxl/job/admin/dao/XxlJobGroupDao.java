@@ -1,7 +1,6 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobGroup;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,4 +23,15 @@ public interface XxlJobGroupDao {
     public int remove(@Param("id") int id);
 
     public XxlJobGroup load(@Param("id") int id);
+
+    public List<XxlJobGroup> pageList(@Param("offset") int offset,
+                                      @Param("pagesize") int pagesize,
+                                      @Param("appname") String appname,
+                                      @Param("title") String title);
+
+    public int pageListCount(@Param("offset") int offset,
+                             @Param("pagesize") int pagesize,
+                             @Param("appname") String appname,
+                             @Param("title") String title);
+
 }

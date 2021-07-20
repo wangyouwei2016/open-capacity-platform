@@ -1,18 +1,13 @@
 package com.xxl.job.admin.core.thread;
 
+import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
-import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
 import com.xxl.job.core.enums.RegistryConfig;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,35 +25,36 @@ public class JobRegistryMonitorHelper {
 	private Thread registryThread;
 	private volatile boolean toStop = false;
 	public void start(){
-		//´´½¨Ò»¸öÏß³Ì
+		//åˆ›å»ºä¸€ä¸ªçº¿ç¨‹
 		registryThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				// µ±toStop ÎªfalseÊ±½øÈë¸ÃÑ­»·¡£
+				//å½“toStopä¸ºfalseæ—¶è¿›å…¥å¾ªç¯
 				while (!toStop) {
 					try {
 						// auto registry group
-						// »ñÈ¡ÀàĞÍÎª×Ô¶¯×¢²áµÄÖ´ĞĞÆ÷µØÖ·ÁĞ±í
-						List<XxlJobGroup> groupList = XxlJobDynamicScheduler.xxlJobGroupDao.findByAddressType(0);
-						if (CollectionUtils.isNotEmpty(groupList)) {
+						// è·å–ç±»å‹ä¸ºè‡ªåŠ¨æ³¨å†Œçš„æ‰§è¡Œå™¨åˆ—è¡¨
+						List<XxlJobGroup> groupList = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().findByAddressType(0);
+						if (groupList!=null && !groupList.isEmpty()) {
 
 							// remove dead address (admin/executor)
-							// É¾³ı 90ÃëÖ®ÄÚÃ»ÓĞ¸üĞÂĞÅÏ¢µÄ×¢²á»úÆ÷£¬ 90ÃëÃ»ÓĞĞÄÌøĞÅÏ¢·µ»Ø£¬´ú±í»úÆ÷ÒÑ¾­³öÏÖÎÊÌâ£¬¹ÊÒÆ³ı--
-							XxlJobDynamicScheduler.xxlJobRegistryDao.removeDead(RegistryConfig.DEAD_TIMEOUT);
+							// åˆ é™¤90så†…æ²¡æœ‰æ›´æ–°ä¿¡æ¯çš„æ‰§è¡Œå™¨ï¼Œ90så†…æ²¡æœ‰å¿ƒè·³ï¼Œä»£è¡¨æ‰§è¡Œå™¨æ•…éšœç§»é™¤
+							List<Integer> ids = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
+							if (ids!=null && ids.size()>0) {
+								XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().removeDead(ids);
+							}
 
 							// fresh online address (admin/executor)
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-							// ²éÑ¯ÔÚ90ÃëÖ®ÄÚÓĞ¹ı¸üĞÂµÄ»úÆ÷ÁĞ±í
-							List<XxlJobRegistry> list = XxlJobDynamicScheduler.xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT);
-							//Ñ­»·×¢²á»úÆ÷ÁĞ±í£¬  ¸ù¾İÖ´ĞĞÆ÷²»Í¬£¬½«ÕâĞ©»úÆ÷ÁĞ±íÇø·ÖÄÃ³öÀ´
+							
+							//æŸ¥è¯¢90så†…æ²¡æœ‰æ›´æ–°è¿‡çš„æ‰§è¡Œå™¨åˆ—è¡¨
+							List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (list != null) {
+								//å¾ªç¯æ‰§è¡Œå™¨åˆ—è¡¨ï¼Œæ ¹æ®æ‰§è¡Œå™¨ä¸åŒï¼Œå°†è¿™äº›æœºå™¨åˆ—è¡¨åŒºåˆ†æ‹¿å‡ºæ¥
 								for (XxlJobRegistry item: list) {
-									// ÅĞ¶Ï¸Ã»úÆ÷×¢²áĞÅÏ¢RegistryGroup £¬RegistType ÊÇ·ñÊÇEXECUTOR , EXECUTOR ´ú±í¸Ã»úÆ÷ÊÇ×¢²áµ½Ö´ĞĞÆ÷ÉÏÃæµÄ
-									// RegistType  ·ÖÎªÁ½ÖÖ£¬ ADMIN ºÍEXECUTOR
 									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
-										// »ñÈ¡×¢²áµÄÖ´ĞĞÆ÷ KEY  £¨Ò²¾ÍÊÇÖ´ĞĞÆ÷£©
-										String appName = item.getRegistryKey();
-										List<String> registryList = appAddressMap.get(appName);
+										String appname = item.getRegistryKey();
+										List<String> registryList = appAddressMap.get(appname);
 										if (registryList == null) {
 											registryList = new ArrayList<String>();
 										}
@@ -66,41 +62,48 @@ public class JobRegistryMonitorHelper {
 										if (!registryList.contains(item.getRegistryValue())) {
 											registryList.add(item.getRegistryValue());
 										}
-										// ÊÕ¼¯ »úÆ÷ĞÅÏ¢£¬¸ù¾İÖ´ĞĞÆ÷×öÇø·Ö
-										appAddressMap.put(appName, registryList);
+										appAddressMap.put(appname, registryList);
 									}
 								}
 							}
 
 							// fresh group address
-							//  ±éÀúÖ´ĞĞÆ÷ÁĞ±í
+							// å¾ªç¯æ‰§è¡Œå™¨åˆ—è¡¨
 							for (XxlJobGroup group: groupList) {
-								// Í¨¹ıÖ´ĞĞÆ÷µÄAPP_NAME  ÄÃ³öËûÏÂÃæµÄ¼¯Èº»úÆ÷µØÖ·
-								List<String> registryList = appAddressMap.get(group.getAppName());
+								// é€šè¿‡æ‰§è¡Œå™¨çš„app_nameï¼Œæ‹¿å‡ºé›†ç¾¤æœºå™¨åœ°å€
+								List<String> registryList = appAddressMap.get(group.getAppname());
 								String addressListStr = null;
-								if (CollectionUtils.isNotEmpty(registryList)) {
+								if (registryList!=null && !registryList.isEmpty()) {
 									Collections.sort(registryList);
-									// ×ªÎªÎªString£¬¡¡Í¨¹ı¶ººÅ·Ö¸ô
-									addressListStr = StringUtils.join(registryList, ",");
+									addressListStr = "";
+									for (String item:registryList) {
+										addressListStr += item + ",";
+									}
+									addressListStr = addressListStr.substring(0, addressListStr.length()-1);
 								}
 								group.setAddressList(addressListStr);
-								// ½« Õâ¸öÖ´ĞĞÆ÷µÄ ¼¯Èº»úÆ÷µØÖ·ÁĞ±í£¬Ğ´Èëµ½Êı¾İ¿â
-								XxlJobDynamicScheduler.xxlJobGroupDao.update(group);
+								//å°†æ‰§è¡Œå™¨çš„æœºå™¨æœºå™¨åœ°å€åˆ—è¡¨å›å†™æ•°æ®åº“
+								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
 							}
 						}
 					} catch (Exception e) {
-						logger.error("job registry instance error:{}", e);
+						if (!toStop) {
+							logger.error(">>>>>>>>>>> xxl-job, job registry monitor thread error:{}", e);
+						}
 					}
 					try {
 						TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
 					} catch (InterruptedException e) {
-						logger.error("job registry instance error:{}", e);
+						if (!toStop) {
+							logger.error(">>>>>>>>>>> xxl-job, job registry monitor thread error:{}", e);
+						}
 					}
 				}
+				logger.info(">>>>>>>>>>> xxl-job, job registry monitor thread stop");
 			}
 		});
 		registryThread.setDaemon(true);
-		//Æô¶¯Ïß³Ì
+		registryThread.setName("xxl-job, admin JobRegistryMonitorHelper");
 		registryThread.start();
 	}
 

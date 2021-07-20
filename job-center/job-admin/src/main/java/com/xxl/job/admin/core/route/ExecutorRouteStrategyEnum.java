@@ -4,7 +4,6 @@ import com.xxl.job.admin.core.route.strategy.*;
 import com.xxl.job.admin.core.util.I18nUtil;
 
 /**
- * 对应设置的路由实现
  * Created by xuxueli on 17/3/10.
  */
 public enum ExecutorRouteStrategyEnum {

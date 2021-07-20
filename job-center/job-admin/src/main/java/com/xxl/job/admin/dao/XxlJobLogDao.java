@@ -1,7 +1,6 @@
 package com.xxl.job.admin.dao;
 
 import com.xxl.job.admin.core.model.XxlJobLog;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,7 +14,8 @@ import java.util.Map;
  */
 @Mapper
 public interface XxlJobLogDao {
-	
+
+	// exist jobId not use jobGroup, not exist use jobGroup
 	public List<XxlJobLog> pageList(@Param("offset") int offset,
 									@Param("pagesize") int pagesize,
 									@Param("jobGroup") int jobGroup,
@@ -31,9 +31,9 @@ public interface XxlJobLogDao {
 							 @Param("triggerTimeEnd") Date triggerTimeEnd,
 							 @Param("logStatus") int logStatus);
 	
-	public XxlJobLog load(@Param("id") int id);
+	public XxlJobLog load(@Param("id") long id);
 
-	public int save(XxlJobLog xxlJobLog);
+	public long save(XxlJobLog xxlJobLog);
 
 	public int updateTriggerInfo(XxlJobLog xxlJobLog);
 
@@ -41,14 +41,25 @@ public interface XxlJobLogDao {
 	
 	public int delete(@Param("jobId") int jobId);
 
-	public int triggerCountByHandleCode(@Param("handleCode") int handleCode);
+	public Map<String, Object> findLogReport(@Param("from") Date from,
+											 @Param("to") Date to);
 
-	public List<Map<String, Object>> triggerCountByDay(@Param("from") Date from,
-													   @Param("to") Date to);
+	public List<Long> findClearLogIds(@Param("jobGroup") int jobGroup,
+									  @Param("jobId") int jobId,
+									  @Param("clearBeforeTime") Date clearBeforeTime,
+									  @Param("clearBeforeNum") int clearBeforeNum,
+									  @Param("pagesize") int pagesize);
+	
+	public int deleteById(@Param("id") long id ,@Param("jobGroup") int jobGroup  , @Param("jobId") int jobId );
+	
+	public int clearLog(@Param("logIds") List<Long> logIds);
 
-	public int clearLog(@Param("jobGroup") int jobGroup,
-						@Param("jobId") int jobId,
-						@Param("clearBeforeTime") Date clearBeforeTime,
-						@Param("clearBeforeNum") int clearBeforeNum);
+	public List<Long> findFailJobLogIds(@Param("pagesize") int pagesize);
+
+	public int updateAlarmStatus(@Param("logId") long logId,
+								 @Param("oldAlarmStatus") int oldAlarmStatus,
+								 @Param("newAlarmStatus") int newAlarmStatus);
+
+	public List<Long> findLostJobIds(@Param("losedTime") Date losedTime);
 
 }
