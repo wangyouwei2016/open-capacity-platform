@@ -14,12 +14,11 @@
   
   <dependencies>
 
-		<!-- 加入redis的处理 -->
+		
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
+	   		<groupId>com.caucho</groupId>
+		    <artifactId>hessian</artifactId>
 		</dependency>
-
 		
 		<dependency>
 		    <groupId>org.redisson</groupId>
@@ -27,7 +26,6 @@
 		    <version>${redssion.version}</version>
 		</dependency>
 		
-		  
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
@@ -42,23 +40,20 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
 		</dependency>
+		
+		<!-- 加入redis的处理 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		
   		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+	 
 		
-		<!-- https://mvnrepository.com/artifact/com.alipay.sofa/bolt -->
-		<dependency>
-		    <groupId>com.alipay.sofa</groupId>
-		    <artifactId>bolt</artifactId>
-		    <version>1.6.3</version>
-		</dependency>
-		<dependency>
-	    <groupId>com.caucho</groupId>
-		    <artifactId>hessian</artifactId>
-		    <version>4.0.65</version>
-		</dependency>
 		
   </dependencies>
   
