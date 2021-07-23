@@ -63,6 +63,13 @@
 		    <version>${chaos-monkey}</version>
 		</dependency>
 		
+		<!-- disruptor -->
+		<dependency>
+		    <groupId>com.lmax</groupId>
+		    <artifactId>disruptor</artifactId>
+		    <version>${disruptor.version}</version>
+		</dependency>
+		
 		<!--  feign http rpc -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
