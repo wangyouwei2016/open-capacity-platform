@@ -1,5 +1,9 @@
 package com.open.capacity.redis.serializer;
 
+import com.open.capacity.redis.serializer.hessian.HessianSerializer;
+import com.open.capacity.redis.serializer.jdk.JdkSerializer;
+import com.open.capacity.redis.serializer.kryo.KryoSerializer;
+
 /**
  * Serializer for serialize and deserialize.
  * 
@@ -9,11 +13,16 @@ package com.open.capacity.redis.serializer;
 public class SerializerManager {
 
     private static Serializer[] serializers = new Serializer[5];
-    public static final byte    Hessian2    = 1;
-    //public static final byte    Json        = 2;
+    
+    public static final byte    JDK        =  0;
+    public static final byte    KRYO        = 1;
+    public static final byte    HESSIAN2    = 2;
+    //public static final byte    Json        = 3;
 
     static {
-        addSerializer(Hessian2, new HessianSerializer());
+    	addSerializer(JDK, new JdkSerializer());
+    	addSerializer(KRYO, new KryoSerializer());
+        addSerializer(HESSIAN2, new HessianSerializer());
     }
 
     public static Serializer getSerializer(int idx) {

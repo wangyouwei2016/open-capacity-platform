@@ -13,7 +13,7 @@ public class RedisObjectSerializer implements RedisSerializer<Object> {
 		if (obj == null) { // 这个时候没有要序列化的对象出现，所以返回的字节数组应该就是一个空数组
 			return EMPTY_BYTE_ARRAY;
 		}
-		return SerializerManager.getSerializer(SerializerManager.Hessian2).serialize(obj); // 将对象变为字节数组
+		return SerializerManager.getSerializer(SerializerManager.HESSIAN2).serialize(obj); // 将对象变为字节数组
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public class RedisObjectSerializer implements RedisSerializer<Object> {
 		if (data == null || data.length == 0) { // 此时没有对象的内容信息
 			return null;
 		}
-		return SerializerManager.getSerializer(SerializerManager.Hessian2).deserialize(data);
+		return SerializerManager.getSerializer(SerializerManager.HESSIAN2).deserialize(data);
 
 	}
 

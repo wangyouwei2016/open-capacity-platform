@@ -14,7 +14,6 @@
   
   <dependencies>
 
-		
 		<dependency>
 	   		<groupId>com.caucho</groupId>
 		    <artifactId>hessian</artifactId>
@@ -26,6 +25,12 @@
 		    <version>${redssion.version}</version>
 		</dependency>
 		
+		<dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>${kryo.version}</version>
+        </dependency>
+        
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
