@@ -1,4 +1,4 @@
-package com.open.capacity.redis.serializer;
+package com.open.capacity.redis.serializer.hessian;
 
 
 
@@ -11,6 +11,7 @@ import org.springframework.data.redis.serializer.SerializationException;
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
+import com.open.capacity.redis.serializer.Serializer;
 
 /**
  * Serializer for serialize and deserialize.
@@ -30,10 +31,15 @@ public class HessianSerializer implements Serializer {
         output.setSerializerFactory(serializerFactory);
         try {
             output.writeObject(obj);
-            output.close();
+            
         } catch (IOException e) {
             throw new SerializationException("IOException occurred when Hessian serializer encode!", e);
-        }
+        }finally {
+        	try {
+				output.close();
+			} catch (IOException e) {
+			}
+		}
 
         return byteArray.toByteArray();
     }
@@ -47,10 +53,14 @@ public class HessianSerializer implements Serializer {
         Object resultObject = null ;
         try {
             resultObject = input.readObject();
-            input.close();
         } catch (IOException e) {
             throw new SerializationException("IOException occurred when Hessian serializer decode!", e);
-        }
+        }finally {
+        	try {
+        		input.close();
+			} catch (IOException e) {
+			}
+		}
         return (T) resultObject;
     }
 

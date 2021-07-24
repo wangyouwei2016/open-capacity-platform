@@ -200,46 +200,46 @@ public class ApiEncryptUtil {
 		  return StringUtils.leftPad(appId, 24,"0");
 	}
 
-	public static void main(String[] args) {
-		/*
-		 * appId: 应用ID timestamp: 发送请求的时间，时间戳-毫秒 System.currentTimeMillis()
-		 * sign: 请求参数签名 data: 业务请求参数 jsonStr
-		 */
-		try {
-			String appId = "webApp";
-			String signKey = getSignKey(appId);
-			String timestamp = System.currentTimeMillis() + "";
-			String sign = "";
-
-			// 业务请求参数
-			Map<String, Object> data = new HashMap<>();
-			data.put("grant_type", "password");
-			data.put("username", "admin");
-			data.put("password", "admin");
-			data.put("scope", "app");
-			
-			// 业务请求参数使用3des加密
-			String dataStr = encryptBy3Des(JSON.toJSONString(data), signKey);
-			// 生成请求参数的签名
-			sign = generateSign(appId, timestamp, dataStr, signKey);
-			// 请求报文
-			Map<String, String> reqParams = new HashMap<>();
-			reqParams.put(APPID, appId);
-			reqParams.put(TIMESTAMP, timestamp);
-			reqParams.put(DATA, dataStr);
-			reqParams.put("sign", sign);
-
-			// 校验请求报文
-			Map desMap = checkSign(reqParams.get(APPID), reqParams.get(TIMESTAMP), reqParams.get(DATA),
-					reqParams.get("sign"), signKey);
-
-			String desData = MapUtils.getString(desMap, "data");
-
-			log.info("请求报文：{}\n解密报文：{}\n解密参数:{}", JSON.toJSONString(reqParams), JSON.toJSONString(desMap),
-					MapUtils.getString(desMap, "data"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		/*
+//		 * appId: 应用ID timestamp: 发送请求的时间，时间戳-毫秒 System.currentTimeMillis()
+//		 * sign: 请求参数签名 data: 业务请求参数 jsonStr
+//		 */
+//		try {
+//			String appId = "webApp";
+//			String signKey = getSignKey(appId);
+//			String timestamp = System.currentTimeMillis() + "";
+//			String sign = "";
+//
+//			// 业务请求参数
+//			Map<String, Object> data = new HashMap<>();
+//			data.put("grant_type", "password");
+//			data.put("username", "admin");
+//			data.put("password", "admin");
+//			data.put("scope", "app");
+//			
+//			// 业务请求参数使用3des加密
+//			String dataStr = encryptBy3Des(JSON.toJSONString(data), signKey);
+//			// 生成请求参数的签名
+//			sign = generateSign(appId, timestamp, dataStr, signKey);
+//			// 请求报文
+//			Map<String, String> reqParams = new HashMap<>();
+//			reqParams.put(APPID, appId);
+//			reqParams.put(TIMESTAMP, timestamp);
+//			reqParams.put(DATA, dataStr);
+//			reqParams.put("sign", sign);
+//
+//			// 校验请求报文
+//			Map desMap = checkSign(reqParams.get(APPID), reqParams.get(TIMESTAMP), reqParams.get(DATA),
+//					reqParams.get("sign"), signKey);
+//
+//			String desData = MapUtils.getString(desMap, "data");
+//
+//			log.info("请求报文：{}\n解密报文：{}\n解密参数:{}", JSON.toJSONString(reqParams), JSON.toJSONString(desMap),
+//					MapUtils.getString(desMap, "data"));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 }

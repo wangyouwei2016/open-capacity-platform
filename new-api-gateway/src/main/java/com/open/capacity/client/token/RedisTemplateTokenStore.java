@@ -27,6 +27,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 import com.open.capacity.common.auth.details.LoginAppUser;
+import com.open.capacity.common.serializer.DefaultSerializationStrategy;
 
 /**
  * @author owen 624191343@qq.com
@@ -54,7 +55,7 @@ public class RedisTemplateTokenStore implements TokenStore {
 
 	private final RedisConnectionFactory connectionFactory;
 	private AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
-	private RedisTokenStoreSerializationStrategy serializationStrategy = new HessianSerializationStrategy();
+	private RedisTokenStoreSerializationStrategy serializationStrategy = new DefaultSerializationStrategy();
 
 	private String prefix = "";
 

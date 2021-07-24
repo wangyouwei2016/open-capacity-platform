@@ -64,6 +64,13 @@
 		    <version>${chaos-monkey}</version>
 		</dependency>
 		
+		<!-- disruptor -->
+		<dependency>
+		    <groupId>com.lmax</groupId>
+		    <artifactId>disruptor</artifactId>
+		    <version>${disruptor.version}</version>
+		</dependency>
+		
 		<!--  feign http rpc -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -116,12 +123,17 @@
 			<artifactId>hutool-all</artifactId>
 			<version>${hutool.version}</version>
 		</dependency>
-		
+		<dependency>
+		    <groupId>net.coobird</groupId>
+		    <artifactId>thumbnailator</artifactId>
+		    <version>0.4.12</version>
+		</dependency>
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
 			<version>${zxing-version}</version>
 		</dependency>
+		
 		
 		<dependency>
 			<groupId>org.hibernate</groupId>
