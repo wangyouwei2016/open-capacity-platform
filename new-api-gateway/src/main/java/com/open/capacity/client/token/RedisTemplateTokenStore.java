@@ -20,7 +20,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.AuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.JdkSerializationStrategy;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
@@ -55,7 +54,7 @@ public class RedisTemplateTokenStore implements TokenStore {
 
 	private final RedisConnectionFactory connectionFactory;
 	private AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
-	private RedisTokenStoreSerializationStrategy serializationStrategy = new JdkSerializationStrategy();
+	private RedisTokenStoreSerializationStrategy serializationStrategy = new HessianSerializationStrategy();
 
 	private String prefix = "";
 
