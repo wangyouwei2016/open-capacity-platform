@@ -386,6 +386,11 @@
             	 	<name>adonis</name>
             	 	<email>1977334800@qq.com</email>
         	</developer>
+		<developer>
+           	<id>14</id>
+            <name>ywb</name>
+            <email>1471275556@qq.com</email>
+        </developer>
 	</developers>
 
 </project>
