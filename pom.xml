@@ -81,6 +81,7 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>${commons-collections4.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
@@ -205,14 +206,14 @@
 				<artifactId>ribbon-spring-boot-starter</artifactId>
 				<version>${core.version}</version>
 			</dependency>
-			
+
 			<!-- 熔断限流组件  -->
 	  		<dependency>
 	  			<groupId>com.open.capacity</groupId>
 	  			<artifactId>sentinel-spring-boot-starter</artifactId>
 	  			<version>${core.version}</version>
 	  		</dependency>
-  		
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -231,7 +232,7 @@
 						<encoding>UTF-8</encoding>
 						<compilerArgs>
         				  <arg>-parameters</arg>
-        				</compilerArgs>	
+        				</compilerArgs>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -296,22 +297,22 @@
             </snapshots>
         </repository>
     </repositories>
-	<!-- 
-	
+	<!--
+
 	<distributionManagement>
         <repository>
             <id>ocp-releases</id>
             <name>ocp Release Repository</name>
             <url>http://106.13.3.200:8081/repository/maven-releases/</url>
         </repository>
- 
+
         <snapshotRepository>
             <id>ocp-snapshots</id>
             <name>ocp Snapshot Repository</name>
             <url>http://106.13.3.200:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-	
+
 	 -->
 
 	<developers>
@@ -382,15 +383,20 @@
 			<email>1363946966@qq.com</email>
 		</developer>
 		<developer>
-           	 	<id>13</id>
-            	 	<name>adonis</name>
-            	 	<email>1977334800@qq.com</email>
-        	</developer>
-		<developer>
-           	<id>14</id>
-            <name>ywb</name>
-            <email>1471275556@qq.com</email>
+           	 <id>13</id>
+             <name>adonis</name>
+             <email>1977334800@qq.com</email>
         </developer>
+		<developer>
+			<id>14</id>
+			<name>ywb</name>
+			<email>1471275556@qq.com</email>
+		</developer>
+		<developer>
+			<id>15</id>
+			<name>brj</name>
+			<email>528320726@qq.com</email>
+		</developer>
 	</developers>
 
 </project>
