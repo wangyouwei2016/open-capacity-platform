@@ -7,7 +7,7 @@ import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysPermission;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 
 /**
 * @author 作者 owen 
@@ -60,6 +60,6 @@ public interface SysRoleService {
 	 * 更新角色
 	 * @param sysRole
 	 */
-	Result saveOrUpdate(SysRole sysRole)  throws ServiceException;
+	ResponseEntity saveOrUpdate(SysRole sysRole)  throws ServiceException;
 
 }

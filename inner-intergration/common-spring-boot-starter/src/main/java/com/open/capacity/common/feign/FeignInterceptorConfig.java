@@ -3,6 +3,7 @@ package com.open.capacity.common.feign;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 import com.open.capacity.common.constant.TraceConstant;
 import com.open.capacity.common.constant.UaaConstant;
@@ -26,10 +27,11 @@ public class FeignInterceptorConfig {
         RequestInterceptor requestInterceptor = template -> {
             //传递token
             //使用feign client访问别的微服务时，将accessToken header
-            //config.anyRequest().permitAll() 非强制校验token
             if (StringUtil.isNotBlank(TokenUtil.getToken())) {
-            	template.header(UaaConstant.TOKEN_HEADER, TokenUtil.getToken());
-//            	template.header(UaaConstant.AUTHORIZATION,  OAuth2AccessToken.BEARER_TYPE  +  " "  +  TokenUtil.getToken() );
+            	//弱认证
+            	//template.header(UaaConstant.TOKEN_HEADER, TokenUtil.getToken());
+            	//强认证
+            	template.header(UaaConstant.AUTHORIZATION,  OAuth2AccessToken.BEARER_TYPE  +  " "  +  TokenUtil.getToken() );
             }
             //传递traceId
             String traceId = StringUtil.isNotBlank(MDC.get(TraceConstant.LOG_TRACE_ID)) ? MDC.get(TraceConstant.LOG_TRACE_ID) : MDC.get(TraceConstant.LOG_B3_TRACEID);

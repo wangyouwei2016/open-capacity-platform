@@ -19,7 +19,7 @@ import com.google.common.collect.Maps;
 import com.open.capacity.common.exception.controller.ControllerException;
 import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.uaa.service.SysClientService;
 
@@ -92,7 +92,7 @@ public class SysClientController {
 	@PostMapping("/saveOrUpdate")
     @ApiOperation(value = "保存或者修改应用")
     @PreAuthorize("hasAuthority('client:post/clients')")
-    public Result saveOrUpdate(@RequestBody SysClient sysClient){
+    public ResponseEntity saveOrUpdate(@RequestBody SysClient sysClient){
         try {
 			return  sysClientService.saveOrUpdate(sysClient);
 		} catch (Exception e) {
@@ -103,7 +103,7 @@ public class SysClientController {
     @ApiOperation(value = "修改状态")
     @PreAuthorize("hasAuthority('client:post/clients')")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
-    public Result updateEnabled(@RequestBody Map<String, Object> params){
+    public ResponseEntity updateEnabled(@RequestBody Map<String, Object> params){
         try {
 			return  sysClientService.updateEnabled(params);
 		} catch (Exception e) {

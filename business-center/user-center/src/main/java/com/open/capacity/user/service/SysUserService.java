@@ -9,7 +9,7 @@ import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.model.SysUser;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.user.model.SysUserExcel;
 
 /**
@@ -56,7 +56,7 @@ public interface SysUserService {
 	 * @param newPassword
 	 * @return
 	 */
-	Result updatePassword(Long id, String oldPassword, String newPassword)  throws ServiceException;
+	ResponseEntity updatePassword(Long id, String oldPassword, String newPassword)  throws ServiceException;
 
 	/**
 	 * 用户列表
@@ -77,14 +77,14 @@ public interface SysUserService {
 	 * @param params
 	 * @return
 	 */
-	Result updateEnabled(Map<String, Object> params)  throws ServiceException;
+	ResponseEntity updateEnabled(Map<String, Object> params)  throws ServiceException;
 
 	/**
 	 * 更新
 	 * @param sysUser
 	 * @return
 	 */
-	Result saveOrUpdate(SysUser sysUser)  throws ServiceException;
+	ResponseEntity saveOrUpdate(SysUser sysUser)  throws ServiceException;
 
 	/**
 	 * 查询全部用户

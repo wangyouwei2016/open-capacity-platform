@@ -22,7 +22,7 @@ import com.open.capacity.common.exception.controller.ControllerException;
 import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.model.SysService;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.uaa.service.SysServiceService;
 
@@ -92,10 +92,10 @@ public class SysServiceController {
     @ApiOperation(value = "删除服务")
     @PreAuthorize("hasAuthority('service:delete/service/{id}')")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
-    public Result delete(@PathVariable Long id){
+    public ResponseEntity delete(@PathVariable Long id){
         try {
 			sysServiceService.delete(id);
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		} catch (Exception e) {
 			throw new ControllerException(e);
 		}
@@ -106,14 +106,14 @@ public class SysServiceController {
     @PostMapping("/saveOrUpdate")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
     @PreAuthorize("hasAnyAuthority('service:post/saveOrUpdate')")
-    public Result saveOrUpdate(@RequestBody SysService service) {
+    public ResponseEntity saveOrUpdate(@RequestBody SysService service) {
         try{
             if (service.getId() != null){
                 sysServiceService.update(service);
             }else {
                 sysServiceService.save(service);
             }
-            return Result.succeed("操作成功");
+            return ResponseEntity.succeed("操作成功");
         }catch (Exception ex){
         	throw new ControllerException(ex);
         }
@@ -152,10 +152,10 @@ public class SysServiceController {
 
     @PostMapping("/granted")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
-    public Result setMenuToClient(@RequestBody SysClient sysClient) {
+    public ResponseEntity setMenuToClient(@RequestBody SysClient sysClient) {
         try {
 			sysServiceService.setMenuToClient(sysClient.getId(), sysClient.getServiceIds());
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		} catch (Exception e) {
 			throw new ControllerException(e);
 		}

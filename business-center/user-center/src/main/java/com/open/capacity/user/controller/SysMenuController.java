@@ -28,7 +28,7 @@ import com.open.capacity.common.model.SysMenu;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.util.SysUserUtil;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.user.service.SysMenuService;
 
@@ -55,10 +55,10 @@ public class SysMenuController {
 	@ApiOperation(value = "删除菜单")
 	@PreAuthorize("hasAuthority('menu:delete/menus/{id}')")
 	@LogAnnotation(module = "user-center", recordRequestParam = false)
-	public Result delete(@PathVariable Long id) throws ControllerException {
+	public ResponseEntity delete(@PathVariable Long id) throws ControllerException {
 		try {
 			menuService.delete(id);
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		} catch (Exception e) {
 			throw new ControllerException(e);
 		}
@@ -106,10 +106,10 @@ public class SysMenuController {
 	@ApiOperation(value = "角色分配菜单")
 	@PreAuthorize("hasAuthority('menu:post/menus/granted')")
 	@LogAnnotation(module = "user-center", recordRequestParam = false)
-	public Result setMenuToRole(@RequestBody SysMenu sysMenu) throws ControllerException {
+	public ResponseEntity setMenuToRole(@RequestBody SysMenu sysMenu) throws ControllerException {
 		try {
 			menuService.setMenuToRole(sysMenu.getRoleId(), sysMenu.getMenuIds());
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		} catch (ServiceException e) {
 			throw new ControllerException(e);
 		}
@@ -152,14 +152,14 @@ public class SysMenuController {
 	@ApiOperation(value = "新增菜单")
 	@PreAuthorize("hasAnyAuthority('menu:post/menus','menu:put/menus')")
 	@LogAnnotation(module = "user-center", recordRequestParam = false)
-	public Result saveOrUpdate(@RequestBody SysMenu menu) throws ControllerException {
+	public ResponseEntity saveOrUpdate(@RequestBody SysMenu menu) throws ControllerException {
 		try {
 			if (menu.getId() != null) {
 				menuService.update(menu);
 			} else {
 				menuService.save(menu);
 			}
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		} catch (ServiceException e) {
 			throw new ControllerException(e);
 		}

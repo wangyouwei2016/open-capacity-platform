@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.redis.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class RedisLimiterUtils {
     @Resource
     private RedisUtil redisUtil;
 
-    public Result IpRateLimiter(String ip, int limit, int timeout) {
+    public ResponseEntity IpRateLimiter(String ip, int limit, int timeout) {
         String identifier = UUID.randomUUID().toString();
         String time_key = "time_key:ip:" + ip;
         String counter_key = "counter_key:ip:" + ip;
@@ -37,13 +37,13 @@ public class RedisLimiterUtils {
         }
         if (redisUtil.hasKey(time_key) && redisUtil.incr(counter_key, 1) > limit) {
             log.info(EXCEEDS_LIMIT);
-            return Result.failedWith(null, -1, EXCEEDS_LIMIT);
+            return ResponseEntity.failedWith(null, -1, EXCEEDS_LIMIT);
         }
-        return Result.succeedWith(null, 0,  "调用次数:" +   redisUtil.get(counter_key)   );
+        return ResponseEntity.succeedWith(null, 0,  "调用次数:" +   redisUtil.get(counter_key)   );
     }
 
 
-    public Result clientRateLimiter(String clientid, int limit, int timeout) {
+    public ResponseEntity clientRateLimiter(String clientid, int limit, int timeout) {
         String identifier = UUID.randomUUID().toString();
         String time_key = "time_key:clientid:" + clientid;
         String counter_key = "counter_key:clientid:" + clientid;
@@ -53,13 +53,13 @@ public class RedisLimiterUtils {
         }
         if (redisUtil.hasKey(time_key) && redisUtil.incr(counter_key, 1) > limit) {
             log.info(EXCEEDS_LIMIT);
-            return Result.failedWith(null, -1, EXCEEDS_LIMIT);
+            return ResponseEntity.failedWith(null, -1, EXCEEDS_LIMIT);
         }
-        return Result.succeedWith(null, 0,  "调用次数:" +  redisUtil.get(counter_key)   );
+        return ResponseEntity.succeedWith(null, 0,  "调用次数:" +  redisUtil.get(counter_key)   );
     }
 
 
-    public Result urlRateLimiter(String path, int limit, int timeout) {
+    public ResponseEntity urlRateLimiter(String path, int limit, int timeout) {
         String identifier = UUID.randomUUID().toString();
         String time_key = "time_key:path:" + path;
         String counter_key = "counter_key:path:" + path;
@@ -69,13 +69,13 @@ public class RedisLimiterUtils {
         }
         if (redisUtil.hasKey(time_key) && redisUtil.incr(counter_key, 1) > limit) {
             log.info(EXCEEDS_LIMIT);
-            return Result.failedWith(null, -1, EXCEEDS_LIMIT);
+            return ResponseEntity.failedWith(null, -1, EXCEEDS_LIMIT);
         }
-        return Result.succeedWith(null, 0,  "调用次数:" +  redisUtil.get(counter_key)   );
+        return ResponseEntity.succeedWith(null, 0,  "调用次数:" +  redisUtil.get(counter_key)   );
     }
 
 
-    public Result clientPathRateLimiter(String clientid, String access_path, int limit, int timeout) {
+    public ResponseEntity clientPathRateLimiter(String clientid, String access_path, int limit, int timeout) {
         String identifier = UUID.randomUUID().toString();
         LocalDate today = LocalDate.now();
         String time_key = "time_key:clientid:" + clientid + ":path:" + access_path;
@@ -87,13 +87,13 @@ public class RedisLimiterUtils {
         }
         if (redisUtil.hasKey(time_key) && redisUtil.incr(counter_key, 1) > limit) {
             log.info(EXCEEDS_LIMIT);
-            return Result.failedWith(null, -1, EXCEEDS_LIMIT);
+            return ResponseEntity.failedWith(null, -1, EXCEEDS_LIMIT);
         }
-        return Result.succeedWith(null, 0,  "调用次数:" + redisUtil.get(counter_key)   );
+        return ResponseEntity.succeedWith(null, 0,  "调用次数:" + redisUtil.get(counter_key)   );
     }
 
 
-    public Result rateLimitOfDay(String clientid, String access_path, long limit) {
+    public ResponseEntity rateLimitOfDay(String clientid, String access_path, long limit) {
         String identifier = UUID.randomUUID().toString();
         LocalDate today = LocalDate.now();
         String time_key = "time_key:date:" + today + ":clientid:" + clientid + ":path:" + access_path;
@@ -108,13 +108,13 @@ public class RedisLimiterUtils {
         //累加访问次数， 超出配置的limit则返回错误
         if (redisUtil.incr(counter_key, 1) > limit) {
             log.info("日内超出了访问的限制！");
-            return Result.failedWith(null, -1, "日内超出了访问的限制!");
+            return ResponseEntity.failedWith(null, -1, "日内超出了访问的限制!");
         }
-        return Result.succeedWith(null, 0,  "调用总次数:" +  redisUtil.get(counter_key)   );
+        return ResponseEntity.succeedWith(null, 0,  "调用总次数:" +  redisUtil.get(counter_key)   );
     }
 
 
-    public Result acquireRateLimiter(String clientid, String access_path, int limit, int timeout) {
+    public ResponseEntity acquireRateLimiter(String clientid, String access_path, int limit, int timeout) {
         String identifier = UUID.randomUUID().toString();
         LocalDate today = LocalDate.now();
         String time_key = "time_key:date:" + today + ":clientid:" + clientid + ":path:" + access_path;
@@ -126,9 +126,9 @@ public class RedisLimiterUtils {
         }
         if (redisUtil.hasKey(time_key) && redisUtil.incr(counter_key, 1) > limit) {
             log.info(EXCEEDS_LIMIT);
-            return Result.failedWith(null, -1, EXCEEDS_LIMIT);
+            return ResponseEntity.failedWith(null, -1, EXCEEDS_LIMIT);
         }
-        return Result.succeedWith(null, 0,  "调用次数:" +  redisUtil.get(counter_key)   );
+        return ResponseEntity.succeedWith(null, 0,  "调用次数:" +  redisUtil.get(counter_key)   );
     }
 
 

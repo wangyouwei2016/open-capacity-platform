@@ -32,7 +32,7 @@ import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.model.SysUser;
 import com.open.capacity.common.util.SysUserUtil;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.user.model.SysUserExcel;
 import com.open.capacity.user.service.SysUserService;
@@ -216,12 +216,12 @@ public class SysUserController {
     @PutMapping("/users/me")
     @LogAnnotation(module = "user-center", recordRequestParam = false)
     @PreAuthorize("hasAnyAuthority('user:put/users/me','user:post/users/saveOrUpdate')")
-    public Result updateMe(@RequestBody SysUser sysUser) throws ControllerException {
+    public ResponseEntity updateMe(@RequestBody SysUser sysUser) throws ControllerException {
 //        SysUser user = SysUserUtil.getLoginAppUser();
 //        sysUser.setId(user.getId());
         try {
             SysUser user = sysUserService.updateSysUser(sysUser);
-            return Result.succeed(user, "操作成功");
+            return ResponseEntity.succeed(user, "操作成功");
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
@@ -235,7 +235,7 @@ public class SysUserController {
     @PutMapping(value = "/users/password")
     @PreAuthorize("hasAuthority('user:put/users/password')")
     @LogAnnotation(module = "user-center", recordRequestParam = false)
-    public Result updatePassword(@RequestBody SysUser sysUser) throws ControllerException {
+    public ResponseEntity updatePassword(@RequestBody SysUser sysUser) throws ControllerException {
         try {
             if (StringUtils.isBlank(sysUser.getOldPassword())) {
                 throw new IllegalArgumentException("旧密码不能为空");
@@ -244,7 +244,7 @@ public class SysUserController {
                 throw new IllegalArgumentException("新密码不能为空");
             }
             if (sysUser.getId() == 1277137734524300032L) {
-                return Result.failed("超级管理员不给予修改");
+                return ResponseEntity.failed("超级管理员不给予修改");
             }
             return sysUserService.updatePassword(sysUser.getId(), sysUser.getOldPassword(), sysUser.getNewPassword());
         } catch (ServiceException e) {
@@ -267,11 +267,11 @@ public class SysUserController {
     })
     @LogAnnotation(module = "user-center", recordRequestParam = false)
     @PreAuthorize("hasAnyAuthority('user:get/users/updateEnabled' ,'user:put/users/me')")
-    public Result updateEnabled(@RequestParam Map<String, Object> params) throws ControllerException {
+    public ResponseEntity updateEnabled(@RequestParam Map<String, Object> params) throws ControllerException {
         try {
             Long id = MapUtils.getLong(params, "id");
             if (id == 1277137734524300032L) {
-                return Result.failed("超级管理员不给予修改");
+                return ResponseEntity.failed("超级管理员不给予修改");
             }
             return sysUserService.updateEnabled(params);
         } catch (ServiceException e) {
@@ -288,13 +288,13 @@ public class SysUserController {
     @PreAuthorize("hasAuthority('user:post/users/{id}/resetPassword' )")
     @PostMapping(value = "/users/{id}/resetPassword")
     @LogAnnotation(module = "user-center", recordRequestParam = false)
-    public Result resetPassword(@PathVariable Long id) throws ControllerException {
+    public ResponseEntity resetPassword(@PathVariable Long id) throws ControllerException {
         try {
             if (id == 1277137734524300032L) {
-                return Result.failed("超级管理员不给予修改");
+                return ResponseEntity.failed("超级管理员不给予修改");
             }
             sysUserService.updatePassword(id, null, "123456");
-            return Result.succeed(null, "重置成功");
+            return ResponseEntity.succeed(null, "重置成功");
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
@@ -310,7 +310,7 @@ public class SysUserController {
     @PostMapping("/users/saveOrUpdate")
     @PreAuthorize("hasAnyAuthority('user:post/users/saveOrUpdate')")
     @LogAnnotation(module = "user-center", recordRequestParam = false)
-    public Result saveOrUpdate(@RequestBody SysUser sysUser) throws ControllerException {
+    public ResponseEntity saveOrUpdate(@RequestBody SysUser sysUser) throws ControllerException {
         try {
             return sysUserService.saveOrUpdate(sysUser);
         } catch (ServiceException e) {
@@ -353,7 +353,7 @@ public class SysUserController {
      */
     @PostMapping("/users/save")
     @ApiIdempotent
-    public Result save(@RequestBody SysUser sysUser) throws ControllerException {
+    public ResponseEntity save(@RequestBody SysUser sysUser) throws ControllerException {
         try {
             return sysUserService.saveOrUpdate(sysUser);
         } catch (ServiceException e) {
