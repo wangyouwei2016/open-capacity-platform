@@ -68,7 +68,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/health");
 		// 忽略登录界面
 		web.ignoring().antMatchers("/login.html");
-		web.ignoring().antMatchers("/index.html");
 		web.ignoring().antMatchers("/oauth/user/token");
 		web.ignoring().antMatchers("/oauth/client/token");
 		web.ignoring().antMatchers("/validata/code/**");
@@ -109,9 +108,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 		}
 
-		http.logout().logoutSuccessUrl(SecurityConstant.LOGIN_PAGE)
-				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
-				.addLogoutHandler(oauthLogoutHandler).clearAuthentication(true);
+		///默认退出/logout
+		http.logout()
+				.logoutSuccessHandler(oauthLogoutHandler)
+				.addLogoutHandler(oauthLogoutHandler)
+				// 无效会话
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                // 清除身份验证
+				.logoutSuccessUrl(SecurityConstant.LOGIN_PAGE);
 
 		//注册到AuthenticationManager中去 增加支持SmsCodeAuthenticationToken
 		http.authenticationProvider(smsCodeAuthenticationProvider);

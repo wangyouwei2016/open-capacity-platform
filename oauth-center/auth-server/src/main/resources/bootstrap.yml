@@ -2,6 +2,9 @@
 server:
   servlet:
     context-path: /api-auth
+    session:
+      cookie:
+        path: /
   use-forward-headers: false  
   port: 8000
 #  port: ${randomServerPort.value[8000,8000]}    #随机端口

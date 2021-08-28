@@ -13,7 +13,11 @@
   
 	<dependencies>
 		  
-		 
+		 <dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>4.5.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -22,16 +26,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-
-	 	
 	 	<!-- 认证中心基础配置-->
 		<dependency>
 			<groupId>com.open.capacity</groupId>
 			<artifactId>uaa-server-spring-boot-starter</artifactId>
 		</dependency>
 	 	
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>

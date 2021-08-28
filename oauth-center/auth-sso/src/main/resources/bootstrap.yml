@@ -3,6 +3,9 @@ server:
   port: 9997
   servlet:
     context-path: /clientOne
+    session:
+      cookie:
+        path: /   
 #服务名称
 spring:
   main:

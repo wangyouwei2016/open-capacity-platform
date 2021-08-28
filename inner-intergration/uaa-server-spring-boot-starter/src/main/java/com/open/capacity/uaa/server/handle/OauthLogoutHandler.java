@@ -1,7 +1,10 @@
 package com.open.capacity.uaa.server.handle;
 
+import java.io.IOException;
 import java.util.Enumeration;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,7 +14,9 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.util.Assert;
 
 import com.open.capacity.common.constant.UaaConstant;
@@ -24,11 +29,26 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2017/10/17
  */
 @Slf4j
-public class OauthLogoutHandler implements LogoutHandler {
+public class OauthLogoutHandler extends AbstractAuthenticationTargetUrlRequestHandler implements    LogoutHandler ,LogoutSuccessHandler  {
 
 
 	@Autowired
 	private TokenStore tokenStore;
+
+	@Override
+	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+			throws IOException, ServletException {
+		// 将子系统的cookie删掉
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null && cookies.length > 0) {
+			for (Cookie cookie : cookies) {
+				cookie.setMaxAge(0);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+			}
+		}
+		super.handle(request, response, authentication);
+	}
 
 	@Override
 	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
