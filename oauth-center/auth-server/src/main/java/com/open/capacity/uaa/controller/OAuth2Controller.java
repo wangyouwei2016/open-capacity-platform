@@ -239,6 +239,7 @@ public class OAuth2Controller {
 			userInfo.put("code", "0");
 			LoginAppUser loginUser = SysUserUtil.getLoginAppUser();
 			userInfo.put("user", loginUser);
+			userInfo.put("username", loginUser.getUsername());
 			List<SysPermission> permissions = new ArrayList<>();
 			new ArrayList(loginUser.getAuthorities()).forEach(o -> {
 				SysPermission sysPermission = new SysPermission();

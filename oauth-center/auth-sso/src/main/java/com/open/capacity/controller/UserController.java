@@ -24,18 +24,11 @@ public class UserController {
 		return Collections.<String, Object> singletonMap("message", "Yay!");
 	}
 
-    @GetMapping("/users")
-    public Authentication user(Authentication user) {
-        return user;
-    }
 
     @RequestMapping("/user")
 	public Principal user(Principal user) {
 		return user;
 	}
-
-    
-    
 
 	
  

@@ -1,7 +1,8 @@
 #端口
 server:
   port: 9997
-#  context-path: /clientOne #2.0不再使用此方式配置
+  servlet:
+    context-path: /clientOne
 #服务名称
 spring:
   main:
@@ -24,3 +25,6 @@ eureka:
 #    instance-id: ${spring.application.name}:${docker.ipAddress}:${spring.application.instance_id:${server.port}}
     lease-renewal-interval-in-seconds: 10
      
+logging:
+  level:
+    org.springframework: INFO
