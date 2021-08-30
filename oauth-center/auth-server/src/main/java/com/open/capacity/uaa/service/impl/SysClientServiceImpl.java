@@ -20,7 +20,7 @@ import com.open.capacity.common.constant.UaaConstant;
 import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.uaa.dao.SysClientDao;
 import com.open.capacity.uaa.dao.SysClientServiceDao;
 import com.open.capacity.uaa.service.SysClientService;
@@ -52,7 +52,7 @@ public class SysClientServiceImpl implements SysClientService {
 
      
     @Override
-    public Result saveOrUpdate(SysClient sysClient) {
+    public ResponseEntity saveOrUpdate(SysClient sysClient) {
         try {
 			sysClient.setClientSecret(passwordEncoder.encode(sysClient.getClientSecretStr()));
 
@@ -61,11 +61,11 @@ public class SysClientServiceImpl implements SysClientService {
 			} else {// 新增
 				SysClient r = sysClientDao.getClient(sysClient.getClientId());
 			    if (r != null) {
-			        return Result.failed(sysClient.getClientId()+"已存在");
+			        return ResponseEntity.failed(sysClient.getClientId()+"已存在");
 			    }
 			    sysClientDao.save(sysClient);
 			}
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
@@ -117,13 +117,13 @@ public class SysClientServiceImpl implements SysClientService {
 
 
 	@Override
-	public Result updateEnabled(Map<String, Object> params) {
+	public ResponseEntity updateEnabled(Map<String, Object> params) {
 		try {
 			Long id = MapUtils.getLong(params, "id");
 			Boolean enabled = MapUtils.getBoolean(params, "status");
 			SysClient client = sysClientDao.getById(id);
 			if (client == null) {
-				return Result.failed("应用不存在");
+				return ResponseEntity.failed("应用不存在");
 				//throw new IllegalArgumentException("用户不存在");
 			}
 			client.setStatus(enabled);
@@ -140,7 +140,7 @@ public class SysClientServiceImpl implements SysClientService {
 			
 			log.info("应用状态修改：{}", client);
 
-			return i > 0 ? Result.succeed(client, "更新成功") : Result.failed("更新失败");
+			return i > 0 ? ResponseEntity.succeed(client, "更新成功") : ResponseEntity.failed("更新失败");
 		} catch (InvalidClientException e) {
 			throw new ServiceException(e);
 		}

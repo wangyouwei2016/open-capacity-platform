@@ -5,17 +5,17 @@ import java.util.Map;
 
 import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 
 @SuppressWarnings("all")
 public interface SysClientService {
 
 	
-	Result saveOrUpdate(SysClient clientDto);
+	ResponseEntity saveOrUpdate(SysClient clientDto);
 	
 	void delete(Long id);
 	
-	Result updateEnabled(Map<String, Object> params);
+	ResponseEntity updateEnabled(Map<String, Object> params);
 	
 	SysClient getById(Long id) ;
 

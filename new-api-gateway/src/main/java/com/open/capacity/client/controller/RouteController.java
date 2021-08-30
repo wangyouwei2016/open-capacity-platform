@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.open.capacity.client.dto.GatewayRouteDefinition;
 import com.open.capacity.client.service.DynamicRouteService;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 
 import reactor.core.publisher.Mono;
 
@@ -29,20 +29,20 @@ public class RouteController {
 
     //增加路由
     @PostMapping("/add")
-    public Mono<Result> add(@RequestBody GatewayRouteDefinition gatewayRouteDefinition) {
-        return Mono.just(Result.succeed(dynamicRouteService.add(gatewayRouteDefinition)));
+    public Mono<ResponseEntity> add(@RequestBody GatewayRouteDefinition gatewayRouteDefinition) {
+        return Mono.just(ResponseEntity.succeed(dynamicRouteService.add(gatewayRouteDefinition)));
     }
 
     //更新路由
     @PostMapping("/update")
-    public Mono<Result> update(@RequestBody GatewayRouteDefinition gatewayRouteDefinition) {
-        return Mono.just(Result.succeed(dynamicRouteService.update(gatewayRouteDefinition)));
+    public Mono<ResponseEntity> update(@RequestBody GatewayRouteDefinition gatewayRouteDefinition) {
+        return Mono.just(ResponseEntity.succeed(dynamicRouteService.update(gatewayRouteDefinition)));
     }
 
     //删除路由
     @DeleteMapping("/{id}")
-    public Mono<Result> delete(@PathVariable String id) {
-        return Mono.just(Result.succeed(dynamicRouteService.delete(id)));
+    public Mono<ResponseEntity> delete(@PathVariable String id) {
+        return Mono.just(ResponseEntity.succeed(dynamicRouteService.delete(id)));
     }
 
     //获取全部数据
@@ -53,15 +53,15 @@ public class RouteController {
 
     //同步redis数据 从mysql中同步过去
     @GetMapping("/synchronization")
-    public Mono<Result> synchronization() {
-        return Mono.just(Result.succeed(dynamicRouteService.synchronization()));
+    public Mono<ResponseEntity> synchronization() {
+        return Mono.just(ResponseEntity.succeed(dynamicRouteService.synchronization()));
     }
 
 
     //修改路由状态
     @GetMapping("/updateFlag")
-    public Mono<Result> updateFlag(@RequestParam Map<String, Object> params) {
-        return Mono.just(Result.succeed(dynamicRouteService.updateFlag(params)));
+    public Mono<ResponseEntity> updateFlag(@RequestParam Map<String, Object> params) {
+        return Mono.just(ResponseEntity.succeed(dynamicRouteService.updateFlag(params)));
     }
 
 

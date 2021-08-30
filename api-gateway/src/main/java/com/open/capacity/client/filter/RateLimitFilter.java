@@ -20,7 +20,7 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.open.capacity.client.service.SysClientService;
 import com.open.capacity.client.utils.RedisLimiterUtils;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RateLimitFilter extends ZuulFilter {
 
 
-	private ThreadLocal<Result> error_info = new ThreadLocal<Result>();
+	private ThreadLocal<ResponseEntity> error_info = new ThreadLocal<ResponseEntity>();
 	@Autowired
 	private RedisLimiterUtils redisLimiterUtils;
 	@Autowired
@@ -67,7 +67,7 @@ public class RateLimitFilter extends ZuulFilter {
 			if (!checkLimit(request)) {
 
 				log.error("too many requests!");
-				error_info.set(Result.failedWith(null, 429, "too many requests!"));
+				error_info.set(ResponseEntity.failedWith(null, 429, "too many requests!"));
 
 				serverResponse(ctx, 429);
 				return null;
@@ -112,7 +112,7 @@ public class RateLimitFilter extends ZuulFilter {
 	 * @throws IOException
 	 */
 	
-	public void outputChineseByOutputStream(HttpServletResponse response, ThreadLocal<Result> data) throws IOException {
+	public void outputChineseByOutputStream(HttpServletResponse response, ThreadLocal<ResponseEntity> data) throws IOException {
 		/**
 		 * 使用OutputStream输出中文注意问题： 在服务器端，数据是以哪个码表输出的，那么就要控制客户端浏览器以相应的码表打开，
 		 * 比如：outputStream.write("中国".getBytes("UTF-8"));//使用OutputStream流向客户端浏览器输出中文，以UTF-8的编码进行输出
@@ -161,7 +161,7 @@ public class RateLimitFilter extends ZuulFilter {
 						if("1".equals(flag)){
 							String accessLimitCount =  String.valueOf(client.get("limitCount") );
 							if (!accessLimitCount.isEmpty()) {
-								Result result = redisLimiterUtils.rateLimitOfDay(clientId, request.getRequestURI(),
+								ResponseEntity result = redisLimiterUtils.rateLimitOfDay(clientId, request.getRequestURI(),
 										Long.parseLong(accessLimitCount));
 								if (-1 == result.getCode()) {
 									log.error("token:" + details.getTokenValue() + result.getMsg());

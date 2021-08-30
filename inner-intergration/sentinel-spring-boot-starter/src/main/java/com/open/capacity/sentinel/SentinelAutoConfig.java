@@ -25,7 +25,7 @@ import com.alibaba.csp.sentinel.adapter.servlet.callback.UrlBlockHandler;
 import com.alibaba.csp.sentinel.adapter.servlet.callback.WebCallbackManager;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.open.capacity.common.interceptor.RestTemplateInterceptor;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 
 import cn.hutool.json.JSONUtil;
 

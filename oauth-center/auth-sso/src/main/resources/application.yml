@@ -1,22 +1,23 @@
-security:
-  ignored: /,/favicon.ico,/home.html,/dashboard.html,/js/**,/css/**,/webjars/**
-  sessions: ALWAYS
-  user:
-    password: 123456
-  oauth2:
-    sso:
-      login-path: /dashboard/login
-    client:
-      client-id: owen
-      client-secret: owen 
-      user-authorization-uri: http://127.0.0.1:9200/api-auth/oauth/authorize    #直接配置认证中心端口(http://127.0.0.1:9200/oauth/authorize)，也可以配置网关端口
-      access-token-uri: http://127.0.0.1:9200/api-auth/oauth/token              #直接配置认证中心端口(http://127.0.0.1:9200/oauth/authorize)，也可以配置网关端口
-    resource: 
-      token-info-uri: http://127.0.0.1:9200/api-auth/oauth/check_token          #直接配置认证中心端口(http://127.0.0.1:9200/oauth/authorize)，也可以配置网关端口
-      prefer-token-info: false
- 
- 
 spring:
+  thymeleaf:
+    cache: false
+  cache:
+    type: NONE
+  security:
+    oauth2:
+      client:
+        registration:
+          custom:
+            client-id: owen
+            client-secret: owen
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+        provider:
+          custom:
+            authorization-uri: http://127.0.0.1:9200/api-auth/oauth/authorize #直接配置认证中心端口(http://127.0.0.1:9200/oauth/authorize)，也可以配置网关端口
+            token-uri: http://127.0.0.1:9200/api-auth/oauth/token             #直接配置认证中心端口(http://127.0.0.1:9200/oauth/authorize)，也可以配置网关端口
+            user-info-uri: http://127.0.0.1:9200/api-auth/oauth/userinfo   #直接配置认证中心端口(http://127.0.0.1:9200/oauth/authorize)，也可以配置网关端口
+            user-name-attribute: username
   datasource:
     druid: 
       url: jdbc:mysql://59.110.164.254:3306/oauth-center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false 

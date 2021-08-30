@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.oss.config.OssServiceFactory;
 import com.open.capacity.oss.model.FileInfo;
@@ -92,7 +92,7 @@ public class FileController {
 	@DeleteMapping("/files/{id}")
 	@PreAuthorize("hasAuthority('file:del')") 
 	@LogAnnotation(module = "file-center", recordRequestParam = false)
-	public Result delete(@PathVariable String id) {
+	public ResponseEntity delete(@PathVariable String id) {
 
 		try{
 			FileInfo fileInfo = fileServiceFactory.getFileService(FileType.QINIU.toString()).getById(id);
@@ -100,9 +100,9 @@ public class FileController {
 				FileService fileService = fileServiceFactory.getFileService(fileInfo.getSource());
 				fileService.delete(fileInfo);
 			}
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		}catch (Exception ex){
-			return Result.failed("操作失败");
+			return ResponseEntity.failed("操作失败");
 		}
 
 	}
@@ -143,12 +143,12 @@ public class FileController {
 	 */
 	@PostMapping(value = "/files-anon/bigFile")
 //	@ResponseStatus(code= HttpStatus.INTERNAL_SERVER_ERROR,reason="server error")
-	public Result bigFile( String guid, Integer chunk, MultipartFile file, Integer chunks){
+	public ResponseEntity bigFile( String guid, Integer chunk, MultipartFile file, Integer chunks){
 		try {
             fileServiceFactory.getFileService(FileType.LOCAL.toString()).chunk(guid,chunk,file,chunks,localFilePath);
-            return Result.succeed("操作成功");
+            return ResponseEntity.succeed("操作成功");
         }catch (Exception ex){
-            return Result.failed("操作失败");
+            return ResponseEntity.failed("操作失败");
         }
 	}
 
@@ -158,11 +158,11 @@ public class FileController {
 	 * @param mergeFileDTO
 	 */
 	@RequestMapping(value = "/files-anon/merge",method =RequestMethod.POST )
-	public Result mergeFile(@RequestBody MergeFileDTO mergeFileDTO){
+	public ResponseEntity mergeFile(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
-			return Result.succeed(fileServiceFactory.getFileService(FileType.LOCAL.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath),"操作成功");
+			return ResponseEntity.succeed(fileServiceFactory.getFileService(FileType.LOCAL.toString()).merge(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath),"操作成功");
 		}catch (Exception ex){
-			return Result.failed("操作失败");
+			return ResponseEntity.failed("操作失败");
 		}
 	}
 
@@ -173,13 +173,13 @@ public class FileController {
 	 * @return
 	 */
 	@RequestMapping(value = "/files-anon/uploadError",method =RequestMethod.POST )
-	public Result uploadError(@RequestBody MergeFileDTO mergeFileDTO){
+	public ResponseEntity uploadError(@RequestBody MergeFileDTO mergeFileDTO){
 		try {
 			//使用默认的 FileService
 			fileServiceFactory.getFileService(null).uploadError(mergeFileDTO.getGuid(),mergeFileDTO.getFileName(),localFilePath);
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		}catch (Exception ex){
-			return Result.failed("操作失败");
+			return ResponseEntity.failed("操作失败");
 		}
 	}
 

@@ -22,7 +22,7 @@ import com.open.capacity.common.exception.controller.ControllerException;
 import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysPermission;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.user.service.SysPermissionService;
 
@@ -54,11 +54,11 @@ public class SysPermissionController {
 	@ApiOperation(value = "后台管理删除权限标识")
 	@PreAuthorize("hasAuthority('permission:delete/permissions/{id}')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
-	public Result delete(@PathVariable Long id) throws ControllerException {
+	public ResponseEntity delete(@PathVariable Long id) throws ControllerException {
 
 		try {
 			sysPermissionService.delete(id);
-			return  Result.succeed("操作成功");
+			return  ResponseEntity.succeed("操作成功");
 		} catch (ServiceException e) {
 			throw new ControllerException(e);
 		}
@@ -98,14 +98,14 @@ public class SysPermissionController {
 	@PostMapping("/permissions/saveOrUpdate")
 	@PreAuthorize("hasAnyAuthority('permission:put/permissions','permission:post/permissions')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
-	public Result saveOrUpdate(@RequestBody SysPermission sysPermission) throws ControllerException {
+	public ResponseEntity saveOrUpdate(@RequestBody SysPermission sysPermission) throws ControllerException {
 		try{
 			if (sysPermission.getId()!=null){
 				sysPermissionService.update(sysPermission);
 			}else {
 				sysPermissionService.save(sysPermission);
 			}
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		}catch (ServiceException e){
 			throw new ControllerException(e);
 		}
@@ -153,10 +153,10 @@ public class SysPermissionController {
 	@PostMapping("/permissions/granted")
 	@PreAuthorize("hasAuthority('permission:post/permissions/granted')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
-	public Result setPermissionToRole(@RequestBody SysPermission sysPermission) throws ControllerException {
+	public ResponseEntity setPermissionToRole(@RequestBody SysPermission sysPermission) throws ControllerException {
 		try {
 			sysPermissionService.setPermissionToRole(sysPermission.getRoleId(),sysPermission.getAuthIds());
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		} catch (ServiceException e) {
 			throw new ControllerException(e);
 		}

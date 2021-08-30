@@ -1,9 +1,15 @@
 #端口
 server:
   port: 9997
-#  context-path: /clientOne #2.0不再使用此方式配置
+  servlet:
+    context-path: /clientOne
+    session:
+      cookie:
+        path: /   
 #服务名称
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: auth-sso
   cloud:
@@ -18,3 +24,6 @@ spring:
         file-extension: yaml                ### dataId扩展名
         namespace: 0415e4d7-c6e4-4096-ae54-f4bba406d744  #命名空间 代指某个环境
   
+logging:
+  level:
+    org.springframework: INFO

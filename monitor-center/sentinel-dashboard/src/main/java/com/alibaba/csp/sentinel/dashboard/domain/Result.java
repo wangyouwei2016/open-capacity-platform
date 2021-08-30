@@ -40,7 +40,7 @@ public class Result<R> {
     }
 
     public static <R> Result<R> ofFail(int code, String msg) {
-        Result<R> result = new Result<>();
+    	Result<R> result = new Result<>();
         result.setSuccess(false);
         result.setCode(code);
         result.setMsg(msg);
@@ -48,7 +48,7 @@ public class Result<R> {
     }
 
     public static <R> Result<R> ofThrowable(int code, Throwable throwable) {
-        Result<R> result = new Result<>();
+    	Result<R> result = new Result<>();
         result.setSuccess(false);
         result.setCode(code);
         result.setMsg(throwable.getClass().getName() + ", " + throwable.getMessage());
