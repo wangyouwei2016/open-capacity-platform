@@ -24,7 +24,7 @@ public class SSOSecurityConfig extends WebSecurityConfigurerAdapter {
 	 @Override
 	    protected void configure(HttpSecurity http) throws Exception {
 		  http.authorizeRequests(req -> req
-	                .antMatchers("/", "/login**")
+	                .antMatchers("/","/webjars/**", "/login**")
 	                .permitAll().anyRequest().authenticated())
 	            .oauth2Login(Customizer.withDefaults());
 	    }
