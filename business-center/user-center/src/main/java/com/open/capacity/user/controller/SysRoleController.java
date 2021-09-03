@@ -17,7 +17,7 @@ import com.open.capacity.common.exception.controller.ControllerException;
 import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.user.service.SysRoleService;
 
@@ -65,7 +65,7 @@ public class SysRoleController {
 	@PostMapping("/roles/saveOrUpdate")
 	@PreAuthorize("hasAnyAuthority('role:post/roles','role:put/roles')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
-	public Result saveOrUpdate(@RequestBody SysRole sysRole) throws ControllerException {
+	public ResponseEntity saveOrUpdate(@RequestBody SysRole sysRole) throws ControllerException {
 		try {
 			return sysRoleService.saveOrUpdate(sysRole);
 		} catch (ServiceException e) {
@@ -83,13 +83,13 @@ public class SysRoleController {
 	@ApiOperation(value = "后台管理删除角色")
 	@PreAuthorize("hasAuthority('role:delete/roles/{id}')")
 	@LogAnnotation(module="user-center",recordRequestParam=false)
-	public Result deleteRole(@PathVariable Long id) throws ControllerException {
+	public ResponseEntity deleteRole(@PathVariable Long id) throws ControllerException {
 		try {
 			if (id == 1L){
-				return Result.failed("管理员不可以删除");
+				return ResponseEntity.failed("管理员不可以删除");
 			}
 			sysRoleService.deleteRole(id);
-			return Result.succeed("操作成功");
+			return ResponseEntity.succeed("操作成功");
 		}catch (Exception e){
 			 throw new ControllerException(e);
 		}

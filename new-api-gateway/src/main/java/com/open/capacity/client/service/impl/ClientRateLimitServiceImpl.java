@@ -16,7 +16,7 @@ import com.open.capacity.client.service.RateLimitService;
 import com.open.capacity.client.service.SysClientService;
 import com.open.capacity.client.utils.RedisLimiterUtils;
 import com.open.capacity.common.util.StringUtil;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,7 +70,7 @@ public class ClientRateLimitServiceImpl implements RateLimitService {
 						if ("1".equals(flag)) {
 							String accessLimitCount = MapUtils.getString(client, "limitCount");
 							if (StringUtil.isNotBlank(accessLimitCount)) {
-								Result result = redisLimiterUtils.rateLimitOfDay(clientId, reqUrl,
+								ResponseEntity result = redisLimiterUtils.rateLimitOfDay(clientId, reqUrl,
 										Long.parseLong(accessLimitCount));
 								if (-1 == result.getCode()) {
 									log.trace("token: {} , limitCount: {} , desc: {} " ,accessToken ,accessLimitCount ,result.getMsg() ); 

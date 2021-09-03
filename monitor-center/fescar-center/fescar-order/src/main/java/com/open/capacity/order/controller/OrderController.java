@@ -1,6 +1,6 @@
 package com.open.capacity.order.controller;
 
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.order.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ public class OrderController {
     private OrderService orderService;
 
     @RequestMapping("/create")
-    public Result create(@NotNull String userId, @NotNull String productId, HttpServletRequest request) {
+    public ResponseEntity create(@NotNull String userId, @NotNull String productId, HttpServletRequest request) {
         String orderId = orderService.create(userId,productId);
-        return Result.succeed(orderId);
+        return ResponseEntity.succeed(orderId);
     }
 }

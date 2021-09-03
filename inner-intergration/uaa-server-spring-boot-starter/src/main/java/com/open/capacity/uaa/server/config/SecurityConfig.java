@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -68,7 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/health");
 		// 忽略登录界面
 		web.ignoring().antMatchers("/login.html");
-		web.ignoring().antMatchers("/index.html");
 		web.ignoring().antMatchers("/oauth/user/token");
 		web.ignoring().antMatchers("/oauth/client/token");
 		web.ignoring().antMatchers("/validata/code/**");
@@ -109,9 +109,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 		}
 
-		http.logout().logoutSuccessUrl(SecurityConstant.LOGIN_PAGE)
-				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
-				.addLogoutHandler(oauthLogoutHandler).clearAuthentication(true);
+		///默认退出/logout
+		http.logout()
+				.logoutSuccessHandler(oauthLogoutHandler)
+				.addLogoutHandler(oauthLogoutHandler)
+				// 无效会话
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                // 清除身份验证
+				.logoutSuccessUrl(SecurityConstant.LOGIN_PAGE);
 
 		//注册到AuthenticationManager中去 增加支持SmsCodeAuthenticationToken
 		http.authenticationProvider(smsCodeAuthenticationProvider);
@@ -133,8 +139,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Autowired
 	public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+		auth.authenticationProvider(daoAuthenticationProvider()) ;
 	}
 
-
+	@Bean
+	public DaoAuthenticationProvider daoAuthenticationProvider() {
+		 DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+		 daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+		 daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+		return daoAuthenticationProvider ;
+	}
+	
 }

@@ -17,7 +17,7 @@ import com.open.capacity.common.exception.service.ServiceException;
 import com.open.capacity.common.model.SysPermission;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.web.PageResult;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.user.dao.SysRoleDao;
 import com.open.capacity.user.dao.SysRoleMenuDao;
 import com.open.capacity.user.dao.SysRolePermissionDao;
@@ -128,13 +128,13 @@ public class SysRoleServiceImpl implements SysRoleService {
 	}
 
 	@Override
-	public Result saveOrUpdate(SysRole sysRole)  throws ServiceException {
+	public ResponseEntity saveOrUpdate(SysRole sysRole)  throws ServiceException {
 		try {
 			int i = 0;
 			if (sysRole.getId()==null){
 				SysRole role = sysRoleDao.findByCode(sysRole.getCode());
 				if (role != null) {
-					return Result.failed("角色code已存在");
+					return ResponseEntity.failed("角色code已存在");
 				}
 				sysRole.setCreateTime(new Date());
 				sysRole.setUpdateTime(sysRole.getCreateTime());
@@ -143,7 +143,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 				sysRole.setUpdateTime(new Date());
 				i = sysRoleDao.updateByPrimaryKey(sysRole);
 			}
-			return i>0?Result.succeed("操作成功"):Result.failed("操作失败");
+			return i>0?ResponseEntity.succeed("操作成功"):ResponseEntity.failed("操作失败");
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

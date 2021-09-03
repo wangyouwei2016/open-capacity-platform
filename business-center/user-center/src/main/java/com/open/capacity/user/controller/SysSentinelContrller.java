@@ -12,7 +12,7 @@ import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.sentinel.flow.FlowHelper;
 import com.open.capacity.sentinel.flow.FlowType;
 import com.open.capacity.sentinel.flow.Flower;
@@ -29,7 +29,7 @@ public class SysSentinelContrller {
 	private FlowHelper flowHelper = new FlowHelper(FlowType.Minute);
 
     @GetMapping("/test")
-    public Result<Flower> testApi() {
+    public ResponseEntity<Flower> testApi() {
         try{
             long startTime = TimeUtil.currentTimeMillis();
             // 业务逻辑
@@ -48,10 +48,10 @@ public class SysSentinelContrller {
             System.out.println("平均请求异常数(每毫秒):"+flower.exceptionAvg());
             
             
-            return Result.succeed("ok");
+            return ResponseEntity.succeed("ok");
         }catch (Exception e){
             flowHelper.incrException();
-            return Result.failed("ko");
+            return ResponseEntity.failed("ko");
         }
     }
 	/**

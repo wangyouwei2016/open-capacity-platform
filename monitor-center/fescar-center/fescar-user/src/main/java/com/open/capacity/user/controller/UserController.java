@@ -1,7 +1,7 @@
 package com.open.capacity.user.controller;
 
 import com.open.capacity.common.exception.service.ServiceException;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/deductionAmount")
-    public Result deductionAmount(@NotNull String userId, HttpServletRequest request) throws ServiceException {
+    public ResponseEntity deductionAmount(@NotNull String userId, HttpServletRequest request) throws ServiceException {
         return  userService.deductionAmount(userId);
     }
 

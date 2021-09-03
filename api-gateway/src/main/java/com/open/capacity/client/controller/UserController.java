@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.uaa.client.token.RedisTemplateTokenStore;
 
 import cn.hutool.core.text.StrBuilder;
@@ -60,12 +60,12 @@ public class UserController {
 	
 	
 	@GetMapping("/getVersion")
-	public Result token() {
+	public ResponseEntity token() {
 		String str = RandomUtil.randomString(24);
 		StrBuilder token = new StrBuilder();
 		token.append(str);
 		redisTemplate.opsForValue().set(token.toString(), token.toString(),300);
-		return Result.succeed(token.toString(),"");
+		return ResponseEntity.succeed(token.toString(),"");
 	}
 
 

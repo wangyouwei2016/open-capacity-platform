@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.open.capacity.common.util.StringUtil;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.log.annotation.LogAnnotation;
 import com.open.capacity.uaa.server.service.ValidateCodeService;
 
@@ -26,7 +26,7 @@ public class SmsController {
 
 	@RequestMapping("/sms/send")
     @LogAnnotation(module="auth-server",recordRequestParam=false)
-    public Result sendSms(@RequestParam(value = "mobile",required = false) String mobile) {
+    public ResponseEntity sendSms(@RequestParam(value = "mobile",required = false) String mobile) {
 		String content = SmsController.SYSMSG_LOGIN_PWD_MSG.replace("{0}", StringUtil.generateRamdomNum());
 //        SendMsgResult sendMsgResult = MobileMsgConfig.sendMsg(mobile, content);
 
@@ -35,7 +35,7 @@ public class SmsController {
         // TODO: 2019-08-29 发送短信验证码 每个公司对接不同，自己实现
 
         validateCodeService.saveImageCode(mobile, calidateCode);
-        return  Result.succeed(  calidateCode, "发送成功");
+        return  ResponseEntity.succeed(  calidateCode, "发送成功");
     }
 
 }

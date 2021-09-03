@@ -1,0 +1,52 @@
+server:
+  port: 8033
+spring: 
+  cloud:
+    # Spring Cloud Stream 配置项，对应 BindingServiceProperties 类
+    stream:
+      # Spring Cloud Stream 配置项，对应 BindingServiceProperties 类
+      bindings:
+        input:
+          destination: rocketmq-topic   # 目的地。这里使用 RocketMQ Topic
+          # rocketmq一定要设置group（随便写） 其他的mq可留空
+          content-type: application/json # 内容格式。这里使用 JSON
+          group: rocketmq-group
+        delay-input:
+          destination: delay-topic   # 目的地。这里使用 RocketMQ Topic
+          # rocketmq一定要设置group（随便写） 其他的mq可留空
+          content-type: application/json # 内容格式。这里使用 JSON
+          group: delay-group  
+        order-input:
+          destination: order-topic   # 目的地。这里使用 order-topic
+          # rocketmq一定要设置group（随便写） 其他的mq可留空
+          content-type: application/json # 内容格式。这里使用 JSON
+          group: order-group         # 消费者分组,命名规则：组名+'-'+topic名  
+        tx-input:
+          destination: trans-topic
+          # rocketmq一定要设置group（随便写） 其他的mq可留空
+          content-type: application/json # 内容格式。这里使用 JSON
+          group: test-trans-group   
+      # Spring Cloud Stream RocketMQ 配置项
+      rocketmq:
+       # RocketMQ Binder 配置项，对应 RocketMQBinderConfigurationProperties 类
+        binder:
+          name-server: 192.168.11.7:9876
+          enable-msg-trace: true
+        # RocketMQ 自定义 Binding 配置项，对应 RocketMQBindingProperties Map
+        bindings:
+          input:
+            comsumer:
+              enabled: true
+          delay-input:
+            comsumer:
+              enabled: true    
+          order-input: 
+            # RocketMQ Consumer 配置项，对应 RocketMQConsumerProperties 类
+            consumer:
+              enabled: true # 是否开启消费，默认为 true 
+              broadcasting: false #是否使用广播消费，默认为 false 使用集群消费
+              orderly: true    # 是否顺序消费，默认为 false 并发消费。
+          tx-input:
+            consumer:
+              enabled: true # 是否开启消费，默认为 true     
+      

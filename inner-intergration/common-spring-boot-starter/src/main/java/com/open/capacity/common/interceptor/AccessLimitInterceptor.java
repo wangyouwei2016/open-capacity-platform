@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.open.capacity.common.annotation.AccessLimit;
 import com.open.capacity.common.auth.details.LoginAppUser;
 import com.open.capacity.common.util.SysUserUtil;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import com.open.capacity.redis.util.RedisUtil;
 
 import lombok.AllArgsConstructor;
@@ -48,7 +48,7 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter {
             if (needLogin) {
                 LoginAppUser user = SysUserUtil.getLoginAppUser();
                 if (user == null) {
-                    render(response, Result.failed("用户鉴权异常！"));
+                    render(response, ResponseEntity.failed("用户鉴权异常！"));
                     return false;
                 }
                 key += ":" + user.getId();
@@ -60,7 +60,7 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter {
                 redisUtil.set(key, 0, seconds);
             }
             if (redisUtil.incr(key, 1) > maxCount) {
-                render(response, Result.failed("访问太频繁！"));
+                render(response, ResponseEntity.failed("访问太频繁！"));
                 return false;
             }
 
@@ -68,7 +68,7 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-    private void render(HttpServletResponse response, Result result) throws Exception {
+    private void render(HttpServletResponse response, ResponseEntity result) throws Exception {
         response.setContentType("application/json;charset=UTF-8");
         OutputStream out = response.getOutputStream();
         String str = JSON.toJSONString(result);

@@ -2,7 +2,7 @@ package com.open.capacity.api.feign;
 
 import com.open.capacity.api.config.NotBreakerConfiguration;
 import com.open.capacity.common.exception.service.ServiceException;
-import com.open.capacity.common.web.Result;
+import com.open.capacity.common.web.ResponseEntity;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +19,7 @@ public interface UserFeignClient {
      * @return
      */
     @RequestMapping(value = "/deductionAmount", method = RequestMethod.GET)
-    Result deductionAmount(@RequestParam("userId") String userId) throws ServiceException;
+    ResponseEntity deductionAmount(@RequestParam("userId") String userId) throws ServiceException;
 
 
 }
