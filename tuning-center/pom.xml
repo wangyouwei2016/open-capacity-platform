@@ -37,6 +37,6 @@
 		<module>test-sharding-jdbc-spring-boot-starter</module>
 		<module>test-jmeter-spring-boot-starter</module>
 		<module>test-kafka-spring-boot-starter</module>
-		<module>test-spring-cloud-stream-starter</module> 
-	</modules>
+	    <module>test-spring-cloud-stream-starter</module> 
+    </modules>
 </project>

@@ -1,4 +1,3 @@
-
 package com.open.capatcity.message.service;
 
 import java.util.concurrent.TimeUnit;
