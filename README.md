@@ -26,11 +26,11 @@
 - 提供完善的微服务部署方案  
 
     
-# **声明** #
+# **与驰骋jflow工作流集成声明** #
 
-### 该软件与JFlow 驰骋工作流、表单引擎中间件集成.
-### JFlow是一款100%开源的、存粹国产的流程引擎、表单引擎系统, 支持多个.net java多个版本.
-### 驰骋官网 http://ccflow.org/frm=capacity 
+-  该软件与JFlow 驰骋工作流、表单引擎中间件集成.
+- JFlow是一款100%开源的、存粹国产的流程引擎、表单引擎系统, 支持多个.net java多个版本.
+-  驰骋官网 http://ccflow.org/frm=capacity 
 
 # **演示地址** #
 http://59.110.164.254:8066/login.html  admin/admin   
