@@ -1,11 +1,11 @@
 package com.open.capacity.uaa.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.open.capacity.common.model.SysClient;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.common.web.ResponseEntity;
+
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("all")
 public interface SysClientService {

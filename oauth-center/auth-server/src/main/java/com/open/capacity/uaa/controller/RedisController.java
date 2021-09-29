@@ -1,9 +1,10 @@
 package com.open.capacity.uaa.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
+import com.alibaba.fastjson.JSON;
+import com.open.capacity.common.exception.controller.ControllerException;
+import com.open.capacity.log.annotation.LogAnnotation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -14,12 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
-import com.open.capacity.common.exception.controller.ControllerException;
-import com.open.capacity.log.annotation.LogAnnotation;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
  
 /**
  * 用于数据源切换

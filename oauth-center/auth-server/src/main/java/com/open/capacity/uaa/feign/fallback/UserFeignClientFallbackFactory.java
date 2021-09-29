@@ -1,16 +1,14 @@
 package com.open.capacity.uaa.feign.fallback;
 
-import java.util.Map;
-
-import org.springframework.stereotype.Component;
-
 import com.open.capacity.common.auth.details.LoginAppUser;
 import com.open.capacity.common.model.SysUser;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.uaa.feign.UserFeignClient;
-
 import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Slf4j
 @Component

@@ -1,16 +1,15 @@
 package com.open.capacity.uaa.feign;
 
-import java.util.Map;
-
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.open.capacity.common.auth.details.LoginAppUser;
 import com.open.capacity.common.feign.FeignExceptionConfig;
 import com.open.capacity.common.model.SysUser;
 import com.open.capacity.common.web.PageResult;
 import com.open.capacity.uaa.feign.fallback.UserFeignClientFallbackFactory;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 /**
 * @author 作者 owen 

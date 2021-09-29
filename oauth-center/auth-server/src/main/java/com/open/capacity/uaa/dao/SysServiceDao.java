@@ -1,13 +1,12 @@
 package com.open.capacity.uaa.dao;
 
-import java.util.List;
-
+import com.open.capacity.common.model.SysService;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-import com.open.capacity.common.model.SysService;
+import java.util.List;
 
 /**
  * @Author: [gitgeek]

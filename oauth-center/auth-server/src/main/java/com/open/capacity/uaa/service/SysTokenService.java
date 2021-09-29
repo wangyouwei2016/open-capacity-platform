@@ -1,10 +1,9 @@
 package com.open.capacity.uaa.service;
 
-import java.util.Map;
-
+import com.open.capacity.common.web.PageResult;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
-import com.open.capacity.common.web.PageResult;
+import java.util.Map;
 
 public interface SysTokenService {
 

@@ -1,21 +1,19 @@
 package com.open.capacity.uaa.controller;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-
+import com.google.common.collect.Lists;
+import com.open.capacity.common.auth.details.LoginAppUser;
+import com.open.capacity.uaa.feign.UserFeignClient;
+import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.Lists;
-import com.open.capacity.common.auth.details.LoginAppUser;
-import com.open.capacity.uaa.feign.UserFeignClient;
-
-import io.swagger.annotations.Api;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @RestController

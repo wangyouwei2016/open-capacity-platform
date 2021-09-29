@@ -1,16 +1,10 @@
 package com.open.capacity.uaa.dao;
 
+import com.open.capacity.common.model.SysClient;
+import org.apache.ibatis.annotations.*;
+
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-
-import com.open.capacity.common.model.SysClient;
 
 @Mapper
 public interface SysClientDao {

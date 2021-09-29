@@ -1,13 +1,13 @@
 package com.open.capacity.uaa.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import com.open.capacity.common.auth.details.LoginAppUser;
+import com.open.capacity.common.exception.service.ServiceException;
+import com.open.capacity.common.token.SmsCodeAuthenticationToken;
+import com.open.capacity.common.web.PageResult;
+import com.open.capacity.uaa.server.service.RedisClientDetailsService;
+import com.open.capacity.uaa.service.SysTokenService;
+import com.open.capacity.uaa.utils.SpringUtil;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -24,11 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
 import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.TokenRequest;
+import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
@@ -38,14 +34,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
-import com.open.capacity.common.auth.details.LoginAppUser;
-import com.open.capacity.common.exception.service.ServiceException;
-import com.open.capacity.common.token.SmsCodeAuthenticationToken;
-import com.open.capacity.common.web.PageResult;
-import com.open.capacity.uaa.server.service.RedisClientDetailsService;
-import com.open.capacity.uaa.service.SysTokenService;
-import com.open.capacity.uaa.utils.SpringUtil;
+import java.util.*;
 
 @Service
 public class SysTokenServiceImpl implements SysTokenService {
