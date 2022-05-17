@@ -18,6 +18,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,158 +26,158 @@ import java.util.Objects;
 
 /**
  * 本地存储文件
- * 该实现文件服务只能部署一台 
+ * 该实现文件服务只能部署一台
  * 如多台机器nfs文件存储解决
+ *
  * @author pm 1280415703@qq.com
  * @date 2019/8/11 16:22
  */
-  
+
 @Service("localOssServiceImpl")
 @Slf4j
 public class LocalOssServiceImpl extends AbstractFileService {
 
-	@Autowired
-	private FileDao fileDao;
+    @Resource
+    private FileDao fileDao;
 
-	@Override
-	protected FileDao getFileDao() {
-		return fileDao;
-	}
+    @Override
+    protected FileDao getFileDao() {
+        return fileDao;
+    }
 
-	@Value("${file.oss.prefix:xxxxx}")
-	private String urlPrefix;
-	/**
-	 * 网关访问路径
-	 */
-	@Value("${file.oss.domain:xxxxx}")
-	private String domain;
-	
-	@Value("${file.oss.path:xxxxx}")
-	private String localFilePath;
+    @Value("${file.oss.prefix:xxxxx}")
+    private String urlPrefix;
+    /**
+     * 网关访问路径
+     */
+    @Value("${file.oss.domain:xxxxx}")
+    private String domain;
 
-	@Override
-	protected FileType fileType() {
-		return FileType.LOCAL;
-	}
+    @Value("${file.oss.path:xxxxx}")
+    private String localFilePath;
 
-	@Override
-	protected void uploadFile(MultipartFile file, FileInfo fileInfo) throws Exception {
-		int index = fileInfo.getName().lastIndexOf(".");
-		// 文件扩展名
-		String fileSuffix = fileInfo.getName().substring(index);
+    @Override
+    protected FileType fileType() {
+        return FileType.LOCAL;
+    }
 
-		String suffix = "/" + LocalDate.now().toString().replace("-", "/") + "/" + fileInfo.getId() + fileSuffix;
+    @Override
+    protected void uploadFile(MultipartFile file, FileInfo fileInfo) throws Exception {
+        int index = fileInfo.getName().lastIndexOf(".");
+        // 文件扩展名
+        String fileSuffix = fileInfo.getName().substring(index);
 
-		String path = localFilePath + suffix;
-		String url = domain + urlPrefix + suffix;
-		fileInfo.setPath(path);
-		fileInfo.setUrl(url);
+        String suffix = "/" + LocalDate.now().toString().replace("-", "/") + "/" + fileInfo.getId() + fileSuffix;
 
-		FileUtil.saveFile(file, path);
-	}
+        String path = localFilePath + suffix;
+        String url = domain + urlPrefix + suffix;
+        fileInfo.setPath(path);
+        fileInfo.setUrl(url);
 
-	@Override
-	protected boolean deleteFile(FileInfo fileInfo) {
-		return FileUtil.deleteFile(fileInfo.getPath());
-	}
+        FileUtil.saveFile(file, path);
+    }
 
-	/**
-	 * 上传大文件
-	 * 分片上传 每片一个临时文件
-	 *
-	 * @param guid
-	 * @param chunk
-	 * @param file
-	 * @param chunks
-	 * @return
-	 */
-	@Override
-	protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
-		log.info("guid:{},chunkNumber:{}",guid,chunk);
-		if(Objects.isNull(chunk)){
-			chunk = 0;
-		}
+    @Override
+    protected boolean deleteFile(FileInfo fileInfo) {
+        return FileUtil.deleteFile(fileInfo.getPath());
+    }
 
-		// TODO: 2020/6/16 从RequestContextHolder上下文中获取 request对象
-		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes)
-				RequestContextHolder.currentRequestAttributes()).getRequest());
-		if (isMultipart) {
-			StringBuffer tempFilePath = new StringBuffer();
-			tempFilePath.append(guid).append("_").append(chunk).append(".part");
-			// 临时目录用来存放所有分片文件
-			String tempFileDir = filePath + File.separator + guid;
-			File parentFileDir = new File(tempFileDir);
-			if (!parentFileDir.exists()) {
-				parentFileDir.mkdirs();
-			}
-			// 分片处理时，前台会多次调用上传接口，每次都会上传文件的一部分到后台
-			File tempPartFile = new File(parentFileDir, tempFilePath.toString());
-			FileUtils.copyInputStreamToFile(file.getInputStream(), tempPartFile);
-		}
-	}
+    /**
+     * 上传大文件
+     * 分片上传 每片一个临时文件
+     *
+     * @param guid
+     * @param chunk
+     * @param file
+     * @param chunks
+     * @return
+     */
+    @Override
+    protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks, String filePath) throws Exception {
+        log.info("guid:{},chunkNumber:{}", guid, chunk);
+        if (Objects.isNull(chunk)) {
+            chunk = 0;
+        }
 
-	/**
-	 * 合并分片文件
-	 * 每一个小片合并一个完整文件
-	 *
-	 * @param guid
-	 * @param fileName
-	 * @param filePath
-	 * @return
-	 */
-	@Override
-	protected FileInfo mergeFile(String guid, String fileName, String filePath) throws Exception {
-		// 得到 destTempFile 就是最终的文件
-		log.info("guid:{},fileName:{}",guid,fileName);
+        // TODO: 2020/6/16 从RequestContextHolder上下文中获取 request对象
+        boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes)
+                RequestContextHolder.currentRequestAttributes()).getRequest());
+        if (isMultipart) {
+            StringBuffer tempFilePath = new StringBuffer();
+            tempFilePath.append(guid).append("_").append(chunk).append(".part");
+            // 临时目录用来存放所有分片文件
+            String tempFileDir = filePath + File.separator + guid;
+            File parentFileDir = new File(tempFileDir);
+            if (!parentFileDir.exists()) {
+                parentFileDir.mkdirs();
+            }
+            // 分片处理时，前台会多次调用上传接口，每次都会上传文件的一部分到后台
+            File tempPartFile = new File(parentFileDir, tempFilePath.toString());
+            FileUtils.copyInputStreamToFile(file.getInputStream(), tempPartFile);
+        }
+    }
 
-		File parentFileDir = new File(filePath + File.separator + guid);
+    /**
+     * 合并分片文件
+     * 每一个小片合并一个完整文件
+     *
+     * @param guid
+     * @param fileName
+     * @param filePath
+     * @return
+     */
+    @Override
+    protected FileInfo mergeFile(String guid, String fileName, String filePath) throws Exception {
+        // 得到 destTempFile 就是最终的文件
+        log.info("guid:{},fileName:{}", guid, fileName);
 
-		try {
-			int index = fileName.lastIndexOf(".");
+        File parentFileDir = new File(filePath + File.separator + guid);
 
-			// 文件扩展名
-			String fileSuffix = fileName.substring(index);
-			String suffix = "/" + LocalDate.now().toString() + "/"  + UUIDUtils.getGUID32() + fileSuffix;
+        try {
+            int index = fileName.lastIndexOf(".");
 
-			File destTempFile = new File(filePath , suffix);
+            // 文件扩展名
+            String fileSuffix = fileName.substring(index);
+            String suffix = "/" + LocalDate.now().toString() + "/" + UUIDUtils.getGUID32() + fileSuffix;
 
-			FileUtil.saveBigFile(guid, parentFileDir, destTempFile);
+            File destTempFile = new File(filePath, suffix);
 
-			// TODO: 2020/6/17 保存到数据库中 LOCAL
-			FileInputStream fileInputStream = new FileInputStream(destTempFile);
-			MultipartFile multipartFile = new MockMultipartFile(destTempFile.getName(), destTempFile.getName(),
-					ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+            FileUtil.saveBigFile(guid, parentFileDir, destTempFile);
 
-			FileInfo fileInfo = FileUtil.getFileInfo(multipartFile);
-			fileInfo.setName(fileName);
-			FileInfo oldFileInfo = getFileDao().findById(fileInfo.getId());
+            // TODO: 2020/6/17 保存到数据库中 LOCAL
+            FileInputStream fileInputStream = new FileInputStream(destTempFile);
+            MultipartFile multipartFile = new MockMultipartFile(destTempFile.getName(), destTempFile.getName(),
+                    ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
 
-			if (oldFileInfo != null) {
-				destTempFile.delete();
-				return oldFileInfo;
-			}
+            FileInfo fileInfo = FileUtil.getFileInfo(multipartFile);
+            fileInfo.setName(fileName);
+            FileInfo oldFileInfo = getFileDao().findById(fileInfo.getId());
 
-			String path = localFilePath + suffix;
-			String url = domain + urlPrefix + suffix;
-			fileInfo.setPath(path);
-			fileInfo.setUrl(url);
-			fileInfo.setSource(fileType().name());// 设置文件来源
-			getFileDao().save(fileInfo);// 将文件信息保存到数据库
-			return  fileInfo;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}finally {
-			// 删除临时目录中的分片文件
-			try {
-				FileUtils.deleteDirectory(parentFileDir);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+            if (oldFileInfo != null) {
+                destTempFile.delete();
+                return oldFileInfo;
+            }
 
-	}
+            String path = localFilePath + suffix;
+            String url = domain + urlPrefix + suffix;
+            fileInfo.setPath(path);
+            fileInfo.setUrl(url);
+            fileInfo.setSource(fileType().name());// 设置文件来源
+            getFileDao().save(fileInfo);// 将文件信息保存到数据库
+            return fileInfo;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            // 删除临时目录中的分片文件
+            try {
+                FileUtils.deleteDirectory(parentFileDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
+    }
 
 
 }
