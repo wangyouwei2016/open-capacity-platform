@@ -120,8 +120,7 @@ public class FastBuildRabbitMqProducer {
     }
 
 
-    private void buildQueue(String exchange, String routingKey,
-                            final String queue, Connection connection, String type) throws IOException {
+    private void buildQueue(String exchange, String routingKey, final String queue, Connection connection, String type) throws IOException {
         Channel channel = connection.createChannel(false);
 
         if (type.equals("direct")) {
@@ -150,6 +149,4 @@ public class FastBuildRabbitMqProducer {
         Channel channel = connection.createChannel(false);
         channel.exchangeDeclare(exchange, "topic", true, false, null);
     }
-
-
 }

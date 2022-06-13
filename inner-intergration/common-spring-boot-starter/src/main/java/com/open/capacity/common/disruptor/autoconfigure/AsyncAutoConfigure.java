@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 /**
- * @author owen
+ * @author someday
  */
 @Configuration
 @EnableConfigurationProperties({BossConfig.class, WorkerConfig.class, ExecutorConfig.class})
@@ -69,16 +69,11 @@ public class AsyncAutoConfigure implements ApplicationListener<ContextRefreshedE
         return new ExecutorService(executorConfig);
     }
 
-    // BossEventBuss+多个WorkEventBus -> 双总线架构
-    // 每个WorkEventBus -> ExecutorService，线程池，一套架构，做到什么，基于内存队列进行异步任务的转发和处理
-    // 如果这两个东西都搞定了以后，应用系统启动之后，他会有一个回调，他会把你的workEventBus对应的listener监听器扫描出来
-    // 把listener注册到你的work event bus里去
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         Map<String, EventListener> eventListenerMap = applicationContext.getBeansOfType(EventListener.class);
         WorkEventBusManager workEventBusManager = WorkEventBusManager.getSingleton();
-        //排序
+        
         Collection<EventListener> listeners = eventListenerMap.values();
         if (CollectionUtils.isNotEmpty(listeners)  ) {
         	   for (EventListener listener : listeners) {
@@ -86,22 +81,15 @@ public class AsyncAutoConfigure implements ApplicationListener<ContextRefreshedE
                }
         }
         for (EventListener eventListener : listeners.stream().sorted(Comparator.comparing(EventListener::getOrder)).collect(Collectors.toList()) ) {
-            // 这里需要过滤一下代理类，比如用了Sentinel啥的，可能就会对bean做增强，
-            // 然后getClass获取到的是一个代理类，代理类上是拿不到Channel注解的
             Class<?> realClazz = CglibUtils.filterCglibProxyClass(eventListener.getClass());
             Channel channel = realClazz.getAnnotation(Channel.class);
             if (channel != null && !channel.value().isEmpty()) {
-                // 获取出来对应的work event bus -> 注册监听器
                 workEventBusManager.getWorkEventBus(channel.value()).register(eventListener);
             }
         }
     }
     
-    /**
-     * 获取拦截器优先级
-     * @param interceptor
-     * @return
-     */
+    
     private int resolveOrder(EventListener<?> eventListener) {
         if (!eventListener.getClass().isAnnotationPresent(Channel.class)) {
             return Channel.LOWEST_ORDER;

@@ -5,7 +5,7 @@ import com.open.capacity.common.disruptor.AsyncContext;
 import lombok.Data;
 
 /**
- * @author owen
+ * @author someday
  * boss event
  */
 @Data

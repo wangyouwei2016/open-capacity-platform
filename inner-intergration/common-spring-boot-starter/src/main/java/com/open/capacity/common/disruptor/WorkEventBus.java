@@ -17,21 +17,18 @@ import com.open.capacity.common.disruptor.listener.EventListener;
 import com.open.capacity.common.disruptor.thread.DaemonThreadFactory;
 
 /**
- * @author owen
+ * @author someday
  */
 public class WorkEventBus<E> {
     private final Disruptor<E> workRingBuffer;
-    // 用来存放这个workEventbus的所有的listener, 这些listener还可以按照处理的事件进一步划分
     private final List<EventListener> eventListeners = new ArrayList<>();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-
     @SuppressWarnings("unchecked")
     public WorkEventBus(int ringBufferSize,
                         int workerHandlerNum,
                         EventFactory<E> eventFactory,
                         Supplier<WorkHandler<E>> workHandlerSupplier) {
 
-        // ring buffer size，会基于 他封装创建一disruptor，大家可以理解为，开源框架，高性能的内存队列
         workRingBuffer = new Disruptor<>(
                 eventFactory,
                 ringBufferSize, // 4096
@@ -49,10 +46,7 @@ public class WorkEventBus<E> {
         workRingBuffer.start();
         
     }
-
-    /**
-     * 留给用的注册listener的方法，可以在容器生命周期的某个阶段自行手动注册listener
-     */
+    
     public boolean register(EventListener eventListener) {
         // 针对我们的监听器注册，写锁
         lock.writeLock().lock();
@@ -68,10 +62,8 @@ public class WorkEventBus<E> {
     }
 
     public List<EventListener> getEventListeners(BaseEvent event) {
-        // 如果说获取event listener，读锁，并发的去跑不同的线程
         lock.readLock().lock();
         try {
-            // 把你注册过的listener都查出来
             return eventListeners.stream()
                     .filter(e -> e.accept(event))
                     .collect(Collectors.toList());
@@ -80,9 +72,6 @@ public class WorkEventBus<E> {
         }
     }
 
-    /**
-     * 暴露发布事件的方法
-     */
     public boolean publish(EventTranslator<E> translator) {
         return workRingBuffer.getRingBuffer().tryPublishEvent(translator);
     }

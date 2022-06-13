@@ -3,7 +3,7 @@ package com.open.capacity.common.disruptor.autoconfigure;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * @author owen
+ * @author someday
  * boss核心分发配置
  */
 @ConfigurationProperties(prefix = "disruptor.async.boss")

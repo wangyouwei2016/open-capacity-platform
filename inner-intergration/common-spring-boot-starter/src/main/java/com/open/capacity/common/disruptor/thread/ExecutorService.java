@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.open.capacity.common.disruptor.autoconfigure.ExecutorConfig;
 
 /**
- * @author owen
+ * @author someday
  * 不同topic对应的线程池
  */
 public class ExecutorService {

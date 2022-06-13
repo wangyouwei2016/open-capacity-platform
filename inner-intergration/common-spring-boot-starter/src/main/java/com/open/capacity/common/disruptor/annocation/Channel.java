@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author owen
+ * @author someday
  * 管道定义注解，用于处理消费者
  */
 @Documented

@@ -1,7 +1,7 @@
 package com.open.capacity.common.disruptor.util;
 
 /**
- * @author owen
+ * @author someday
  */
 public class CglibUtils {
 

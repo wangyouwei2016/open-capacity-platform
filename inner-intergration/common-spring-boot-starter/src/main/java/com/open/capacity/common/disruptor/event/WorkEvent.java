@@ -8,7 +8,7 @@ import com.open.capacity.common.disruptor.listener.EventListener;
 import lombok.Data;
 
 /**
- * @author owen
+ * @author someday
  * work event
  */
 @Data

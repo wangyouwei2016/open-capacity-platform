@@ -1,8 +1,8 @@
 package com.open.capacity.common.disruptor.event;
 
 /**
- * @author owen
+ * @author someday
  * event对象
  */
-public class BaseEvent {
+public class BaseEvent  {
 }

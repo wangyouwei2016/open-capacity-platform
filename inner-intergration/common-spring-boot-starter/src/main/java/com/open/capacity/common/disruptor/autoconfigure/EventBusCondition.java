@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
- * @author owen
+ * @author someday
  * 条件配置boss
  */
 public class EventBusCondition implements Condition {

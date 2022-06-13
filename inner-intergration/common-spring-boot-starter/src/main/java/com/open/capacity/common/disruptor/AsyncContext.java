@@ -1,7 +1,7 @@
 package com.open.capacity.common.disruptor;
 
 /**
- * @author owen
+ * @author someday
  */
 public interface AsyncContext {
 }

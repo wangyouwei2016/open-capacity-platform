@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * @author owen
+ * @author someday
  * 消费者配置
  */
 @ConfigurationProperties(prefix = "disruptor.async")

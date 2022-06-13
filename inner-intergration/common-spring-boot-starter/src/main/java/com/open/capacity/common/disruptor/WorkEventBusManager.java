@@ -7,7 +7,7 @@ import com.open.capacity.common.disruptor.event.WorkEvent;
 import com.open.capacity.common.disruptor.handler.WorkEventHandler;
 
 /**
- * @author owen
+ * @author someday
  */
 public class WorkEventBusManager {
 
@@ -20,15 +20,11 @@ public class WorkEventBusManager {
     public static WorkEventBusManager getSingleton() {
         return SINGLETON;
     }
-
-    /**
-     * 总的入口放到了bossEventBus的构造方法中，
-     * 在那里先创建好所有的workerEventBus然后再创建bossEventBus
-     */
+ 
     public void register(WorkerConfig.Config config) {
         BUFFER.computeIfAbsent(config.getChannel(), k -> new WorkEventBus<>(
-                config.getRingbufferSize(), // ring buffer，内存队列数据结构
-                config.getEventHandlerNum(), // work event bus -> 肯定是往这个里面发布event，ring buffer，event handler
+                config.getRingbufferSize(),  
+                config.getEventHandlerNum(),  
                 WorkEvent::new,
                 WorkEventHandler::new)
         );

@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 创建业务线程池的都可以从这里获取一个自定义线程名的线程工厂
  *
- * @author owen
+ * @author someday
  */
 public class DaemonThreadFactory implements ThreadFactory {
 

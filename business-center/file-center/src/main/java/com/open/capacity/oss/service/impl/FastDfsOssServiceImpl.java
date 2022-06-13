@@ -36,6 +36,7 @@ import java.util.Objects;
 
 /**
  * fastdfs存储文件
+ *
  * @author pm 1280415703@qq.com
  * @date 2019/8/11 16:22
  */
@@ -44,79 +45,79 @@ import java.util.Objects;
 @Slf4j
 public class FastDfsOssServiceImpl extends AbstractFileService {
 
-	@Resource
-	private FileDao fileDao;
+    @Resource
+    private FileDao fileDao;
 
-	@Resource
-	private FileExtendDao fileExtendDao;
+    @Resource
+    private FileExtendDao fileExtendDao;
 
-	@Resource
+    @Resource
     private FastFileStorageClient storageClient;
 
-	@Override
-	protected FileDao getFileDao() {
-		return fileDao;
-	}
- 
-	/**
-	 * nginx安装了fastdfs的地址
-	 */
-	@Value("${fdfs.oss.domain:}")
-	private String domain;
-	 
+    @Override
+    protected FileDao getFileDao() {
+        return fileDao;
+    }
 
-	@Override
-	protected FileType fileType() {
-		return FileType.FASTDFS;
-	}
+    /**
+     * nginx安装了fastdfs的地址
+     */
+    @Value("${fdfs.oss.domain:}")
+    private String domain;
 
-	 @Override
-     protected void uploadFile(MultipartFile file, FileInfo fileInfo) throws Exception {
-         StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), FilenameUtils.getExtension(file.getOriginalFilename()), null);
-         fileInfo.setUrl(domain+ storePath.getFullPath());
-         fileInfo.setPath(storePath.getFullPath());
-     }
 
-     @Override
-     protected boolean deleteFile(FileInfo fileInfo) {
-         if (fileInfo != null && StrUtil.isNotEmpty(fileInfo.getPath())) {
-             StorePath storePath = StorePath.parseFromUrl(fileInfo.getPath());
-             storageClient.deleteFile(storePath.getGroup(), storePath.getPath());
-         }
-         return true;
-     }
+    @Override
+    protected FileType fileType() {
+        return FileType.FASTDFS;
+    }
 
-	/**
-	 * 上传大文件
-	 * 分片上传 每片一个临时文件
-	 *
-	 * @param guid
-	 * @param chunk
-	 * @param file
-	 * @param chunks
-	 * @return
-	 */
-	@Override
-	protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks,String filePath)throws Exception {
-		log.info("guid:{},chunkNumber:{}",guid,chunk);
-		if(Objects.isNull(chunk)){
-			chunk = 0;
-		}
+    @Override
+    protected void uploadFile(MultipartFile file, FileInfo fileInfo) throws Exception {
+        StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), FilenameUtils.getExtension(file.getOriginalFilename()), null);
+        fileInfo.setUrl(domain + storePath.getFullPath());
+        fileInfo.setPath(storePath.getFullPath());
+    }
 
-		// TODO: 2020/6/16 从RequestContextHolder上下文中获取 request对象
-		boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes)
-				RequestContextHolder.currentRequestAttributes()).getRequest());
-		if (isMultipart) {
-			StringBuffer tempFilePath = new StringBuffer();
-			tempFilePath.append(guid).append("_").append(chunk).append(".part");
-			FileExtend fileExtend = new FileExtend();
-			String md5 = FileUtil.fileMd5(file.getInputStream());
-			fileExtend.setId(md5);
-			fileExtend.setGuid(guid);
-			fileExtend.setSize(file.getSize());
-			fileExtend.setName(tempFilePath.toString());
-			fileExtend.setSource(fileType().name());
-			fileExtend.setCreateTime(new Date());
+    @Override
+    protected boolean deleteFile(FileInfo fileInfo) {
+        if (fileInfo != null && StrUtil.isNotEmpty(fileInfo.getPath())) {
+            StorePath storePath = StorePath.parseFromUrl(fileInfo.getPath());
+            storageClient.deleteFile(storePath.getGroup(), storePath.getPath());
+        }
+        return true;
+    }
+
+    /**
+     * 上传大文件
+     * 分片上传 每片一个临时文件
+     *
+     * @param guid
+     * @param chunk
+     * @param file
+     * @param chunks
+     * @return
+     */
+    @Override
+    protected void chunkFile(String guid, Integer chunk, MultipartFile file, Integer chunks, String filePath) throws Exception {
+        log.info("guid:{},chunkNumber:{}", guid, chunk);
+        if (Objects.isNull(chunk)) {
+            chunk = 0;
+        }
+
+        // TODO: 2020/6/16 从RequestContextHolder上下文中获取 request对象
+        boolean isMultipart = ServletFileUpload.isMultipartContent(((ServletRequestAttributes)
+                RequestContextHolder.currentRequestAttributes()).getRequest());
+        if (isMultipart) {
+            StringBuffer tempFilePath = new StringBuffer();
+            tempFilePath.append(guid).append("_").append(chunk).append(".part");
+            FileExtend fileExtend = new FileExtend();
+            String md5 = FileUtil.fileMd5(file.getInputStream());
+            fileExtend.setId(md5);
+            fileExtend.setGuid(guid);
+            fileExtend.setSize(file.getSize());
+            fileExtend.setName(tempFilePath.toString());
+            fileExtend.setSource(fileType().name());
+            fileExtend.setCreateTime(new Date());
 
             FileExtend oldFileExtend = fileExtendDao.findById(fileExtend.getId());
             if (oldFileExtend != null) {
@@ -124,45 +125,45 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
             }
 
             // TODO: 2020/6/29 fastdfs上传
-            StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(),  FilenameUtils.getExtension(tempFilePath.toString()), null);
-            fileExtend.setUrl(domain+ storePath.getFullPath());
+            StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), FilenameUtils.getExtension(tempFilePath.toString()), null);
+            fileExtend.setUrl(domain + storePath.getFullPath());
             fileExtend.setPath(storePath.getFullPath());
 
-			fileExtendDao.save(fileExtend);
-		}
-	}
+            fileExtendDao.save(fileExtend);
+        }
+    }
 
 
-	/**
-	 * 合并分片文件
-	 * 每一个小片合并一个完整文件
-	 *
-	 * @param guid
-	 * @param fileName
-	 * @param filePath
-	 * @return
-	 */
-	@Override
-	protected FileInfo mergeFile(String guid, String fileName, String filePath) throws Exception {
-		// 得到 destTempFile 就是最终的文件
-		log.info("guid:{},fileName:{}",guid,fileName);
+    /**
+     * 合并分片文件
+     * 每一个小片合并一个完整文件
+     *
+     * @param guid
+     * @param fileName
+     * @param filePath
+     * @return
+     */
+    @Override
+    protected FileInfo mergeFile(String guid, String fileName, String filePath) throws Exception {
+        // 得到 destTempFile 就是最终的文件
+        log.info("guid:{},fileName:{}", guid, fileName);
 
         //根据guid 获取 全部临时分片数据
-		List<FileExtend> fileExtends = fileExtendDao.findByGuid(guid);
-		log.info("fileExtends -> size ：{}",fileExtends.size());
+        List<FileExtend> fileExtends = fileExtendDao.findByGuid(guid);
+        log.info("fileExtends -> size ：{}", fileExtends.size());
 
         File parentFileDir = new File(filePath + File.separator + guid);
-        File destTempFile = new File(filePath , fileName);
+        File destTempFile = new File(filePath, fileName);
         try {
-            if (CollectionUtils.isEmpty(fileExtends)){
+            if (CollectionUtils.isEmpty(fileExtends)) {
                 return null;
             }
 
             // TODO: 2020/6/29 下载到本地进行操作
-            for (FileExtend extend:  fileExtends) {
+            for (FileExtend extend : fileExtends) {
                 DownloadByteArray callback = new DownloadByteArray();
-                byte[] buf = storageClient.downloadFile("group1", extend.getPath().substring(extend.getPath().lastIndexOf("group1/")+7),callback);
-                FileUtil.byte2File(buf,filePath + File.separator + guid,extend.getName());
+                byte[] buf = storageClient.downloadFile("group1", extend.getPath().substring(extend.getPath().lastIndexOf("group1/") + 7), callback);
+                FileUtil.byte2File(buf, filePath + File.separator + guid, extend.getName());
             }
 
             FileUtil.saveBigFile(guid, parentFileDir, destTempFile);
@@ -181,20 +182,20 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
             }
 
             StorePath storePath = storageClient.uploadFile(multipartFile.getInputStream(), multipartFile.getSize(), FilenameUtils.getExtension(multipartFile.getOriginalFilename()), null);
-            fileInfo.setUrl(domain+ storePath.getFullPath());
+            fileInfo.setUrl(domain + storePath.getFullPath());
             fileInfo.setPath(storePath.getFullPath());
 
             fileInfo.setSource(fileType().name());// 设置文件来源
             getFileDao().save(fileInfo);// 将文件信息保存到数据库
 
             // TODO: 2020/6/29 更新分片文件的FileId
-            fileExtends.stream().forEach(vo->vo.setFileId(fileInfo.getId()));
+            fileExtends.stream().forEach(vo -> vo.setFileId(fileInfo.getId()));
             fileExtendDao.batchUpdateSelective(fileExtends);
-            return  fileInfo;
-		}catch (Exception e){
+            return fileInfo;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
-		}finally {
+        } finally {
             // 删除临时目录中的分片文件
             try {
                 destTempFile.delete();
@@ -202,6 +203,6 @@ public class FastDfsOssServiceImpl extends AbstractFileService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-		}
-	}
+        }
+    }
 }
