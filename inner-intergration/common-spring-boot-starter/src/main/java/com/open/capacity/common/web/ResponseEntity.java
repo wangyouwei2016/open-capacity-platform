@@ -36,6 +36,10 @@ public class ResponseEntity<T> implements Serializable {
         return new ResponseEntity<T>(data, code, msg);
     }
 
+    public static <T> ResponseEntity<T> succeedWithOutData(Integer code, String msg) {
+        return new ResponseEntity<T>(null, code, msg);
+    }
+
     public static <T> ResponseEntity<T> failed(String msg) {
         return failedWith(null, CodeEnum.ERROR.getCode(), msg);
     }
