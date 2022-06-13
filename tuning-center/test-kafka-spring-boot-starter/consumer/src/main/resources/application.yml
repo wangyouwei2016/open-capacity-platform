@@ -1,17 +1,40 @@
+server:
+  port: 9092
+
 spring:
   cloud:
     stream:
       default-binder: kafka
       kafka:
+        bindings:
+          order_input:
+            consumer:
+              autoCommitOffset: false    
         binder:
           brokers:
           - 47.99.88.28:9092
+          consumer-properties:
+            max:
+              poll:
+                interval:
+                  ms: 900000  ##每次消费的处理时间15分钟
+                records: 100  ##单次批量拉取100条数据  
+            session:
+              timeout:
+                ms: 120000     ##心跳超时时间
+            heartbeat:
+              interval:
+                ms: 40000      ##心跳间隔4s   
+            request:
+              timeout:
+                ms: 180000    ##消费请求超时时间       
       bindings:
-        input:  #通道名称 @Input(Sink.INPUT)
-          consumer:            max-attempts: 1  #通道发送消息失败时的重试次数
+        order_input:  #通道名称 @Input(Sink.INPUT)
+          consumer:
+            max-attempts: 1  #通道发送消息失败时的重试次数
           binder: kafka
-          destination: test1
+          destination: order_topic
           content-type:  application/json
-          group: input-group-1
+          group: order_group
          
 

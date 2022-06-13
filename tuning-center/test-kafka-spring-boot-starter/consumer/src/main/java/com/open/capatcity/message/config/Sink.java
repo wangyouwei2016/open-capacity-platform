@@ -7,7 +7,7 @@ public interface Sink {
 	/**
 	 * Input channel name.
 	 */
-	String INPUT = "input";
+	String INPUT = "order_input";
 
 	/**
 	 * @return input channel.
