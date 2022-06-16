@@ -2,7 +2,6 @@ package com.open.capacity.common.disruptor.listener;
 
 import com.open.capacity.common.disruptor.AsyncContext;
 import com.open.capacity.common.disruptor.event.BaseEvent;
-import com.open.capacity.common.disruptor.handler.BossEventHandler;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import lombok.Setter;
  * 模仿java.util.EventListener实现观察者模型
  * 
  */
-public abstract class EventListener<E extends BaseEvent>  {
+public abstract class EventListener<E extends BaseEvent ,T extends AsyncContext>  {
 
 	@Getter
 	@Setter
@@ -23,7 +22,7 @@ public abstract class EventListener<E extends BaseEvent>  {
 	public abstract  boolean accept(BaseEvent event);
 	
 
-	public abstract  void onEvent(E event, AsyncContext eventContext);
+	public abstract  void onEvent(E event, T eventContext);
 	
 
 }
