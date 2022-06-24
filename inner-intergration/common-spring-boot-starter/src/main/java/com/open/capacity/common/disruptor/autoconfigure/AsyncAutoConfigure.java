@@ -90,7 +90,7 @@ public class AsyncAutoConfigure implements ApplicationListener<ContextRefreshedE
     }
     
     
-    private int resolveOrder(EventListener<?> eventListener) {
+    private int resolveOrder(EventListener<?,?> eventListener) {
         if (!eventListener.getClass().isAnnotationPresent(Channel.class)) {
             return Channel.LOWEST_ORDER;
         } else {
