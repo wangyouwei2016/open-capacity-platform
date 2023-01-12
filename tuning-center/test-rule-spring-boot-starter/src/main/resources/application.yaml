@@ -1,0 +1,4 @@
+easy:
+  rules:
+    enabled: true
+    rules-engine-type: default 
