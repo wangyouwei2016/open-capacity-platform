@@ -7,7 +7,7 @@
 //import de.codecentric.boot.admin.server.cloud.discovery.EurekaServiceInstanceConverter;
 //
 ///**
-// * @author 作者 owen 
+// * @author 作者 owen
 // * @version 创建时间：2017年11月24日 下午5:34:47 类说明
 // * 偷梁换柱 将druid api 注册到监控中心
 // */
@@ -20,7 +20,7 @@
 //		if(bean instanceof EurekaServiceInstanceConverter){
 //			return new EurekaConverter();
 //		}
-//		
+//
 //		return bean;
 //	}
 //
@@ -29,5 +29,5 @@
 //		return bean;
 //	}
 //
-//	
+//
 //}

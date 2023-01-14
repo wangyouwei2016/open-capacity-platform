@@ -19,7 +19,7 @@
 //
 //
 ///**
-// * @author 作者 owen 
+// * @author 作者 owen
 // * @version 创建时间：2017年11月24日 下午5:34:47 类说明
 // * 偷梁换柱 将druid数据库连接池 注册到监控中心
 // */
@@ -53,7 +53,7 @@
 //
 //        URI serviceUrl = getServiceUrl(instance);
 //        if (serviceUrl != null) {
-//        	
+//
 //        	if("EUREKA-SERVER".equals(instance.getServiceId())) {
 //        		builder.serviceUrl( serviceUrl.toString() );
 //        	} else if ("ADMIN-SERVER".equals(instance.getServiceId())){
@@ -63,8 +63,8 @@
 //        	}else{
 //        		builder.serviceUrl( serviceUrl.toString().replaceFirst("/+$", "") + "/druid" );
 //        	}
-//        	
-//            
+//
+//
 //        }
 //
 //        Map<String, String> metadata = getMetadata(instance);
@@ -83,7 +83,7 @@
 //
 //        return UriComponentsBuilder.fromUri(getManagementUrl(instance)).path("/").path(healthPath).build().toUri();
 //    }
-//    
+//
 //    protected URI getHealthUrl(ServiceInstance instance) {
 //        Assert.isInstanceOf(EurekaServiceInstance.class, instance,
 //            "serviceInstance must be of type EurekaServiceInstance");
@@ -96,8 +96,8 @@
 //        return URI.create(healthUrl);
 //    }
 //
-//    
-//    
+//
+//
 //    protected URI getManagementUrl(ServiceInstance instance) {
 //        String managamentPath = instance.getMetadata().get(KEY_MANAGEMENT_PATH);
 //        if (isEmpty(managamentPath)) {

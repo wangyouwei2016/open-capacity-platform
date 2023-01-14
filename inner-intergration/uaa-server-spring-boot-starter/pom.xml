@@ -65,7 +65,23 @@
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
 		</dependency>
-		
+
+
+
+	  <!--新增 oauth2 相关依赖-->
+	  <!-- Spring Authorization Server-->
+	  <dependency>
+		  <groupId>org.springframework.security</groupId>
+		  <artifactId>spring-security-oauth2-authorization-server</artifactId>
+		  <version>0.2.2</version>
+	  </dependency>
+
+	  <!-- 新版 Resource Server 类库 -->
+	  <dependency>
+		  <groupId>org.springframework.boot</groupId>
+		  <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+	  </dependency>
+
 		
 		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-jwt -->
 		<dependency>
