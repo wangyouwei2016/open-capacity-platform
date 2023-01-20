@@ -140,6 +140,21 @@ public class FileController {
 		disruptorTemplate.publish(CommandType.DOWNLOAD, event, context);
 
 	}
+	
+	
+	@GetMapping("/download-zip")
+	public void downloadZipFile(@RequestParam String id, HttpServletRequest request) {
+
+		Assert.isTrue(id != null, "No files");
+		UploadContext context = new UploadContext();
+		javax.servlet.AsyncContext asyncContext = request.startAsync();
+		asyncContext.setTimeout(900000);
+		context.setAsyncContext(asyncContext);
+		DownloadEvent event = DownloadEvent.builder().tenant(TenantContextHolder.getTenant()).fileType(FileType.S3)
+				.commandType(CommandType.DOWNLOAD_ZIP).fileId(id).build();
+		disruptorTemplate.publish(CommandType.DOWNLOAD_ZIP, event, context);
+
+	}
 
 	/**
 	 * 文件查询

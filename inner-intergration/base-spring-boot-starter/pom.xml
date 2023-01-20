@@ -55,6 +55,10 @@
 	  		<artifactId>pinyin4j</artifactId>
 		</dependency>
 		<dependency>
+		    <groupId>com.jsoniter</groupId>
+		    <artifactId>jsoniter</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>eu.bitwalker</groupId>
 			<artifactId>UserAgentUtils</artifactId>
 		</dependency>

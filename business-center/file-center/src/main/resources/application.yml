@@ -16,6 +16,9 @@ disruptor:
       - channel: download
         ringbufferSize: 4096
         eventHandlerNum: 4  
+      - channel: download_zip
+        ringbufferSize: 4096
+        eventHandlerNum: 4  
   executors:
     - threadPool: upload
       threadCount: 4
@@ -25,6 +28,8 @@ disruptor:
       threadCount: 4  
     - threadPool: download
       threadCount: 4
+    - threadPool: download_zip
+      threadCount: 4  
 spring:
   shardingsphere:
     sharding:

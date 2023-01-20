@@ -73,6 +73,7 @@
 		<problem.version>0.27.0</problem.version>
 		<antisamy.version>1.5.7</antisamy.version>
 		<fastjson.version>1.2.83</fastjson.version>
+		<jsoniter.version>0.9.23</jsoniter.version>
 		<easyexcel.version>2.2.6</easyexcel.version>
 		<disruptor.version>3.4.1</disruptor.version>
 		<baidu-api.version>4.15.3</baidu-api.version>
@@ -249,6 +250,12 @@
 				<groupId>org.passay</groupId>
 				<artifactId>passay</artifactId>
 				<version>${passay.version}</version>
+			</dependency>
+			<!-- json -->
+			<dependency>
+			    <groupId>com.jsoniter</groupId>
+			    <artifactId>jsoniter</artifactId>
+			    <version>${jsoniter.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.alibaba</groupId>
