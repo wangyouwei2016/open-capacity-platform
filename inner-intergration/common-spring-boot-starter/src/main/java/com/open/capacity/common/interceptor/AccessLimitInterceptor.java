@@ -52,8 +52,6 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
                 key += ":" + user.getId();
-            } else {
-                // do nothing
             }
 
             if (!redisUtil.hasKey(key) || redisUtil.getExpire(key) <= 0) {
