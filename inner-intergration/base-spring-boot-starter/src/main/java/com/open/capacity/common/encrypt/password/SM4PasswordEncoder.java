@@ -1,9 +1,11 @@
-package com.open.capacity.common.algorithm;
+package com.open.capacity.common.encrypt.password;
 
 
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.open.capacity.common.algorithm.SM3Util;
+import com.open.capacity.common.algorithm.SM4Util;
 import com.open.capacity.common.exception.BusinessException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  * 数据库SM3 + SM4 hash 算法
  */
 @Slf4j
-public class SMPasswordEncoder implements PasswordEncoder {
+public class SM4PasswordEncoder implements PasswordEncoder {
 
 	@Override
 	public String encode(CharSequence rawPassword) {

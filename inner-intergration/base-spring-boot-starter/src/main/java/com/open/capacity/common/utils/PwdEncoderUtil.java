@@ -11,7 +11,8 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.util.Assert;
 
-import com.open.capacity.common.algorithm.SMPasswordEncoder;
+import com.open.capacity.common.encrypt.password.SM3PasswordEncoder;
+import com.open.capacity.common.encrypt.password.SM4PasswordEncoder;
 
 import lombok.experimental.UtilityClass;
 
@@ -26,7 +27,9 @@ import lombok.experimental.UtilityClass;
 public class PwdEncoderUtil {
 	public PasswordEncoder getDelegatingPasswordEncoder(String encodingId) {
 		Map<String, PasswordEncoder> encoders = new HashMap<>();
-		encoders.put("sm4", new SMPasswordEncoder());
+		
+		encoders.put("sm3", new SM3PasswordEncoder());
+		encoders.put("sm4", new SM4PasswordEncoder());
 		encoders.put("bcrypt", new BCryptPasswordEncoder(4));
 		encoders.put("ldap", new org.springframework.security.crypto.password.LdapShaPasswordEncoder());
 		encoders.put("MD4", new org.springframework.security.crypto.password.Md4PasswordEncoder());
