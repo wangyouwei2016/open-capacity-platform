@@ -2,6 +2,8 @@ package com.open.capacity.uaa.service;
 
 import java.awt.image.BufferedImage;
 
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+
 import com.open.capacity.common.dto.ResponseEntity;
 
 /**
@@ -19,8 +21,18 @@ public interface IValidateCodeService {
      */
     void saveImageCode(String deviceId, String imageCode);
 
+    /**
+     * 短信验证码
+     * @param mobile
+     * @return
+     */
     ResponseEntity sendSmsCode(String mobile);
     
+    /**
+     * 动态令牌二维码
+     * @param username
+     * @return
+     */
     BufferedImage createQrCode(String username) ;
 
 
@@ -58,5 +70,20 @@ public interface IValidateCodeService {
      * @param secret
      */
     void validateDynamicToken(String deviceId, String validCode);
+
+    /**
+     *  服务端国密字符串保存
+     * @param deviceId
+     * @param publicKey
+     * @param privateKey
+     */
+    ResponseEntity saveSmKey(String deviceId, String publicKey, String privateKey);
+
+	/**
+	 * 国密密码传输校验
+	 * @param deviceId
+	 * @param password
+	 */
+    String validateSmkey(String deviceId, String password);
     
 }

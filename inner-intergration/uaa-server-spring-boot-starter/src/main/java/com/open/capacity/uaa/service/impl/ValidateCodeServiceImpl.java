@@ -1,11 +1,15 @@
 package com.open.capacity.uaa.service.impl;
 
 import java.awt.image.BufferedImage;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.bouncycastle.crypto.InvalidCipherTextException;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -17,11 +21,15 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.open.capacity.common.algorithm.SM2Util;
+import com.open.capacity.common.algorithm.SM3Util;
+import com.open.capacity.common.constant.CommonConstant;
 import com.open.capacity.common.constant.SecurityConstants;
 import com.open.capacity.common.dto.ResponseEntity;
 import com.open.capacity.common.feign.SmsFeignClient;
 import com.open.capacity.common.feign.UserFeignClient;
 import com.open.capacity.common.model.SysUser;
+import com.open.capacity.common.utils.StringUtil;
 import com.open.capacity.redis.repository.RedisRepository;
 import com.open.capacity.uaa.exception.ValidateCodeException;
 import com.open.capacity.uaa.google.GoogleOTPAuthUtil;
@@ -195,5 +203,42 @@ public class ValidateCodeServiceImpl implements IValidateCodeService {
         
         this.remove(String.format("%s:%s", SecurityConstants.QR_CODE_KEY,deviceId) );
 	}
-	
+
+	@Override
+	public ResponseEntity saveSmKey(String deviceId,String publicKey, String privateKey) {
+
+		redisRepository.setExpire(String.format("%s%s", CommonConstant.SM_PRIVATE_KEY, deviceId), privateKey,
+				SecurityConstants.DEFAULT_SMKEY_EXPIRE);
+
+		return  ResponseEntity.succeed(publicKey);
+	}
+
+	@Override
+	@SneakyThrows
+	public String validateSmkey(String deviceId, String password) {
+		Assert.isTrue(!StringUtil.isBlank(password), "解析密码错误，密码为空!");
+		String privateKey = (String) redisRepository
+				.get(String.format("%s%s", CommonConstant.SM_PRIVATE_KEY, deviceId));
+		// 如果发生异常，直接原样返回
+		Assert.isTrue(!StringUtil.isEmpty(privateKey), "密码验证Key丢失,解析密码失败!");
+		ECPrivateKeyParameters priKey = new ECPrivateKeyParameters(new BigInteger(ByteUtils.fromHexString(privateKey)),
+				SM2Util.DOMAIN_PARAMS);
+		byte[] passwordDecrypt = null;
+		try {
+			passwordDecrypt = SM2Util.decrypt(priKey, ByteUtils.fromHexString(password));
+		} catch (InvalidCipherTextException | IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+			throw new ValidateCodeException("解析密码错误，密码传输过程中被篡改!");
+		}
+		String realPass = "";
+		String[] pass = new String(passwordDecrypt).split("\\|");
+		Assert.isTrue(pass.length == 2, "解析密码错误，密码传输过程中被篡改!");
+		realPass = pass[0];
+		Assert.isTrue(!StringUtil.isBlank(realPass), "解析密码错误，密码为空!");
+		// 密码传输防串改
+		boolean matchFlag = SM3Util.verify(pass[0].getBytes("utf-8"), ByteUtils.fromHexString(pass[1]));
+		Assert.isTrue(matchFlag, "解析密码错误，密码传输过程中被篡改!");
+		this.remove(String.format("%s%s", CommonConstant.SM_PRIVATE_KEY, deviceId));
+		return realPass;
+	}
+
 }

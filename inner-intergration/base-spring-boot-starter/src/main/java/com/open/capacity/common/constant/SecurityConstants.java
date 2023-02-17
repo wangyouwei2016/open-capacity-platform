@@ -71,6 +71,11 @@ public interface SecurityConstants {
      * oauth token
      */
     String OAUTH_TOKEN_URL = "/oauth/token";
+    
+    /**
+     * 默认服务端验证码处理技术
+     */
+    String DEFAULT_SMKEY_URL_PREFIX = "/validata/smkey";
 
     /**
      * 默认的处理验证码的url前缀
@@ -116,6 +121,11 @@ public interface SecurityConstants {
      * 默认生成二维码过期时间
      */
     int DEFAULT_QRCODE_EXPIRE = 1800;
+    
+    /**
+     * 
+     */
+    int DEFAULT_SMKEY_EXPIRE = 180;
 
     /**
      * 边框颜色，合法值： r,g,b (and optional alpha) 或者 white,black,blue.

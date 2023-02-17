@@ -203,4 +203,11 @@ public interface CommonConstant {
 	 * 文件前缀
 	 */
 	String PREFIX_FILE_KEY = CommonConstant.PROJECT_KEY + StrUtil.COLON + "file:";
+	
+	
+	/**
+	 * sm 私钥
+	 */
+	String SM_PRIVATE_KEY = CommonConstant.PROJECT_KEY + StrUtil.COLON + "security:sm_private_key::";
+	
 }
