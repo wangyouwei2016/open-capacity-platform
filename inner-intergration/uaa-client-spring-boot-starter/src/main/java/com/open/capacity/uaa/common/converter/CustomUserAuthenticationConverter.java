@@ -1,6 +1,9 @@
 package com.open.capacity.uaa.common.converter;
 
-import com.open.capacity.common.model.LoginAppUser;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.collections.MapUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,9 +15,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.open.capacity.common.feign.UserFeignClient;
+import com.open.capacity.common.model.LoginAppUser;
+
+import lombok.SneakyThrows;
 
 /**
  * jwt转换器 
@@ -23,15 +27,15 @@ import java.util.Map;
 public class CustomUserAuthenticationConverter implements UserAuthenticationConverter {
     private Collection<? extends GrantedAuthority> defaultAuthorities;
 
-    private UserDetailsService userDetailsService;
+    private UserFeignClient userFeignClient;
 
     /**
      * Optional {@link UserDetailsService} to use when extracting an {@link Authentication} from the incoming map.
      *
      * @param userDetailsService the userDetailsService to set
      */
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public void setUserFeignClient(UserFeignClient userFeignClient) {
+        this.userFeignClient = userFeignClient;
     }
 
     /**
@@ -57,27 +61,28 @@ public class CustomUserAuthenticationConverter implements UserAuthenticationConv
     }
 
     @Override
+    @SneakyThrows
     public Authentication extractAuthentication(Map<String, ?> map) {
-        if (map.containsKey(USERNAME)) {
-            Object principal = map.get(USERNAME);
-            Collection<? extends GrantedAuthority> authorities = getAuthorities(map);
-            if (userDetailsService != null) {
-                UserDetails user = userDetailsService.loadUserByUsername( MapUtils.getString(map, USERNAME) );
-                authorities = user.getAuthorities();
-                principal = user;
-            } else {
-                Integer id = (Integer)map.get("id");
-                LoginAppUser user = new LoginAppUser();
-                user.setUsername((String)principal);
-                user.setId(Long.valueOf(id));
-                principal = user;
-            }
-            return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
-        }
+		if (map.containsKey(USERNAME)) {
+			Object principal = map.get(USERNAME);
+			Collection authorities = getAuthorities(map);
+			if (userFeignClient != null) {
+				UserDetails user = CompletableFuture
+						.supplyAsync(() -> userFeignClient.findByUsername(MapUtils.getString(map, USERNAME))).get();
+				user.getAuthorities().addAll(authorities);
+				principal = user;
+			} else {
+				Integer id = (Integer) map.get("id");
+				LoginAppUser user = new LoginAppUser();
+				user.setUsername((String) principal);
+				user.setId(Long.valueOf(id));
+				principal = user;
+			}
+			return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
+		}
         return null;
     }
-
-    private Collection<? extends GrantedAuthority> getAuthorities(Map<String, ?> map) {
+    private Collection  getAuthorities(Map<String, ?> map) {
         if (!map.containsKey(AUTHORITIES)) {
             return defaultAuthorities;
         }

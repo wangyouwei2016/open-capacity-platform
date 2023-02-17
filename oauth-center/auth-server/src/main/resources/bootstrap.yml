@@ -6,6 +6,12 @@ server:
         name: OAUTH2SESSION
   use-forward-headers: false          
 
+encrypt:
+  key-store:
+    alias: ocp
+    location: classpath:ocp.jks
+    secret: 123456
+
 spring:
   cloud:
     nacos:
