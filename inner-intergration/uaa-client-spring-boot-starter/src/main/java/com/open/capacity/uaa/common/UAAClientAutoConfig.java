@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.bootstrap.encrypt.KeyProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -39,10 +40,9 @@ import com.open.capacity.uaa.common.config.DefaultSecurityHandlerConfig;
  * @date 2018/7/24 
  * code: https://gitee.com/owenwangwen/open-capacity-platform
  */
-@Configuration
 @ComponentScan
-@AutoConfigureAfter(TokenStore.class)
-@EnableConfigurationProperties({ BlackListProperties.class,SecurityProperties.class,TokenStoreProperties.class })
+@Configuration
+@EnableConfigurationProperties({ BlackListProperties.class,SecurityProperties.class,TokenStoreProperties.class , KeyProperties.class })
 public class UAAClientAutoConfig {
 
 	@Configuration

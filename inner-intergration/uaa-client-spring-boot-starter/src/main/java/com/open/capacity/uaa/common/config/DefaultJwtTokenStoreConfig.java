@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import com.open.capacity.common.feign.AsycUserService;
+import com.open.capacity.common.feign.UserFeignClient;
 import com.open.capacity.uaa.common.store.CustomerJwtTokenStore;
 
 /**
@@ -24,11 +25,11 @@ public class DefaultJwtTokenStoreConfig {
 	
 	@Lazy
 	@Autowired
-	private AsycUserService  asycUserService ;
+	private UserFeignClient userFeignClient;
 	
 	@Bean
 	public JwtTokenStore jwtTokenStore(){
-		return new CustomerJwtTokenStore( jwtAccessTokenConverter() ,asycUserService ) ;
+		return new CustomerJwtTokenStore( jwtAccessTokenConverter() ,userFeignClient ) ;
 	}
 	
 	@Bean

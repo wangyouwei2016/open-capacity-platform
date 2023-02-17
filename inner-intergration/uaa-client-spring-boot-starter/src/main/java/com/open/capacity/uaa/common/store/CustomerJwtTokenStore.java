@@ -1,5 +1,7 @@
 package com.open.capacity.uaa.common.store;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -8,18 +10,20 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import com.open.capacity.common.feign.AsycUserService;
+import com.open.capacity.common.feign.UserFeignClient;
 import com.open.capacity.common.model.LoginAppUser;
 
+import io.netty.util.concurrent.CompleteFuture;
 import lombok.SneakyThrows;
 
 @SuppressWarnings("all")		
 public class CustomerJwtTokenStore extends JwtTokenStore{
 	
-	private AsycUserService asycUserService;
+	private UserFeignClient userFeignClient;
 	
-	public CustomerJwtTokenStore(JwtAccessTokenConverter jwtTokenEnhancer, AsycUserService  asycUserService) {
+	public CustomerJwtTokenStore(JwtAccessTokenConverter jwtTokenEnhancer, UserFeignClient  userFeignClient) {
 		super(jwtTokenEnhancer);
-		this.asycUserService=asycUserService;
+		this.userFeignClient=userFeignClient;
 	}
 
 	@Override
@@ -31,11 +35,12 @@ public class CustomerJwtTokenStore extends JwtTokenStore{
 	@SneakyThrows
 	public OAuth2Authentication readAuthentication(OAuth2AccessToken token) {
 		
+		
 	   OAuth2Authentication oauth2Authentication = super.readAuthentication(token) ;
- 
-	   LoginAppUser loginAppUser = asycUserService.findByUserName(oauth2Authentication.getUserAuthentication().getName()).get();
-		 
-	   UsernamePasswordAuthenticationToken userAuth = new UsernamePasswordAuthenticationToken(loginAppUser, "N/A", oauth2Authentication.getAuthorities());
+	   
+	   CompletableFuture<LoginAppUser> loginAppUser =  CompletableFuture.supplyAsync(()-> userFeignClient.findByUsername(oauth2Authentication.getUserAuthentication().getName()) );
+	   
+	   UsernamePasswordAuthenticationToken userAuth = new UsernamePasswordAuthenticationToken(loginAppUser.get(), "N/A", oauth2Authentication.getAuthorities());
 		
 	   return new OAuth2Authentication(oauth2Authentication.getOAuth2Request(), userAuth);
 	}
