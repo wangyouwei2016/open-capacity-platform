@@ -141,6 +141,9 @@ public class TokenGranterConfig {
 			// 添加密码加图形验证码模式
 			tokenGranters.add(new PwdImgCodeTokenGranter(authenticationManager, tokenServices, clientDetailsService,
 					requestFactory, validateCodeService));
+			// 添加密码smkey模式
+			tokenGranters.add(new PwdSmKeyTokenGranter(authenticationManager, tokenServices, clientDetailsService,
+					requestFactory, validateCodeService));
 			// 添加密码加谷歌动态令牌校验
 			tokenGranters.add(new GoogleCodeTokenGranter(authenticationManager, tokenServices, clientDetailsService,
 					requestFactory, validateCodeService));

@@ -6,6 +6,10 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.code.kaptcha.Producer;
+import com.open.capacity.common.algorithm.SM2Util;
+import com.open.capacity.common.algorithm.SM3Util;
 import com.open.capacity.common.constant.SecurityConstants;
 import com.open.capacity.common.dto.ResponseEntity;
 import com.open.capacity.uaa.google.GoogleOTPAuthUtil;
@@ -21,12 +27,14 @@ import com.open.capacity.uaa.service.IValidateCodeService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 验证码提供
  * @author someday
  * @date 2018/12/18
  */
+@Slf4j
 @Controller
 public class ValidateCodeController {
 	
@@ -36,6 +44,30 @@ public class ValidateCodeController {
 
     @Autowired
 	private Producer producer;
+    
+    
+    /**
+     * 创建验证码
+     * @throws Exception
+     */
+    @SneakyThrows
+    @ResponseBody
+    @GetMapping(SecurityConstants.DEFAULT_SMKEY_URL_PREFIX + "/{deviceId}")
+	public ResponseEntity createSmKey(@PathVariable  String deviceId) {
+
+		// 生成sm2 pubKey,priKey
+		AsymmetricCipherKeyPair keyPair = SM2Util.generateKeyPairParameter();
+		ECPrivateKeyParameters priKeyParams = (ECPrivateKeyParameters) keyPair.getPrivate();
+		ECPublicKeyParameters pubKeyParams = (ECPublicKeyParameters) keyPair.getPublic();
+		// 获取公钥私钥
+		String publicKey = ByteUtils.toHexString(pubKeyParams.getQ().getEncoded(false)).toUpperCase();
+		String privateKey = ByteUtils.toHexString(priKeyParams.getD().toByteArray()).toUpperCase();
+		byte[] encryptedData = SM2Util.encrypt(pubKeyParams, ("admin|" + ByteUtils.toHexString(SM3Util.hash("admin".getBytes("utf-8")))).getBytes());
+		log.info("encryted:{}" , ByteUtils.toHexString(encryptedData));
+		// 返回公钥
+		return validateCodeService.saveSmKey(deviceId,publicKey, privateKey);
+	}
+    
     
     /**
      * 创建验证码
