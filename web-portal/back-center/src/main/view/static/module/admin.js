@@ -1,6 +1,12 @@
-layui.define(['config', 'layer'], function (exports) {
+layui.extend({
+    md5: 'md5/md5',
+    cover: 'md5/cover'
+});
+layui.define(['config', 'layer', 'cover', 'md5'], function (exports) {
     var config = layui.config;
     var layer = layui.layer;
+    var md5 = layui.md5;
+    var cover = layui.cover;
     var popupRightIndex, popupCenterIndex, popupCenterParam;
 
     var admin = {
@@ -105,6 +111,36 @@ layui.define(['config', 'layer'], function (exports) {
                             xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
                         }
                     }
+                    //前端灰度版本匹配
+                    let isolationVersion = config.isolationVersion;
+                    if (isolationVersion) {
+                        xhr.setRequestHeader('o-c-p-version', isolationVersion);
+                    }
+                }
+            });
+        },
+        // 封装ajax请求，返回数据类型为json，请求头签名校验
+        reqS: function (url, data, success, method) {
+            if ('put' == method.toLowerCase()) {
+                method = 'PUT';
+            } else if ('delete' == method.toLowerCase()) {
+                method = 'DELETE';
+            }
+            //创建签名
+            let timestamp = new Date().getTime();
+            let token = this.md5Encryption(timestamp);
+            //add by owen ajax 执行前置处理器
+            admin.ajax({
+                url: config.base_server + url,
+                data: data,
+                type: method,
+                dataType: 'json',
+                contentType: "application/json",
+                success: success,
+                beforeSend: function (xhr) {
+                    // 签名和时间戳
+                    xhr.setRequestHeader('webToken', token);
+                    xhr.setRequestHeader('webTm', timestamp);
                     //前端灰度版本匹配
                     let isolationVersion = config.isolationVersion;
                     if (isolationVersion) {
@@ -360,6 +396,22 @@ layui.define(['config', 'layer'], function (exports) {
                 return true;
             }
             return false;
+        }
+        /**
+         * md5加密
+         * @param t
+         * @returns {string|*}
+         */
+        ,md5Encryption: function (t) {
+            return md5.md5(cover.fromCode(md5.secret()) + t);
+        }
+        /**
+         * 解密secret
+         * @param s
+         * @returns {*}
+         */
+        ,coverCode: function (s) {
+            return cover.fromCode(s);
         }
     };
 
