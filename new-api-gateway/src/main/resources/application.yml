@@ -178,7 +178,8 @@ ocp:
         /login.html,
         /user/login,
         /routes/**,
-        /api-auth/tokens/key
+        /api-auth/tokens/key,
+        /api-user/demo/signatureValidation
     auth:
       urlPermission:
         #是否开启url级别权限

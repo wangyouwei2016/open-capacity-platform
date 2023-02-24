@@ -229,7 +229,10 @@ VALUES(90, 67, '调度日志', '#!joblog', 'http://127.0.0.1:8888/joblog', '', '
 INSERT INTO sys_menu
 (id, parent_id, name, url, `path`, path_method, css, sort, create_time, update_time, `type`, hidden, tenant_id)
 VALUES(91, 67, '执行器管理', '#!jobgroup', 'http://127.0.0.1:8888/jobgroup', '', 'layui-icon-senior', 3, '2022-09-25 19:06:33.0', '2022-09-25 19:08:39.0', 1, 0, 'webApp');
- 
+INSERT INTO sys_menu
+(id, parent_id, name, url, `path`, path_method, css, sort, create_time, update_time, `type`, hidden, tenant_id)
+VALUES(94, 37, '签名校验demo', '#!signatureValid', 'demo/signature_demo.html', '', 'layui-icon-file-b', 10, '2023-02-24 15:49:20', '2023-02-24 15:55:24', 1, 0, 'webApp');
+
 -- ----------------------------
 -- Table structure for `sys_role_menu`
 -- ----------------------------
@@ -402,6 +405,10 @@ VALUES(4, 83);
 INSERT INTO `sys_role_menu`
 (role_id, menu_id)
 VALUES(5, 84);
+INSERT INTO `sys_role_menu`
+(role_id, menu_id)
+VALUES(1, 94);
+
  
 
 
