@@ -57,8 +57,8 @@ public class PartUploadEventLisener extends EventListener<UploadEvent, UploadCon
 	@Override
 	@SneakyThrows
 	public void onEvent(UploadEvent event, UploadContext eventContext) {
-		String ok = objectMapper.writeValueAsString(ResponseEntity.succeed("操作成功"));
-		String ko = objectMapper.writeValueAsString(ResponseEntity.succeed("操作失败"));
+		String ok = objectMapper.writeValueAsString(ResponseEntity.succeed("分段上传成功"));
+		String ko = objectMapper.writeValueAsString(ResponseEntity.succeed("分段上传失败"));
 		executorService.execute(CommandType.PART_UPLOAD, () -> {
 			ServletResponse response = eventContext.getAsyncContext().getResponse();
 			response.setCharacterEncoding("UTF-8");
@@ -72,6 +72,7 @@ public class PartUploadEventLisener extends EventListener<UploadEvent, UploadCon
 				fileServiceFactory.getService(event.getFileType()).chunk(event.getGuid(), event.getChunk(), file,
 						event.getChunks(), filepath);
 				IoUtil.write(out, false, ok.getBytes(StandardCharsets.UTF_8));
+				out.flush();
 			} catch (Exception e1) {
 				IoUtil.write(out, false, ko.getBytes(StandardCharsets.UTF_8));
 			} finally {

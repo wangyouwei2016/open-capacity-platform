@@ -29,5 +29,9 @@ public class DownloadEvent extends BaseEvent {
 	 */
 	private String fileId ;
  
+	/**
+	 * 断点下载
+	 */
+	private String range ;
 
 }

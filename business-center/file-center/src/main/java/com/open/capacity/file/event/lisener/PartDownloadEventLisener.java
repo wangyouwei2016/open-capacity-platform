@@ -35,12 +35,12 @@ import cn.hutool.core.util.URLUtil;
 import lombok.SneakyThrows;
 
 @Service
-@Channel(CommandType.DOWNLOAD)
-public class DownloadEventLisener extends EventListener<DownloadEvent, UploadContext> {
+@Channel(CommandType.PART_DOWNLOAD)
+public class PartDownloadEventLisener extends EventListener<DownloadEvent, UploadContext> {
 
 	@Resource
 	private FileServiceFactory fileServiceFactory;
-
+	
 	@Resource
 	private ObjectMapper objectMapper;
 
@@ -50,7 +50,7 @@ public class DownloadEventLisener extends EventListener<DownloadEvent, UploadCon
 		DownloadEvent uploadEvent = (DownloadEvent) event;
 
 		// s3 单个文件上传
-		if (CommandType.DOWNLOAD.equals(uploadEvent.getCommandType())) {
+		if (CommandType.PART_DOWNLOAD.equals(uploadEvent.getCommandType())) {
 			return true;
 		}
 		return false;
@@ -59,20 +59,27 @@ public class DownloadEventLisener extends EventListener<DownloadEvent, UploadCon
 	@Override
 	@SneakyThrows
 	public void onEvent(DownloadEvent event, UploadContext eventContext) {
-		String ko = objectMapper.writeValueAsString(ResponseEntity.succeed("下载失败"));
-		executorService.execute(CommandType.DOWNLOAD, () -> {
+		String ko = objectMapper.writeValueAsString(ResponseEntity.succeed("分段下载失败"));
+		executorService.execute(CommandType.PART_DOWNLOAD ,()-> {
 			HttpServletResponse response = (HttpServletResponse) eventContext.getAsyncContext().getResponse();
 			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application/json;charset=UTF-8");
-			ServletOutputStream out = null;
-			try {
+			ServletOutputStream out = null ;
+			try{
 				out = response.getOutputStream();
 				TenantContextHolder.setTenant(event.getTenant());
-				DownloadDto downloadInfo = fileServiceFactory.getService(FileType.S3).download(event.getFileId());
-				response.setCharacterEncoding("UTF-8");
+				DownloadDto downloadInfo = fileServiceFactory.getService(FileType.S3).downloadChunkFile(event.getFileId() ,event.getRange() );
+				// 断点开始 响应头设置
+		        //https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Accept-Ranges
+		        response.setHeader("Accept-Ranges", "bytes");
+		        if(downloadInfo.getFlag()==2) {
+		        	response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+		        }
+				response.setHeader("Content-Range", downloadInfo.getContentRange());
+				response.setContentType(downloadInfo.getContentType());
 				response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
 						"attachment;fileName=" + URLUtil.encode(downloadInfo.getFileName()));
-				response.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
+				response.setContentLengthLong(downloadInfo.getContentLength());
+				response.addHeader(HttpHeaders.CACHE_CONTROL, "private");
 				response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition,Content-Length");
 				IoUtil.write(out, false, downloadInfo.getBytes());
 				out.flush();
@@ -83,6 +90,7 @@ public class DownloadEventLisener extends EventListener<DownloadEvent, UploadCon
 				eventContext.getAsyncContext().complete();
 			}
 		});
+		
 
 	}
 

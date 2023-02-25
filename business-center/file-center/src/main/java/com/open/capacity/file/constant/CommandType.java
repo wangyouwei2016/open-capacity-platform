@@ -12,4 +12,7 @@ public interface CommandType {
 	public static final String DOWNLOAD = "download" ;
 	
 	public static final String DOWNLOAD_ZIP = "download_zip" ;
+	
+	public static final String PART_DOWNLOAD = "part_download" ;
+	
 }

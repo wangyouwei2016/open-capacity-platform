@@ -142,6 +142,22 @@ public class FileController {
 	}
 	
 	
+	@GetMapping("/downloadBigFile")
+	public void downloadBigFile(@RequestParam String id, HttpServletRequest request) {
+		Assert.isTrue(id != null, "No files");
+		UploadContext context = new UploadContext();
+		javax.servlet.AsyncContext asyncContext = request.startAsync();
+		asyncContext.setTimeout(900000);
+		context.setAsyncContext(asyncContext);
+		DownloadEvent event = DownloadEvent.builder().tenant(TenantContextHolder.getTenant()).fileType(FileType.S3)
+				.commandType(CommandType.PART_DOWNLOAD).fileId(id).range(request.getHeader("Range")).build();
+		disruptorTemplate.publish(CommandType.PART_DOWNLOAD, event, context);
+
+	}
+	
+	
+	
+	
 	@GetMapping("/download-zip")
 	public void downloadZipFile(@RequestParam String id, HttpServletRequest request) {
 

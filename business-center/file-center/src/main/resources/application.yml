@@ -6,30 +6,35 @@ disruptor:
     workers:
       - channel: upload
         ringbufferSize: 4096
-        eventHandlerNum: 4
+        eventHandlerNum: 2
       - channel: batch_upload
         ringbufferSize: 4096
-        eventHandlerNum: 4
+        eventHandlerNum: 2
       - channel: part_upload
         ringbufferSize: 4096
-        eventHandlerNum: 4
+        eventHandlerNum: 2
       - channel: download
         ringbufferSize: 4096
-        eventHandlerNum: 4  
+        eventHandlerNum: 2  
       - channel: download_zip
         ringbufferSize: 4096
-        eventHandlerNum: 4  
+        eventHandlerNum: 2
+      - channel: part_download
+        ringbufferSize: 4096
+        eventHandlerNum: 2  
   executors:
     - threadPool: upload
-      threadCount: 4
+      threadCount: 2
     - threadPool: batch_upload
-      threadCount: 4
+      threadCount: 2
     - threadPool: part_upload
-      threadCount: 4  
+      threadCount: 2  
     - threadPool: download
-      threadCount: 4
+      threadCount: 2
     - threadPool: download_zip
-      threadCount: 4  
+      threadCount: 2  
+    - threadPool: part_download
+      threadCount: 2  
 spring:
   shardingsphere:
     sharding:

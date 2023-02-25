@@ -88,6 +88,14 @@ public abstract class AbstractFileService extends ServiceImpl<FileMapper, FileIn
 	 * @return
 	 */
 	protected abstract DownloadDto  downloadFile(FileInfo file);
+	
+	/**
+	 * 下载大文件
+	 * @param file
+	 * @return
+	 */
+	protected abstract DownloadDto downloadChunkFile(FileInfo file,String range);
+
 
 	@Override
 	@SneakyThrows
@@ -170,7 +178,16 @@ public abstract class AbstractFileService extends ServiceImpl<FileMapper, FileIn
 		Assert.isTrue(file != null, "No files");
 		return this.downloadFile(file) ;
 	}
-
+	
+	@Override
+	public DownloadDto downloadChunkFile(String fileId,String range) {
+		FileInfo file = getFileMapper().selectById(fileId);
+		Assert.isTrue(file != null, "No files");
+		return this.downloadChunkFile(file,range) ;
+	}
+ 
+	
+	
 	@Override
 	public void uploadError(String guid, String fileName, String filePath) {
 		File parentFileDir = new File(filePath + File.separator + guid);

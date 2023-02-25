@@ -24,6 +24,7 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CompleteMultipartUploadRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.InitiateMultipartUploadRequest;
 import com.amazonaws.services.s3.model.InitiateMultipartUploadResult;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -248,6 +249,69 @@ public class OssFileServiceImpl extends AbstractFileService implements Plugin<Fi
 		try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
 			return DownloadDto.builder().fileName(file.getName()).bytes(IOUtils.toByteArray(inputStream)).build();
 		}
+	}
+
+	@Override
+	@SneakyThrows
+	protected DownloadDto downloadChunkFile(FileInfo file, String range) {
+		ObjectMetadata objectMetadata = ossClient.getS3Client().getObjectMetadata(ossProperties.getBucketName(),
+				file.getPath());
+		// 总文件大小
+		long fileLength = objectMetadata.getContentLength() - 1;
+		// 开始下载位置
+		long startByte = 0;
+		// 结束下载位置
+		long endByte = objectMetadata.getContentLength() - 1;
+		int flag = 0; // 0,从头开始的全文下载；1,从某字节开始的下载（bytes=1024-）；2,从某字节开始到某字节结束的下载（bytes=1024-2048）
+		// client requests a file block download start byte
+		if (Objects.nonNull(range)) {
+			range = range.substring(range.lastIndexOf("=") + 1).trim();
+			String ranges[] = range.split("-");
+			try {
+				// 根据range解析下载分片的位置区间
+				if (ranges.length == 1) {
+					if (range.endsWith("-")) {
+						// 情况1，如：bytes=1024- 第1024个字节到最后字节的数据
+						flag = 1;
+						startByte = Long.parseLong(ranges[0]);
+					}
+				} else if (ranges.length == 2) {
+					// 情况2，如：bytes=1024-2048 第1024个字节到2048个字节的数据
+					flag = 2;
+					startByte = Long.parseLong(ranges[0]);
+					endByte = Long.parseLong(ranges[1]);
+				}
+			} catch (NumberFormatException e) {
+				// 从头开始的全文下载
+				flag = 0;
+				startByte = 0;
+				endByte = objectMetadata.getContentLength();
+			}
+		}
+		// 要下载的长度
+		long contentLength = endByte - startByte + 1;
+		GetObjectRequest getObjectRequest = new GetObjectRequest(ossProperties.getBucketName(), file.getPath());
+		// 响应的格式是:
+		String contentRange = "";
+		contentRange = new StringBuffer("bytes ").append(startByte).append("-").append(endByte).append("/")
+				.append(fileLength).toString();
+
+		Assert.isTrue(endByte <= fileLength, "分段下载异常");
+		if (flag == 1) {
+			getObjectRequest = getObjectRequest.withRange(startByte);
+		} else if (flag == 2) {
+			getObjectRequest = getObjectRequest.withRange(startByte, endByte);
+		}
+		if (endByte == fileLength) {
+			flag = 1;
+		}
+		S3Object s3Object = ossClient.getS3Client().getObject(getObjectRequest);
+		try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
+			return DownloadDto.builder().fileName(file.getName()).bytes(IOUtils.toByteArray(inputStream))
+					.contentType(objectMetadata.getContentType()).contentRange(contentRange).fileSize(fileLength)
+					.contentLength(contentLength).flag(flag).build();
+		}
+
 	}
 
 }

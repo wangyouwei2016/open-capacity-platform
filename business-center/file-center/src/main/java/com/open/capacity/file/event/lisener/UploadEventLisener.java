@@ -17,6 +17,7 @@ import com.open.capacity.common.disruptor.annocation.Channel;
 import com.open.capacity.common.disruptor.event.BaseEvent;
 import com.open.capacity.common.disruptor.listener.EventListener;
 import com.open.capacity.common.disruptor.thread.ExecutorService;
+import com.open.capacity.common.dto.ResponseEntity;
 import com.open.capacity.common.exception.BusinessException;
 import com.open.capacity.file.constant.CommandType;
 import com.open.capacity.file.context.UploadContext;
@@ -39,9 +40,7 @@ public class UploadEventLisener extends EventListener<UploadEvent, UploadContext
 
 	@Override
 	public boolean accept(BaseEvent event) {
-
 		UploadEvent uploadEvent = (UploadEvent) event;
-
 		// s3 单个文件上传
 		if (CommandType.UPLOAD.equals(uploadEvent.getCommandType())) {
 			return true;
@@ -52,19 +51,23 @@ public class UploadEventLisener extends EventListener<UploadEvent, UploadContext
 	@Override
 	@SneakyThrows
 	public void onEvent(UploadEvent event, UploadContext eventContext) {
-
+		String ko = objectMapper.writeValueAsString(ResponseEntity.succeed("上传失败"));
 		executorService.execute(CommandType.UPLOAD, () -> {
 			ServletResponse response = eventContext.getAsyncContext().getResponse();
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application/json;charset=UTF-8");
-			try (ServletOutputStream out = response.getOutputStream()) {
+			ServletOutputStream out = null;
+			try {
+				out = response.getOutputStream();
 				TenantContextHolder.setTenant(event.getTenant());
 				MultipartFile file = event.getFiles().get(0);
 				FileInfo fileInfo = fileServiceFactory.getService(event.getFileType()).upload(file);
-				IoUtil.write(out, false,objectMapper.writeValueAsString(fileInfo).getBytes(StandardCharsets.UTF_8));
+				IoUtil.write(out, false, objectMapper.writeValueAsString(fileInfo).getBytes(StandardCharsets.UTF_8));
+				out.flush();
 			} catch (IOException e) {
-				throw new BusinessException(e.getMessage());
+				IoUtil.write(out, false, ko.getBytes(StandardCharsets.UTF_8));
 			} finally {
+				IoUtil.close(out);
 				eventContext.getAsyncContext().complete();
 			}
 		});

@@ -9,4 +9,15 @@ public class DownloadDto {
 	private String fileName ;
 	
 	private byte[] bytes ;
+	
+	private long fileSize ;
+	
+	private int flag ;
+	
+	private long contentLength ;
+	
+	private String contentRange ;
+	
+	private String contentType ;
+	
 }

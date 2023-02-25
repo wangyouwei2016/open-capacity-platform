@@ -104,6 +104,7 @@
 		<google-api-client.version>2.0.0</google-api-client.version>
 		<spring-social-security.version>1.1.6.RELEASE</spring-social-security.version>
 		<commons-io.version>2.7</commons-io.version>
+		<statemachine.version>4.3.1</statemachine.version>
 		<commons-chain.version>1.2</commons-chain.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
 		<knife4j.version>2.0.5</knife4j.version>
@@ -709,6 +710,11 @@
 				<artifactId>commons-chain</artifactId>
 				<version>${commons-chain.version}</version>
 			</dependency>
+			<dependency>
+	            <groupId>com.alibaba.cola</groupId>
+	            <artifactId>cola-component-statemachine</artifactId>
+	            <version>${statemachine.version}</version>
+	        </dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>

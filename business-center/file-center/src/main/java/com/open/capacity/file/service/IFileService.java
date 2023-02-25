@@ -36,4 +36,6 @@ public interface IFileService extends IService<FileInfo>, Plugin<FileType> {
 
 	DownloadDto download(String fileName);
 
+	DownloadDto downloadChunkFile(String fileId,String range);
+
 }

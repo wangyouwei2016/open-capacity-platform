@@ -19,6 +19,7 @@ import com.open.capacity.common.context.TenantContextHolder;
 import com.open.capacity.common.disruptor.annocation.Channel;
 import com.open.capacity.common.disruptor.event.BaseEvent;
 import com.open.capacity.common.disruptor.listener.EventListener;
+import com.open.capacity.common.dto.ResponseEntity;
 import com.open.capacity.common.exception.BusinessException;
 import com.open.capacity.file.constant.CommandType;
 import com.open.capacity.file.constant.FileType;
@@ -56,12 +57,14 @@ public class DownloadZipEventLisener extends EventListener<DownloadEvent, Upload
 	@Override
 	@SneakyThrows
 	public void onEvent(DownloadEvent event, UploadContext eventContext) {
-
+		String ko = objectMapper.writeValueAsString(ResponseEntity.succeed("下载压缩文件失败"));
 		executorService.execute(CommandType.DOWNLOAD_ZIP, () -> {
 			HttpServletResponse response = (HttpServletResponse) eventContext.getAsyncContext().getResponse();
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application/json;charset=UTF-8");
-			try (ServletOutputStream out = response.getOutputStream()) {
+			ServletOutputStream out = null;
+			try {
+				out = response.getOutputStream();
 				TenantContextHolder.setTenant(event.getTenant());
 				DownloadDto downloadInfo = fileServiceFactory.getService(FileType.S3).download(event.getFileId());
 				response.reset();
@@ -78,8 +81,9 @@ public class DownloadZipEventLisener extends EventListener<DownloadEvent, Upload
 				}
 				out.flush();
 			} catch (IOException e) {
-				throw new BusinessException(e.getMessage());
+				IoUtil.write(out, false, ko.getBytes(StandardCharsets.UTF_8));
 			} finally {
+				IoUtil.close(out);
 				eventContext.getAsyncContext().complete();
 			}
 		});
