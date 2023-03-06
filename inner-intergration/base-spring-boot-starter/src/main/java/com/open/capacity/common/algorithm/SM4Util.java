@@ -1,5 +1,6 @@
 package com.open.capacity.common.algorithm;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.engines.SM4Engine;
 import org.bouncycastle.crypto.macs.CBCBlockCipherMac;
@@ -10,6 +11,9 @@ import org.bouncycastle.crypto.paddings.PKCS7Padding;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
+
+import com.open.capacity.common.exception.BusinessException;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -23,6 +27,38 @@ public class SM4Util extends GMBaseUtil {
 	public static final String ALGORITHM_NAME_CBC_PADDING = "SM4/CBC/PKCS5Padding";
 	public static final String ALGORITHM_NAME_CBC_NOPADDING = "SM4/CBC/NoPadding";
 	public static final int DEFAULT_KEY_SIZE = 128;
+	public static final String DEFAULT_KEY = "0123456789abcdeffedcba9876543210";
+
+	public static final boolean ENCRYPTIONBREAK = true;
+
+	public static String decrypt(String text, String key) {
+		try {
+			byte[] paramsByte = ByteUtils.fromHexString(text);
+			byte[] decryptedData = SM4Util.decryptEcbPadding(
+					ByteUtils.fromHexString(
+							StringUtils.isNotEmpty(key) ? key.substring(0, 32) : DEFAULT_KEY.substring(0, 32)),
+					paramsByte);
+			return new String(decryptedData, "UTF-8");
+		} catch (Exception e) {
+			throw new BusinessException("请求数据解密失败！");
+		}
+	}
+
+	public static String encrypt(String text, String key) {
+		byte[] cipherText = null;
+		try {
+			byte[] resultByte = text.getBytes("UTF-8");
+			cipherText = SM4Util.encryptEcbPadding(
+					ByteUtils.fromHexString(
+							StringUtils.isNotEmpty(key) ? key.substring(0, 32) : DEFAULT_KEY.substring(0, 32)),
+					resultByte);
+		} catch (Exception e) {
+			throw new BusinessException("响应数据加密失败！");
+		} finally {
+			return ByteUtils.toHexString(cipherText);
+		}
+
+	}
 
 	public static byte[] generateKey() throws NoSuchAlgorithmException, NoSuchProviderException {
 		return generateKey(DEFAULT_KEY_SIZE);
