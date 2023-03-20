@@ -2,10 +2,7 @@ package com.open.capacity.common.core.obj.collect;
 
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -123,7 +120,7 @@ public class CollectionTools {
      * @return
      */
     public static <S,K,T> Map<K,T> toMap(ToMapContext<S,K,T> context){
-        return toMap(context.source,context.converter,context.keyGetter,context.excluder,context.targetExcluder);
+        return toMap(context.source,context.converter,context.keyGetter,context.valExcluder,context.keyExcluder);
     }
     /**
      * 集合类型转换
@@ -133,16 +130,16 @@ public class CollectionTools {
      * @param <T> 目标对象类型
      * @return
      */
-    public static <S,K,T> Map<K,T> toMap(Collection<S> source, Function<S, T> converter, BiFunction<S,T,K> keyFun, Predicate<S> excluder, Predicate<T> tExcluder){
+    public static <S,K,T> Map<K,T> toMap(Collection<S> source, Function<S, T> converter, BiFunction<S,T,K> keyFun, BiPredicate<S,T> valExcluder, Predicate<K> keyExcluder){
         if (CollectionTools.isEmpty(source)){
             return Collections.emptyMap();
         }
         Map<K,T> result = new HashMap<>();
         for (S s: source){
-            if (!excluder.test(s)){
-                T t = converter.apply(s);
-                if (!tExcluder.test(t)){
-                    K key = keyFun.apply(s,t);
+            T t = converter.apply(s);
+            if (!valExcluder.test(s,t)){
+                K key = keyFun.apply(s,t);
+                if (!keyExcluder.test(key)){
                     result.put(key,t);
                 }
             }
@@ -203,8 +200,8 @@ public class CollectionTools {
         private Collection<S> source;
         private Function<S,T> converter;
         private BiFunction<S,T,K> keyGetter;
-        private Predicate<S> excluder = CollectionConstant.NO_EXCLUDER;
-        private Predicate<T> targetExcluder = CollectionConstant.NO_EXCLUDER;
+        private BiPredicate<S,T> valExcluder = CollectionConstant.NO_BI_EXCLUDER;
+        private Predicate<K> keyExcluder = CollectionConstant.NO_EXCLUDER;
 
         public ToMapContext( Function<S, K> keyGetter,Collection<S> sources, Function<S, T> converter) {
             this(sources,converter,(e,t) -> keyGetter.apply(e));
@@ -218,13 +215,13 @@ public class CollectionTools {
             this.keyGetter = keyGetter;
         }
 
-        public ToMapContext setExcluder(Predicate<S> excluder){
-            this.excluder = excluder;
+        public ToMapContext setValExcluder(BiPredicate<S,T> valExcluder){
+            this.valExcluder = valExcluder;
             return this;
         }
 
-        public ToMapContext setTargetExcluder(Predicate<T> targetExcluder) {
-            this.targetExcluder = targetExcluder;
+        public ToMapContext setTargetExcluder(Predicate<K> keyExcluder) {
+            this.keyExcluder = keyExcluder;
             return this;
         }
 
