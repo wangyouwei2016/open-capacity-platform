@@ -10,7 +10,9 @@
 
 	<artifactId>db-spring-boot-starter</artifactId>
 	<description>数据库支撑</description>
-
+	<properties>
+		<dynamic-datasource.version>3.5.0</dynamic-datasource.version>
+	</properties>
 	<dependencies>
 
 		<dependency>
@@ -63,6 +65,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+			<version>${dynamic-datasource.version}</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
