@@ -5,7 +5,7 @@ import com.xxl.job.core.biz.model.TriggerParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by xuxueli on 17/3/10.
@@ -14,11 +14,12 @@ public abstract class ExecutorRouter {
     protected static Logger logger = LoggerFactory.getLogger(ExecutorRouter.class);
 
     /**
-     * route address
+     * route run executor
      *
+     * @param triggerParam
      * @param addressList
-     * @return  ReturnT.content=address
+     * @return  ReturnT.content: final address
      */
-    public abstract ReturnT<String> route(TriggerParam triggerParam, List<String> addressList);
+    public abstract ReturnT<String> routeRun(TriggerParam triggerParam, ArrayList<String> addressList);
 
 }

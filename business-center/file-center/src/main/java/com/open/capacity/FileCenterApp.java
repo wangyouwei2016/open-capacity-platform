@@ -2,6 +2,7 @@ package com.open.capacity;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 import com.open.capacity.common.port.PortApplicationEnvironmentPreparedEventListener;
 
@@ -10,6 +11,7 @@ import com.open.capacity.common.port.PortApplicationEnvironmentPreparedEventList
  * @version 创建时间：2017年11月12日 上午22:57:51
  * 文件中心
 */
+@EnableDiscoveryClient
 @SpringBootApplication
 public class FileCenterApp {
 

@@ -1,5 +1,7 @@
 package com.xxl.job.core.handler;
 
+import com.xxl.job.core.biz.model.ReturnT;
+
 /**
  * job handler
  *
@@ -8,30 +10,37 @@ package com.xxl.job.core.handler;
 public abstract class IJobHandler {
 
 
+	/** success */
+	public static final ReturnT<String> SUCCESS = new ReturnT<String>(200, null);
+	/** fail */
+	public static final ReturnT<String> FAIL = new ReturnT<String>(500, null);
+	/** fail retry */
+	public static final ReturnT<String> FAIL_RETRY = new ReturnT<String>(501, null);
+
+
 	/**
 	 * execute handler, invoked when executor receives a scheduling request
 	 *
+	 * @param param
+	 * @return
 	 * @throws Exception
 	 */
-	public abstract void execute() throws Exception;
+	public abstract ReturnT<String> execute(String param) throws Exception;
 
-
-	/*@Deprecated
-	public abstract ReturnT<String> execute(String param) throws Exception;*/
 
 	/**
 	 * init handler, invoked when JobThread init
 	 */
-	public void init() throws Exception {
-		// do something
+	public void init() {
+		// TODO
 	}
 
 
 	/**
 	 * destroy handler, invoked when JobThread destroy
 	 */
-	public void destroy() throws Exception {
-		// do something
+	public void destroy() {
+		// TODO
 	}
 
 

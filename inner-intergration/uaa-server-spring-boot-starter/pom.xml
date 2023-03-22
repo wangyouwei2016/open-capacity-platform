@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.open.capacity</groupId>
     <artifactId>inner-intergration</artifactId>
-    <version>${revision}</version>
+    <version>2.0.1</version>
   </parent>
   <artifactId>uaa-server-spring-boot-starter</artifactId>
   <description>认证服务支撑</description>
@@ -11,68 +11,80 @@
   	<kaptcha.version>0.0.9</kaptcha.version>
   </properties>
   
-   
-	<dependencies>
+  <dependencies>
+  
+  		<!-- kaptcha 验证码生成工具 -->
+		<dependency>
+			<groupId>com.github.axet</groupId>
+			<artifactId>kaptcha</artifactId>
+			<version>${kaptcha.version}</version>
+		</dependency>
+  		
+		<!-- 关系型数据库配置 -->
 		<dependency>
 			<groupId>com.open.capacity</groupId>
 			<artifactId>db-spring-boot-starter</artifactId>
 		</dependency>
+		
+		<!-- 非关系型配置 -->
 		<dependency>
 			<groupId>com.open.capacity</groupId>
 			<artifactId>redis-spring-boot-starter</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.open.capacity</groupId>
-			<artifactId>base-spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.social</groupId>
-			<artifactId>spring-social-security</artifactId>
-		</dependency>
-		 <!-- cas -->
-        <dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-cas</artifactId>
-		</dependency> 
+		
 		<dependency>
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-data-redis</artifactId>
 		</dependency>
+		
+		<!-- 公共实体类模块 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>common-spring-boot-starter</artifactId>
+		</dependency>
+		
+		<!-- 公共实体类模块 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>log-spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+
+		<!-- 加入spring security spring security oauth2的处理 -->
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
 		</dependency>
 		
-		<dependency>
-			<groupId>com.open.capacity</groupId>
-			<artifactId>uaa-client-spring-boot-starter</artifactId>
-		</dependency>
-
-		<!-- For Google API -->
-	 	<dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.http-client</groupId>
-            <artifactId>google-http-client-jackson2</artifactId>
-        </dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-jwt -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.passay</groupId>
-			<artifactId>passay</artifactId>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-jwt</artifactId>
 		</dependency>
 
-	</dependencies>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-web</artifactId>
+		</dependency>
+
+		 
+		 
+  		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+  
+  </dependencies>
 </project>

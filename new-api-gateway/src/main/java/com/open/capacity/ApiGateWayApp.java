@@ -1,24 +1,21 @@
 package com.open.capacity;
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
-import com.open.capacity.common.feign.GlobalFeignConfig;
-import com.open.capacity.common.lb.annotation.EnableBaseFeignInterceptor;
-import com.open.capacity.gateway.annotation.EnableNacosDynamicRoute;
+import com.open.capacity.common.config.TraceFilterConfig;
 
-/**
- * @author someday
- * @date 2019/10/5
- */
-@SpringBootApplication
+ 
+@EnableCircuitBreaker
 @EnableDiscoveryClient
-@EnableNacosDynamicRoute
-@EnableBaseFeignInterceptor
-@EnableFeignClients(defaultConfiguration= GlobalFeignConfig.class)
-public class ApiGateWayApp  {
+@ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = TraceFilterConfig.class)) 
+@SpringBootApplication 
+public class ApiGateWayApp {
     public static void main(String[] args) {
         SpringApplication.run(ApiGateWayApp.class, args);
     }

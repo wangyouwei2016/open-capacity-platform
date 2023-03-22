@@ -99,7 +99,7 @@
                 layer.load(2);
                 admin.req('route/' + obj.data.id, {}, function (data) {
                     layer.closeAll('loading');
-                    if (data.statusCodeValue == 0) {
+                    if (data.code == 0) {
                         layer.msg(data.msg, {icon: 1, time: 500});
                         obj.del();
                     } else {
@@ -122,7 +122,7 @@
                 layer.load(2);
                 admin.req('route/synchronization', {}, function (data) {
                     layer.closeAll('loading');
-                    if (data.statusCodeValue == 0) {
+                    if (data.code == 0) {
                         layer.msg(data.msg, {icon: 1, time: 500});
                     } else {
                         layer.msg(data.msg, {icon: 2, time: 500});
@@ -140,7 +140,7 @@
                 flag: obj.elem.checked ? 0 : 1
             }, function (data) {
                 layer.closeAll('loading');
-                if (data.statusCodeValue == 0) {
+                if (data.code == 0) {
                     layer.msg(data.msg, {icon: 1, time: 500});
                     //table.reload('table-user', {});
                 } else {

@@ -1,7 +1,8 @@
 package com.xxl.job.admin.core.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * local cache tool
@@ -10,7 +11,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class LocalCacheUtil {
 
-    private static ConcurrentMap<String, LocalCacheData> cacheRepository = new ConcurrentHashMap<String, LocalCacheData>();   // 类型建议用抽象父类，兼容性更好；
+    private static ConcurrentHashMap<String, LocalCacheData> cacheRepository = new ConcurrentHashMap<>();
     private static class LocalCacheData{
         private String key;
         private Object val;
@@ -62,10 +63,10 @@ public class LocalCacheUtil {
     public static boolean set(String key, Object val, long cacheTime){
 
         // clean timeout cache, before set new cache (avoid cache too much)
-        cleanTimeoutCache();
+        cleanTimeutCache();
 
         // set new cache
-        if (key==null || key.trim().length()==0) {
+        if (StringUtils.isBlank(key)) {
             return false;
         }
         if (val == null) {
@@ -87,7 +88,7 @@ public class LocalCacheUtil {
      * @return
      */
     public static boolean remove(String key){
-        if (key==null || key.trim().length()==0) {
+        if (StringUtils.isBlank(key)) {
             return false;
         }
         cacheRepository.remove(key);
@@ -101,7 +102,7 @@ public class LocalCacheUtil {
      * @return
      */
     public static Object get(String key){
-        if (key==null || key.trim().length()==0) {
+        if (StringUtils.isBlank(key)) {
             return null;
         }
         LocalCacheData localCacheData = cacheRepository.get(key);
@@ -118,7 +119,7 @@ public class LocalCacheUtil {
      *
      * @return
      */
-    public static boolean cleanTimeoutCache(){
+    public static boolean cleanTimeutCache(){
         if (!cacheRepository.keySet().isEmpty()) {
             for (String key: cacheRepository.keySet()) {
                 LocalCacheData localCacheData = cacheRepository.get(key);

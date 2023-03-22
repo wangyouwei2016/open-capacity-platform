@@ -1,4 +1,5 @@
-FROM openjdk:8-jdk-alpine
+#FROM openjdk:8-jdk-alpine
+FROM java:8
 VOLUME /tmp
 ADD user-center.jar app.jar
 RUN sh -c 'touch /app.jar'

@@ -37,8 +37,61 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
     var index = {
         // 渲染左侧菜单栏
         initLeftNav: function () {
+            // // 判断权限
+            // for (var i = config.menus.length - 1; i >= 0; i--) {
+            //     var tempMenu = config.menus[i];
+            //     if (tempMenu.auth && !admin.hasPerm(tempMenu.auth)) {
+            //         config.menus.splice(i, 1);
+            //         continue;
+            //     }
+            //     if (!tempMenu.subMenus) {
+            //         continue;
+            //     }
+            //     for (var j = tempMenu.subMenus.length - 1; j >= 0; j--) {
+            //         var jMenus = tempMenu.subMenus[j];
+            //         if (jMenus.auth && !admin.hasPerm(jMenus.auth)) {
+            //             tempMenu.subMenus.splice(j, 1);
+            //             continue;
+            //         }
+            //         if (!jMenus.subMenus) {
+            //             continue;
+            //         }
+            //         for (var k = jMenus.subMenus.length - 1; k >= 0; k--) {
+            //             if (jMenus.subMenus[k].auth && !admin.hasPerm(jMenus.subMenus[k].auth)) {
+            //                 jMenus.subMenus.splice(k, 1);
+            //                 continue;
+            //             }
+            //         }
+            //     }
+            // }
+            // // 去除空的目录
+            // for (var i = config.menus.length - 1; i >= 0; i--) {
+            //     var tempMenu = config.menus[i];
+            //     if (tempMenu.subMenus && tempMenu.subMenus.length <= 0) {
+            //         config.menus.splice(i, 1);
+            //         continue;
+            //     }
+            //     if (!tempMenu.subMenus) {
+            //         continue;
+            //     }
+            //     for (var j = tempMenu.subMenus.length - 1; j >= 0; j--) {
+            //         var jMenus = tempMenu.subMenus[j];
+            //         if (jMenus.subMenus && jMenus.subMenus.length <= 0) {
+            //             tempMenu.splice(j, 1);
+            //             continue;
+            //         }
+            //     }
+            // }
+            // // 渲染
+            // $('.layui-layout-admin .layui-side').load('pages/side.html', function () {
+            //     laytpl(sideNav.innerHTML).render(config.menus, function (html) {
+            //         $('#sideNav').after(html);
+            //     });
+            //     element.render('nav');
+            //     admin.activeNav(Q.lash);
+            // });
+
             admin.req('api-user/menus/current', {}, function (data) {
-                //data = data[1];
                 admin.putTempData("menus",data);
                 var menus = data;
                 // 判断权限
@@ -100,7 +153,7 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
         },
         // 路由注册
         initRouter: function () {
-
+		
             index.regRouter(admin.getTempData("menus"));
             // index.regRouter(config.menus);
             Q.reg('console', function () {
@@ -117,17 +170,13 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
             $.each(menus, function (i, data) {
                 if (data.url && data.url.indexOf('#!') == 0) {
                     Q.reg(data.url.substring(2), function () {
-                        if (data.path.startWith("http://")) {
-                            window.open(data.path);
-                        } else {
-                            //临时保存url
-                            data.path.startWith("http://") ?  admin.putTempData("params",data.path) : null ;
+                        //临时保存url
+                        data.path.startWith("http://") ?  admin.putTempData("params",data.path) : null ;
 
-                            var menuId = data.url.substring(2);
-                            //add by owen 修复 path 无法引用http://页面的问题
-                            var menuPath = data.path.startWith("http://") ? 'pages/tpl/iframe.html' : 'pages/' + data.path
-                            index.loadView(menuId, menuPath, data.name);
-                        }
+                        var menuId = data.url.substring(2);
+                        //add by owen 修复 path 无法引用http://页面的问题
+                        var menuPath = data.path.startWith("http://") ? 'pages/tpl/iframe.html' : 'pages/' + data.path
+                        index.loadView(menuId, menuPath, data.name);
                     });
                 }
                 if (data.subMenus) {
@@ -188,18 +237,19 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
         // 从服务器获取登录用户的信息
         getUser: function (success) {
             layer.load(2);
-            admin.req('api-user/users/current', {}, function (data) {
+            // admin.req('userInfo.json', {}, function (data) {
+            admin.req('api-auth/oauth/userinfo', {}, function (data) {
                 layer.closeAll('loading');
-                if (data && data.statusCodeValue === 0) {
-                    let user = data.datas;
-                    config.putUser(user);
-                    admin.putTempData("permissions",user.permissions);
-                    success(user);
+                if (0 == data.code) {
+                    config.putUser(data.user);
+                    admin.putTempData("permissions",data.permissions);
+                    success(data.user);
                 } else {
                     layer.msg('获取用户失败', {icon: 2});
                     //add by owen 登录失败重定向到登录页
                     config.removeToken();
                     location.replace('login.html');
+                    return ;
                 }
             }, 'GET');
         },
@@ -211,13 +261,11 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
         },
         // 页面元素绑定事件监听
         bindEvent: function () {
-			debugger;
             // 退出登录
             $('#btnLogout').click(function () {
                 layer.confirm('确定退出登录？', function () {
-					debugger;
                     //通过认证中心 tuic
-                    admin.req('api-auth/oauth/remove/token?token='+config.getToken().access_token , {}, function (data) {
+                    admin.req('api-auth/oauth/remove/token?access_token='+config.getToken().access_token, {}, function (data) {
                             config.removeToken();
                             location.replace('login.html');
                     }, 'POST');
@@ -273,31 +321,6 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
         var layId = $(this).attr('lay-id');
         Q.go(layId);
     });
-
-    // 自动登录及token拦截
-    if (!config.getToken() || config.getToken() == '') { //token为空
-        if (! (location.href.substring(location.href.lastIndexOf("/") + 1) == 'login.html')) {
-            admin.putTempData(config.CAS_LOGIN_PARAMS, ''); //清空
-            let href = location.href;
-            if (href.indexOf("?") != -1) {
-                let params = href.substring(href.indexOf('?') + 1);
-                if (params.indexOf('txt1') != -1) {
-                    admin.putTempData(config.CAS_LOGIN_PARAMS, params); //暂存参数
-                }
-            }
-            top.location.replace('login.html');
-            return;
-        }
-    } else {
-        let href = location.href;
-        if (/\\login.html\?txt/.test(href)) {
-            config.putToken('');
-            let params = href.substring(href.indexOf('?') + 1);
-            admin.putTempData(config.CAS_LOGIN_PARAMS, params); //暂存参数
-            top.location.replace('login.html');
-            return;
-        }
-    }
 
     exports('index', index);
 });

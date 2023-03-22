@@ -1,4 +1,5 @@
-FROM frolvlad/alpine-oraclejdk8
+# FROM frolvlad/alpine-oraclejdk8
+FROM java:8
 VOLUME /tmp
 ADD file-center.jar app.jar
 RUN sh -c 'touch /app.jar'

@@ -63,20 +63,18 @@
             contact.id = data.field.id;
             contact.uri = data.field.uri;
             contact.order = data.field.order;
-            contact.description = data.field.description;
-
             console.log(  contact  );
             console.log( JSON.stringify(contact , null , '\t') );
             layer.load(2);
 
             admin.req('route/add', JSON.stringify(contact , null , '\t'), function (data) {
-                if (data.statusCodeValue == 0) {
+                if (data.code == 0) {
                     layer.closeAll('loading');
-                    layer.msg(data.msg, {icon: 1, time: 500});
+                    //layer.msg(data.msg, {icon: 1, time: 500});
                     admin.finishPopupCenter();
                 } else {
                     layer.closeAll('loading');
-                    layer.msg(data.msg, {icon: 2, time: 500});
+                    //layer.msg(data.msg, {icon: 2, time: 500});
                 }
             }, 'POST');
             return false;
