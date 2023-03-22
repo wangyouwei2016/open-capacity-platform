@@ -22,8 +22,8 @@
 //*  http 密码模式认证服务器的token
 //*/
 //public class AuthPasswordInvoker {
-//	private static final String BASE_URL="http://127.0.0.1:9900/api-user/users?page=1&limit=10";
-//	private static final String TOKEN_URL = "http://127.0.0.1:9900/api-auth/oauth/user/token";
+//	private static final String BASE_URL="http://127.0.0.1:9200/api-user/users?page=1&limit=10";
+//	private static final String TOKEN_URL = "http://127.0.0.1:9200/api-auth/oauth/user/token";
 //	public static String access_token;
 //
 //	private HttpClientBuilder httpClientBuilder;

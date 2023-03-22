@@ -16,9 +16,9 @@
 //*/
 //public class AuthCodeInvoker {
 //	
-//	private static final String BASE_URL="http://127.0.0.1:9900/api-user/users?page=1&limit=10";
-//	private static final String AUTHORIZE_URL = "http://127.0.0.1:8000/api-auth/oauth/authorize?client_id=owen&redirect_uri=http://127.0.0.1:9997/dashboard/login&state=abc&scope=app&response_type=code";
-//	private static final String TOKEN_URL = "http://127.0.0.1:8000/api-auth/oauth/token?grant_type=authorization_code&code=%s&client_id=%s&client_secret=%s&redirect_uri=%s" ;
+//	private static final String BASE_URL="http://127.0.0.1:9200/api-user/users?page=1&limit=10";
+//	private static final String AUTHORIZE_URL = "http://127.0.0.1:9200/api-auth/oauth/authorize?client_id=owen&redirect_uri=http://127.0.0.1:9997/dashboard/login&state=abc&scope=app&response_type=code";
+//	private static final String TOKEN_URL = "http://127.0.0.1:9200/api-auth/oauth/token?grant_type=authorization_code&code=%s&client_id=%s&client_secret=%s&redirect_uri=%s" ;
 //	public static String access_token;
 //
 //	private HttpClientBuilder httpClientBuilder;

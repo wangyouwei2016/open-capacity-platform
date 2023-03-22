@@ -4,14 +4,14 @@ import java.util.Date;
 
 /**
  * xxl-job info
- *
  * @author xuxueli  2016-1-12 18:25:49
  */
 public class XxlJobInfo {
 	
-	private int id;				// 主键ID
+	private int id;				// 主键ID	    (JobKey.name)
 	
-	private int jobGroup;		// 执行器主键ID
+	private int jobGroup;		// 执行器主键ID	(JobKey.group)
+	private String jobCron;		// 任务执行CRON表达式 【base on quartz】
 	private String jobDesc;
 	
 	private Date addTime;
@@ -20,16 +20,11 @@ public class XxlJobInfo {
 	private String author;		// 负责人
 	private String alarmEmail;	// 报警邮件
 
-	private String scheduleType;			// 调度类型
-	private String scheduleConf;			// 调度配置，值含义取决于调度类型
-	private String misfireStrategy;			// 调度过期策略
-
 	private String executorRouteStrategy;	// 执行器路由策略
 	private String executorHandler;		    // 执行器，任务Handler名称
 	private String executorParam;		    // 执行器，任务参数
 	private String executorBlockStrategy;	// 阻塞处理策略
-	private int executorTimeout;     		// 任务执行超时时间，单位秒
-	private int executorFailRetryCount;		// 失败重试次数
+	private String executorFailStrategy;	// 失败处理策略
 	
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
 	private String glueSource;		// GLUE源代码
@@ -37,11 +32,9 @@ public class XxlJobInfo {
 	private Date glueUpdatetime;	// GLUE更新时间
 
 	private String childJobId;		// 子任务ID，多个逗号分隔
-
-	private int triggerStatus;		// 调度状态：0-停止，1-运行
-	private long triggerLastTime;	// 上次调度时间
-	private long triggerNextTime;	// 下次调度时间
-
+	
+	// copy from quartz
+	private String jobStatus;		// 任务状态 【base on quartz】
 
 	public int getId() {
 		return id;
@@ -57,6 +50,14 @@ public class XxlJobInfo {
 
 	public void setJobGroup(int jobGroup) {
 		this.jobGroup = jobGroup;
+	}
+
+	public String getJobCron() {
+		return jobCron;
+	}
+
+	public void setJobCron(String jobCron) {
+		this.jobCron = jobCron;
 	}
 
 	public String getJobDesc() {
@@ -99,39 +100,15 @@ public class XxlJobInfo {
 		this.alarmEmail = alarmEmail;
 	}
 
-	public String getScheduleType() {
-		return scheduleType;
-	}
+    public String getExecutorRouteStrategy() {
+        return executorRouteStrategy;
+    }
 
-	public void setScheduleType(String scheduleType) {
-		this.scheduleType = scheduleType;
-	}
+    public void setExecutorRouteStrategy(String executorRouteStrategy) {
+        this.executorRouteStrategy = executorRouteStrategy;
+    }
 
-	public String getScheduleConf() {
-		return scheduleConf;
-	}
-
-	public void setScheduleConf(String scheduleConf) {
-		this.scheduleConf = scheduleConf;
-	}
-
-	public String getMisfireStrategy() {
-		return misfireStrategy;
-	}
-
-	public void setMisfireStrategy(String misfireStrategy) {
-		this.misfireStrategy = misfireStrategy;
-	}
-
-	public String getExecutorRouteStrategy() {
-		return executorRouteStrategy;
-	}
-
-	public void setExecutorRouteStrategy(String executorRouteStrategy) {
-		this.executorRouteStrategy = executorRouteStrategy;
-	}
-
-	public String getExecutorHandler() {
+    public String getExecutorHandler() {
 		return executorHandler;
 	}
 
@@ -155,20 +132,12 @@ public class XxlJobInfo {
 		this.executorBlockStrategy = executorBlockStrategy;
 	}
 
-	public int getExecutorTimeout() {
-		return executorTimeout;
+	public String getExecutorFailStrategy() {
+		return executorFailStrategy;
 	}
 
-	public void setExecutorTimeout(int executorTimeout) {
-		this.executorTimeout = executorTimeout;
-	}
-
-	public int getExecutorFailRetryCount() {
-		return executorFailRetryCount;
-	}
-
-	public void setExecutorFailRetryCount(int executorFailRetryCount) {
-		this.executorFailRetryCount = executorFailRetryCount;
+	public void setExecutorFailStrategy(String executorFailStrategy) {
+		this.executorFailStrategy = executorFailStrategy;
 	}
 
 	public String getGlueType() {
@@ -211,27 +180,12 @@ public class XxlJobInfo {
 		this.childJobId = childJobId;
 	}
 
-	public int getTriggerStatus() {
-		return triggerStatus;
+	public String getJobStatus() {
+		return jobStatus;
 	}
 
-	public void setTriggerStatus(int triggerStatus) {
-		this.triggerStatus = triggerStatus;
+	public void setJobStatus(String jobStatus) {
+		this.jobStatus = jobStatus;
 	}
 
-	public long getTriggerLastTime() {
-		return triggerLastTime;
-	}
-
-	public void setTriggerLastTime(long triggerLastTime) {
-		this.triggerLastTime = triggerLastTime;
-	}
-
-	public long getTriggerNextTime() {
-		return triggerNextTime;
-	}
-
-	public void setTriggerNextTime(long triggerNextTime) {
-		this.triggerNextTime = triggerNextTime;
-	}
 }

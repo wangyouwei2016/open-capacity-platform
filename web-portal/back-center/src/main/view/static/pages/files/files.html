@@ -39,9 +39,11 @@
         table.render({
             elem: '#files-table',
             // url: config.base_server + 'user_query.json',
-            url: config.base_server + 'api-file/file/files',
+            url: config.base_server + 'api-file/files',
             method: 'GET',
-            headers:{'Authorization': 'Bearer ' + config.getToken().access_token},
+            where: {
+                access_token: config.getToken().access_token
+            },
             page: true,
             cols: [[
                 {type: 'numbers'},
@@ -49,6 +51,7 @@
                 {field: 'name', sort: true, title: '流媒体名称'},
                 {field: 'size', sort: true, title: '文件大小(B)'},
                 {field: 'contentType', sort: true, title: '媒体类型'},
+                {field: 'source', sort: true, title: 'OSS运营商'},
                 {
                     sort: true, templet: function (d) {
                         return util.toDateString(d.createTime);
@@ -83,9 +86,9 @@
             layer.confirm('确定要删除吗？', function (i) {
                 layer.close(i);
                 layer.load(2);
-                admin.req('api-file/file/' + obj.data.id, {}, function (data) {
+                admin.req('api-file/files/' + obj.data.id, {}, function (data) {
                     layer.closeAll('loading');
-                    if (data.statusCodeValue == 0) {
+                    if (data.code == 0) {
                         layer.msg(data.msg, {icon: 1, time: 500});
                         obj.del();
                     } else {

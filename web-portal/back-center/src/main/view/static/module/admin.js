@@ -1,12 +1,6 @@
-layui.extend({
-    md5: 'md5/md5',
-    cover: 'md5/cover'
-});
-layui.define(['config', 'layer', 'cover', 'md5'], function (exports) {
+layui.define(['config', 'layer'], function (exports) {
     var config = layui.config;
     var layer = layui.layer;
-    var md5 = layui.md5;
-    var cover = layui.cover;
     var popupRightIndex, popupCenterIndex, popupCenterParam;
 
     var admin = {
@@ -90,11 +84,19 @@ layui.define(['config', 'layer', 'cover', 'md5'], function (exports) {
             return layer.open(param);
         },
         // 封装ajax请求，返回数据类型为json
-        req: function (url, data, success, method, noHeaderToken) {
+        req: function (url, data, success, method) {
             if ('put' == method.toLowerCase()) {
+                // method = 'POST';
+                // data._method = 'PUT';
                 method = 'PUT';
             } else if ('delete' == method.toLowerCase()) {
+                // method = 'POST';
+                // data._method = 'DELETE';
                 method = 'DELETE';
+            }
+            var token = config.getToken();
+            if (token) {
+                data.access_token = token.access_token;
             }
             //add by owen ajax 执行前置处理器  
             admin.ajax({
@@ -105,32 +107,46 @@ layui.define(['config', 'layer', 'cover', 'md5'], function (exports) {
                 contentType: "application/json",
                 success: success,
                 beforeSend: function (xhr) {
-                    if (!noHeaderToken) {
-                        let token = config.getToken();
-                        if (token) {
-                            xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
-                        }
+                    var token = config.getToken();
+                    if (token) {
+                        // xhr.setRequestHeader('Authorization', 'Basic ' + token.access_token);
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token);
                     }
-                    //前端灰度版本匹配
-                    let isolationVersion = config.isolationVersion;
-                    if (isolationVersion) {
-                        xhr.setRequestHeader('o-c-p-version', isolationVersion);
-                    }
+
+//                    此时发送一个refresh_token
+//                    if (access_token != null && access_token.trim().length != 0) {
+//                		$.ajax({
+//                			type : 'get',
+//                			url : domainName + '/api-u/users/current?access_token=' + access_token,
+//                			success : function(data) {
+//                				location.href = 'index.html';
+//                			},
+//                			error : function(xhr, textStatus, errorThrown) {
+//                				if (xhr.status == 401) {
+//                					localStorage.removeItem("access_token");
+//                				}
+//                			}
+//                		});
+//                	}
                 }
             });
         },
-        // 封装ajax请求，返回数据类型为json，请求头签名校验
-        reqS: function (url, data, success, method) {
+        asyncReq: function (url, data, success, method) {
             if ('put' == method.toLowerCase()) {
+                // method = 'POST';
+                // data._method = 'PUT';
                 method = 'PUT';
             } else if ('delete' == method.toLowerCase()) {
+                // method = 'POST';
+                // data._method = 'DELETE';
                 method = 'DELETE';
             }
-            //创建签名
-            let timestamp = new Date().getTime();
-            let token = this.md5Encryption(timestamp);
-            //add by owen ajax 执行前置处理器
-            admin.ajax({
+            var token = config.getToken();
+            if (token) {
+                data.access_token = token.access_token;
+            }
+            //add by owen ajax 执行前置处理器  
+            admin.asyncajax({
                 url: config.base_server + url,
                 data: data,
                 type: method,
@@ -138,19 +154,64 @@ layui.define(['config', 'layer', 'cover', 'md5'], function (exports) {
                 contentType: "application/json",
                 success: success,
                 beforeSend: function (xhr) {
-                    // 签名和时间戳
-                    xhr.setRequestHeader('webToken', token);
-                    xhr.setRequestHeader('webTm', timestamp);
-                    //前端灰度版本匹配
-                    let isolationVersion = config.isolationVersion;
-                    if (isolationVersion) {
-                        xhr.setRequestHeader('o-c-p-version', isolationVersion);
+                    var token = config.getToken();
+                    if (token) {
+                        // xhr.setRequestHeader('Authorization', 'Basic ' + token.access_token);
+                        xhr.setRequestHeader('Authorization', 'bearer ' + token.access_token);
                     }
+
+//                    此时发送一个refresh_token
+//                    if (access_token != null && access_token.trim().length != 0) {
+//                		$.ajax({
+//                			type : 'get',
+//                			url : domainName + '/api-u/users/current?access_token=' + access_token,
+//                			success : function(data) {
+//                				location.href = 'index.html';
+//                			},
+//                			error : function(xhr, textStatus, errorThrown) {
+//                				if (xhr.status == 401) {
+//                					localStorage.removeItem("access_token");
+//                				}
+//                			}
+//                		});
+//                	}
                 }
             });
         },
-
-        // 封装ajax请求
+        // 封装异步ajax请求
+        asyncAjax: function (param) {
+            var successCallback = param.success;
+            param.success = function (result, status, xhr) {
+                // 判断登录过期和没有权限
+                var jsonRs;
+                if ('json' == param.dataType.toLowerCase()) {
+                    jsonRs = result;
+                } else if ('html' == param.dataType.toLowerCase() || 'text' == param.dataType.toLowerCase()) {
+                    jsonRs = admin.parseJSON(result);
+                }
+                if (jsonRs) {
+                    if (jsonRs.code == 401) {
+                        config.removeToken();
+                        layer.msg('登录过期', {icon: 2, time: 1500}, function () {
+                            location.replace('/login.html');
+                        }, 1000);
+                        return;
+                    } else if (jsonRs.code == 403) {
+                        layer.msg('没有权限', {icon: 2});
+                        return;
+                    }
+                }
+                successCallback(result, status, xhr);
+            };
+            param.error = function (xhr) {
+                param.success({code: xhr.status, msg: xhr.statusText});
+            };
+            //发送异步ajax请求
+            param.async = true;
+            console.log(param);
+            $.ajax(param);
+        },
+        // 封装同步ajax请求
         ajax: function (param) {
             var successCallback = param.success;
             param.success = function (result, status, xhr) {
@@ -162,29 +223,25 @@ layui.define(['config', 'layer', 'cover', 'md5'], function (exports) {
                     jsonRs = admin.parseJSON(result);
                 }
                 if (jsonRs) {
-                    if (jsonRs.statusCodeValue == 401) {
+                    if (jsonRs.code == 401) {
                         config.removeToken();
                         layer.msg('登录过期', {icon: 2, time: 1500}, function () {
                             location.replace('/login.html');
                         }, 1000);
                         return;
-                    } else if (jsonRs.statusCodeValue == 403) {
+                    } else if (jsonRs.code == 403) {
                         layer.msg('没有权限', {icon: 2});
-                        layer.closeAll('loading');
                         return;
                     }
                 }
                 successCallback(result, status, xhr);
             };
             param.error = function (xhr) {
-				var str = xhr.responseJSON.msg ;
-                param.success({statusCodeValue: xhr.status, msg:
-               		str==undefined || str==null ||str=="" ? xhr.statusText : xhr.responseJSON.msg
-                 });
+                param.success({code: xhr.status, msg: xhr.statusText});
             };
             //发送同步ajax请求
             param.async = false;
-            //console.log(param);
+            console.log(param);
             $.ajax(param);
         },
         // 判断是否有权限
@@ -192,11 +249,19 @@ layui.define(['config', 'layer', 'cover', 'md5'], function (exports) {
             var permissions = admin.getTempData("permissions");
             if (permissions){
                 for (var i = 0; i < permissions.length; i++) {
-                    if (auth == permissions[i]) {
+                    if (auth == permissions[i].permission) {
                         return true;
                     }
                 }
             }
+            // var user = config.getUser();
+            // if (user.authorities) {
+            //     for (var i = 0; i < user.authorities.length; i++) {
+            //         if (auth == user.authorities[i].authority) {
+            //             return true;
+            //         }
+            //     }
+            // }
             return false;
         },
         // 窗口大小改变监听
@@ -244,6 +309,7 @@ layui.define(['config', 'layer', 'cover', 'md5'], function (exports) {
                         autoLeft += $(this).outerWidth();
                     }
                 });
+                // console.log(autoLeft);
                 $tabTitle.scrollLeft(autoLeft - 47);
             } else {
                 $tabTitle.scrollLeft(left + 120);
@@ -264,154 +330,6 @@ layui.define(['config', 'layer', 'cover', 'md5'], function (exports) {
                 } catch (e) {
                 }
             }
-        }
-        /**
-         * 页面添加水印
-         * @param txt   水印内容
-         * @param zIndex z-index属性
-         */
-        ,watermark: function (txt, zIndex) {
-            if (zIndex == null || zIndex == '') {
-                zIndex = 9999999999;
-            }
-            let html = '<div id="water-div"></div>';
-            $('body').append(html);
-            //初始设置水印容器高度
-            let water = document.getElementById('water-div');
-            water.innerHTML = "";
-            water.style.height = window.screen.availHeight + "px";
-            water.style.height = document.documentElement.clientHeight + "px";
-            water.style.zIndex = zIndex;
-            //水印样式默认设置
-            let defaultSettings = {
-                watermark_txt:txt,
-                watermark_x:20,//水印起始位置x轴坐标
-                watermark_y:20,//水印起始位置Y轴坐标
-                watermark_rows:2000,//水印行数
-                watermark_cols:2000,//水印列数
-                watermark_x_space:70,//水印x轴间隔
-                watermark_y_space:30,//水印y轴间隔
-                watermark_color:'#aaaaaa',//水印字体颜色
-                watermark_alpha:0.3,//水印透明度
-                watermark_fontsize:'15px',//水印字体大小
-                watermark_font:'微软雅黑',//水印字体
-                watermark_width:210,//水印宽度
-                watermark_height:80,//水印长度
-                watermark_angle:15//水印倾斜度数
-            };
-            //获取页面最大宽度
-            let page_width = Math.max(water.scrollWidth,water.clientWidth);
-            //获取页面最大高度
-            let page_height = Math.max(water.scrollHeight,water.clientHeight);
-
-            //水印数量自适应元素区域尺寸
-            defaultSettings.watermark_cols=Math.ceil(page_width/(defaultSettings.watermark_x_space+defaultSettings.watermark_width));
-            defaultSettings.watermark_rows=Math.ceil(page_height/(defaultSettings.watermark_y_space+defaultSettings.watermark_height));
-            let x;
-            let y;
-            for (let i = 0; i < defaultSettings.watermark_rows; i++) {
-                y = defaultSettings.watermark_y + (defaultSettings.watermark_y_space + defaultSettings.watermark_height) * i;
-                for (let j = 0; j < defaultSettings.watermark_cols; j++) {
-                    x = defaultSettings.watermark_x + (defaultSettings.watermark_width + defaultSettings.watermark_x_space) * j;
-                    let mask_div = document.createElement('div');
-                    //mask_div.id = 'mask_div' + i + j;
-                    mask_div.className = 'mask_div';
-                    //mask_div.appendChild(document.createTextNode(defaultSettings.watermark_txt));
-                    mask_div.innerHTML=(defaultSettings.watermark_txt);
-                    //设置水印div倾斜显示
-                    mask_div.style.webkitTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-                    mask_div.style.MozTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-                    mask_div.style.msTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-                    mask_div.style.OTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-                    mask_div.style.transform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
-                    mask_div.style.visibility = "";
-                    mask_div.style.position = "absolute";
-                    mask_div.style.left = x + 'px';
-                    mask_div.style.top = y + 'px';
-                    mask_div.style.overflow = "hidden";
-                    mask_div.style.zIndex = "9999";
-                    mask_div.style.pointerEvents='none';//pointer-events:none 让水印不遮挡页面的点击事件
-                    //mask_div.style.border="solid #eee 1px";//兼容IE9以下的透明度设置  mask_div.style.filter="alpha(opacity=50)";
-                    mask_div.style.opacity = defaultSettings.watermark_alpha;
-                    mask_div.style.fontSize = defaultSettings.watermark_fontsize;
-                    mask_div.style.fontFamily = defaultSettings.watermark_font;
-                    mask_div.style.color = defaultSettings.watermark_color;
-                    mask_div.style.textAlign = "center";
-                    mask_div.style.width = defaultSettings.watermark_width + 'px';
-                    mask_div.style.height = defaultSettings.watermark_height + 'px';
-                    mask_div.style.display = "block";
-                    water.appendChild(mask_div);
-                }
-            }
-        }
-        /**
-         * 添加水印
-         * */
-        ,addWater: function () {
-            if (config.waterMark) {
-                let href = location.href;
-                if (!(/\/login.html\??[^]*/.test(href.substring(href.lastIndexOf("/"))))) {
-                    let loginUser = config.getUser();
-                    let text = admin.parseTime(new Date());
-                    if (loginUser != null) {
-                        text = loginUser.username + loginUser.mobile + '<br/>' + admin.parseTime(new Date());
-                    }
-                    if (top.$('#water-div').length == 0) {
-                        if (config.waterMarkTop) {
-                            $(window).on('load', admin.watermark(text));
-                        } else {
-                            $(window).on('load', admin.watermark(text, 999));
-                        }
-                    }
-                }
-            }
-        }
-        // 时间解析
-        ,parseTime: function (date, format) {
-            if (admin.isNull(format)) {
-                format = 'yyyy-MM-dd HH:mm:ss';
-            }
-            let o = {
-                "M+": date.getMonth() + 1, //月份
-                "d+": date.getDate(), //日
-                "H+": date.getHours(), //小时
-                "m+": date.getMinutes(), //分
-                "s+": date.getSeconds(), //秒
-                "q+": Math.floor((date.getMonth() + 3) / 3), //季度
-                "S": date.getMilliseconds() //毫秒
-            };
-            if (/(y+)/.test(format)) format = format.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
-            for (let k in o) {
-                if (new RegExp("(" + k + ")").test(format)) format = format.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-            }
-            return format;
-        }
-        /**
-         * 判断字符串是否为空
-         * @param txt
-         * @returns {boolean}
-         */
-        ,isNull: function (txt) {
-            if (typeof txt == 'undefined' || txt == null || txt == '' || txt.trim() == '' || txt.toLowerCase() == 'null') {
-                return true;
-            }
-            return false;
-        }
-        /**
-         * md5加密
-         * @param t
-         * @returns {string|*}
-         */
-        ,md5Encryption: function (t) {
-            return md5.md5(cover.fromCode(md5.secret()) + t);
-        }
-        /**
-         * 解密secret
-         * @param s
-         * @returns {*}
-         */
-        ,coverCode: function (s) {
-            return cover.fromCode(s);
         }
     };
 

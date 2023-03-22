@@ -1,6 +1,119 @@
+#端口
 server:
-  port: 4007
+  port: 5000    #固定端口
+#   port: ${randomServerPort.value[5000,5005]}  #随机端口
 
+#服务名称
 spring:
   application:
-    name: @artifactId@
+    name: file-center
+  servlet:
+    multipart:
+      max-request-size: 200MB
+      max-file-size: 200MB
+
+#  cloud:
+#    servicecomb:
+#      discovery:
+#        enabled: true
+#        address: http://127.0.0.1:30100
+#        appName: OCP-application
+#        serviceName: ${spring.application.name}
+#        version: 0.0.1
+#        healthCheckInterval: 15
+#      config:
+#        serverAddr: http://127.0.0.1:30110
+#        serverType: kie
+  cloud:
+    servicecomb:
+      discovery:
+        enabled: true
+        watch: false
+        address: https://cse.cn-south-1.myhuaweicloud.com
+        # address: http://127.0.0.1:30100
+        appName: OCP-application
+        serviceName: ${spring.application.name}
+        version: 0.0.2
+        healthCheckInterval: 30
+
+      config:
+        serverAddr: https://cse.cn-south-1.myhuaweicloud.com
+        # serverAddr:  http://127.0.0.1:30113
+        # fileSource: application.yaml
+        serverType: config-center
+
+      # Configure AK/SK credentials if needed. Default not enabled.
+      credentials:
+        enabled: true
+        accessKey: 你的AK
+        secretKey: 你的SK
+        akskCustomCipher: default
+        project: 区域
+
+ 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    chaosmonkey:
+      enabled: true
+    health:
+      show-details: always  
+      
+#eureka client配置
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone:  http://ocp:ocp2019@127.0.0.1:1111/eureka  #http://130.75.131.241:8761/eureka,http://130.75.131.248:8762/eureka
+#      #http://134.224.249.33:1111/eureka/  正式库
+#      #http://134.224.249.33:1111/eureka/  测试库
+#      #http://127.0.0.1:8761/eureka,http://127.0.0.1:8762/eureka
+#    registry-fetch-interval-seconds: 5
+#    instance-info-replication-interval-seconds: 10
+#  instance:
+#    prefer-ip-address: true
+#    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}  #固定端口
+##    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${randomServerPort.value[5000,5005]}}  #随机端口
+#    lease-renewal-interval-in-seconds: 10  #每隔几秒告诉eureka服务器我还存活，用于心跳检测
+#    lease-expiration-duration-in-seconds: 10 #如果心跳检测一直没有发送，10秒后会从eureka服务器中将此服务剔除
+#    status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/doc.html # ${server.port}为该服务的端口号
+##    status-page-url: http://${spring.cloud.client.ip-address}:${randomServerPort.value[5000,5005]}/document.html # ${server.port}为该服务的端口号
+
+        #  cloud:
+        #    servicecomb:
+        #      # 微服务的基本信息
+        #      service:
+        #        # 微服务名称，和spring.application.name保持一致。
+        #        name: ${spring.application.name}
+        #        # 微服务版本号，本示例使用ServiceStage环境变量。建议保留这种配置方式，
+        #        # 部署的时候，不用手工修改版本号，防止契约注册失败。
+        #        version: ${CAS_INSTANCE_VERSION:0.0.1}
+        #        # 应用名称。默认情况下只有应用名称相同的微服务之间才可以相互发现。
+        #        application: ${CAS_APPLICATION_NAME:OCP-application}
+        #        # 环境名称。只有环境名称相同的微服务之间才可以相互发现。
+        #        # 可以取值 development, testing, acceptance, production
+        #        # environment: production
+        #      # 注册发现相关配置
+        #      discovery:
+        #        # 注册中心地址，本示例使用ServiceStage环境变量。建议保留这种配置方式，
+        #        # 部署的时候，不用手工修改地址。
+        #        address: ${PAAS_CSE_SC_ENDPOINT:https://cse.cn-south-1.myhuaweicloud.com}
+        #        # 微服务向CSE发送心跳间隔时间，单位秒
+        #        healthCheckInterval: 10
+        #        # 拉取实例的轮询时间，单位毫秒
+        #        pollInterval: 15000
+        #        # 优雅停机设置。优雅停机后，先从注册中心注销自己。这个时间表示注销自己后等待的时间，这个时间后才退出。
+        #        waitTimeForShutDownInMillis: 15000
+        #      config:
+        #        # 配置中心地址，本示例使用ServiceStage环境变量。建议保留这种配置方式，
+        #        # 部署的时候，不用手工修改地址。
+        #        serverAddr: ${PAAS_CSE_CC_ENDPOINT:https://cse.cn-south-1.myhuaweicloud.com}
+        #        serverType: kie
+        #        # 自定义配置
+        #        kie:
+        #          customLabel: ${ spring.application.name}
+        #          customLabelValue: ${ INSTANCE_TAG:default}
+      # 自定义配置，使用文本的key / value配置项作为yaml格式配置
+#        fileSource: test.yaml

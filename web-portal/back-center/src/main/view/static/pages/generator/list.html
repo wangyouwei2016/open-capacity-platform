@@ -37,7 +37,9 @@
             elem: '#generator-table',
             url: config.base_server + 'api-generator/generator/list',
             method: 'GET',
-            headers:{'Authorization': 'Bearer ' + config.getToken().access_token},
+            where: {
+                access_token: config.getToken().access_token
+            },
             page: true,
             cols: [[
                 {type: 'numbers'},
@@ -48,7 +50,7 @@
                         return util.toDateString(d.createTime);
                     }, title: '创建时间'
                 },
-                {align: 'center', width: 80, toolbar: '#generator-table-bar', title: '操作'}
+                {align: 'center', width:80, toolbar: '#generator-table-bar', title: '操作'}
             ]]
         });
 
@@ -71,8 +73,25 @@
         // 生成
         var generator = function (obj) {
             // layer.msg("演示阶段", {icon: 1});
-            var url = config.base_server + 'api-generator/generator/code?access_token=' + config.getToken().access_token + "&tables=" + obj.data.tableName;
-            window.location.href = url;
+            var url = config.base_server + 'api-generator/generator/code?access_token='+config.getToken().access_token+"&tables="+ obj.data.tableName;
+            window.location.href =  url;
+
+            // var xhr = new XMLHttpRequest();
+            // xhr.open('GET', url, true);
+            // xhr.responseType = "blob";
+            // xhr.setRequestHeader("client_type", "DESKTOP_WEB");
+            // xhr.onload = function() {
+            //     if (this.status == 200) {
+            //         var blob = this.response;
+            //         var objecturl = URL.createObjectURL(blob);
+            //         window.location.href = objecturl;
+            //     }
+            // }
+            // xhr.send();
+
         };
+
+
+
     });
 </script>

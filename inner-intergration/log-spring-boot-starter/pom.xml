@@ -1,120 +1,85 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.open.capacity</groupId>
-    <artifactId>inner-intergration</artifactId>
-    <version>${revision}</version>
-  </parent>
-	<packaging>jar</packaging>
-  <artifactId>log-spring-boot-starter</artifactId>
-  <description>日志支撑</description>
-  
-  
-  <properties>
-  	<log-version>1.0.0</log-version>
-  </properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.open.capacity</groupId>
+        <artifactId>inner-intergration</artifactId>
+        <version>2.0.1</version>
+    </parent>
+    <artifactId>log-spring-boot-starter</artifactId>
+    <description>日志支撑</description>
+
+
+    <properties>
+        <log-version>1.0.0</log-version>
+        <sentry-version>1.7.30</sentry-version>
+    </properties>
+    <dependencies>
+        <dependency>
             <groupId>structlog4j</groupId>
             <artifactId>structlog4j-api</artifactId>
             <version>${log-version}</version>
         </dependency>
+
         <dependency>
             <groupId>structlog4j</groupId>
             <artifactId>structlog4j-json</artifactId>
             <version>${log-version}</version>
         </dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-context</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>transmittable-thread-local</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-aop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-all</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.zalando</groupId>
-			<artifactId>tracer-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<optional>true</optional>
-		</dependency>
-		 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-stream</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-stream-kafka</artifactId>
-		</dependency>
-		<dependency>
-		  <groupId>org.springframework.cloud</groupId>
-		  <artifactId>spring-cloud-stream-binder-kafka</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.dubbo</groupId>
-			<artifactId>dubbo</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>io.github.openfeign</groupId>
-			<artifactId>feign-core</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-		      <groupId>org.javers</groupId>
-		      <artifactId>javers-core</artifactId>
-   		 </dependency>
-		 <!-- 
-		  <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        
+        <!-- 
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-logback</artifactId>
+            <version>${sentry-version}</version>
         </dependency>
-		  -->
-	</dependencies>
-  
+         -->
+        
+        <dependency>
+            <groupId>com.open.capacity</groupId>
+            <artifactId>common-spring-boot-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.open.capacity</groupId>
+            <artifactId>db-spring-boot-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-sleuth-core -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-sleuth-core</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
+    </dependencies>
+
 </project>

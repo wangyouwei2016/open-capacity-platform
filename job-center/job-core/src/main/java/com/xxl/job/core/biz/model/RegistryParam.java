@@ -8,23 +8,23 @@ import java.io.Serializable;
 public class RegistryParam implements Serializable {
     private static final long serialVersionUID = 42L;
 
-    private String registryGroup;
+    private String registGroup;
     private String registryKey;
     private String registryValue;
 
     public RegistryParam(){}
-    public RegistryParam(String registryGroup, String registryKey, String registryValue) {
-        this.registryGroup = registryGroup;
+    public RegistryParam(String registGroup, String registryKey, String registryValue) {
+        this.registGroup = registGroup;
         this.registryKey = registryKey;
         this.registryValue = registryValue;
     }
 
-    public String getRegistryGroup() {
-        return registryGroup;
+    public String getRegistGroup() {
+        return registGroup;
     }
 
-    public void setRegistryGroup(String registryGroup) {
-        this.registryGroup = registryGroup;
+    public void setRegistGroup(String registGroup) {
+        this.registGroup = registGroup;
     }
 
     public String getRegistryKey() {
@@ -46,7 +46,7 @@ public class RegistryParam implements Serializable {
     @Override
     public String toString() {
         return "RegistryParam{" +
-                "registryGroup='" + registryGroup + '\'' +
+                "registGroup='" + registGroup + '\'' +
                 ", registryKey='" + registryKey + '\'' +
                 ", registryValue='" + registryValue + '\'' +
                 '}';

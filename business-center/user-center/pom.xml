@@ -3,27 +3,15 @@
   <parent>
     <groupId>com.open.capacity</groupId>
     <artifactId>business-center</artifactId>
-    <version>${revision}</version>
+    <version>2.0.1</version>
   </parent>
   <artifactId>user-center</artifactId>
   <description>用户中心</description>
+	<name>user-center</name>
+	<packaging>jar</packaging>
   <dependencies>
   
-  		<!-- 启动图标 -->
-		<dependency>
-			<groupId>com.open.capacity</groupId>
-			<artifactId>banner-spring-boot-starter</artifactId>
-		</dependency>
-  		<!-- 配置服务 -->
-        <dependency>
-		  <groupId>com.open.capacity</groupId>
-		  <artifactId>config-spring-boot-starter</artifactId>
-	    </dependency>
   		<!-- 关系型数据库配置 -->
-  		<dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
 	 	<dependency>
   			<groupId>com.open.capacity</groupId>
   			<artifactId>db-spring-boot-starter</artifactId>
@@ -40,79 +28,95 @@
   			<artifactId>log-spring-boot-starter</artifactId>
   		</dependency>
 
-  		<!-- 通用基础能力模块 -->
+  		<!-- 公共实体配置 -->
   		<dependency>
   			<groupId>com.open.capacity</groupId>
   			<artifactId>common-spring-boot-starter</artifactId>
   		</dependency>
+  		
+  		<!-- 资源服务器配置 -->
+  		<dependency>
+  			<groupId>com.open.capacity</groupId>
+  			<artifactId>uaa-client-spring-boot-starter</artifactId>
+  		</dependency>
+		
 		<!-- API文档配置 -->
 		<dependency>
   			<groupId>com.open.capacity</groupId>
   			<artifactId>swagger-spring-boot-starter</artifactId>
   		</dependency>
-		
-		<!-- 熔断限流组件 -->
+
 		<dependency>
-			<groupId>com.open.capacity</groupId>
-			<artifactId>sentinel-spring-boot-starter</artifactId>
-		</dependency>
-		
-		<!-- 负责均衡 -->
-		<dependency>
-            <groupId>com.open.capacity</groupId>
-            <artifactId>loadbalancer-spring-boot-starter</artifactId>
-        </dependency>
-		<!-- 资源服务器 -->
-  		<dependency>
-			<groupId>com.open.capacity</groupId>
-			<artifactId>uaa-client-spring-boot-starter</artifactId>
-		</dependency>
-        <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<!-- 移除tomcat容器 -->
+		</dependency>
+
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+ 
+		<!-- easypoi -->
+		<dependency>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-base</artifactId>
+			<version>4.0.0</version>
+			<!--add by owen �ų��������swagger�������� -->
 			<exclusions>
 				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-web</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.afterturn</groupId>
+			<artifactId>easypoi-annotation</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-zipkin</artifactId>
+		</dependency>
+		 -->
+		 
+		<!-- 选用eureka时打开-->
+		<!--<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>-->
 
-		</dependency>
+	  <dependency>
+		  <groupId>com.huaweicloud</groupId>
+		  <artifactId>spring-cloud-starter-huawei-service-engine-gateway</artifactId>
+		  <version>1.6.1-Greenwich</version>
+		  <!--		  <version>1.9.3-Hoxton</version>-->
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-undertow</artifactId>
-		</dependency>
-        
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-		<dependency>
-			<groupId>net.bull.javamelody</groupId>
-			<artifactId>javamelody-spring-boot-starter</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-    	<!-- 测试框架 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-  </dependencies>
+		  <exclusions>
+			  <exclusion>
+				  <groupId>com.huaweicloud</groupId>
+				  <artifactId>spring-cloud-starter-huawei-swagger</artifactId>
+			  </exclusion>
+			  <!--<exclusion>
+				  <groupId>com.huaweicloud</groupId>
+				  <artifactId>spring-cloud-starter-huawei-router</artifactId>
+			  </exclusion>-->
+		  </exclusions>
+	  </dependency>
+		 
+	</dependencies>
 
 	<!-- 形成带第三方jar包的可执行jar包，jar包目录结构如下 application.properties lib META-INF mybatis 
 		org -->
@@ -121,6 +125,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.1.6.RELEASE</version>
 				<executions>
 					<execution>
 						<goals>
@@ -131,9 +136,9 @@
 			</plugin>
 
 
-			<!-- 首先加入pom ${docker.image.prefix} ： 这个是你的dockerhub注册上面的名字 gitgeek 这个是我注册的 
+			<!-- 首先加入pom ${docker.image.prefix} ： 这个是你的dockerhub注册上面的名字 gitgeek 这个是我注册的
 				${project.artifactId} ： 项目的名称 dockerDirectory ： dockerfile的文件路径 -->
-			<plugin>
+			<!--<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>0.4.13</version>
@@ -149,7 +154,7 @@
 						</resource>
 					</resources>
 				</configuration>
-			</plugin>
+			</plugin>-->
 
 		</plugins>
 		<finalName>${project.artifactId}</finalName>

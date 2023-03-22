@@ -3,14 +3,11 @@ target/
 *.jar
 *.war
 *.zip
-*.gz
 *.tar
 *.tar.gz
-*.log.gz
 *.class
 *.project
 *.factorypath
-*.flattened-pom.xml
 
 # eclipse ignore
 .settings/
@@ -40,8 +37,3 @@ Thumbs.db
 
 # else
 .springBeans
-/register-center/nacos-server/target/nacos.part1.rar
-/register-center/nacos-server/target/nacos.part2.rar
-/register-center/nacos-server/target/nacos.part3.rar
-MANIFEST.MF
-

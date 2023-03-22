@@ -3,46 +3,30 @@
   <parent>
     <groupId>com.open.capacity</groupId>
     <artifactId>open-capacity-platform</artifactId>
-    <version>${revision}</version>
+    <version>2.0.1</version>
   </parent>
   <artifactId>inner-intergration</artifactId>
   <packaging>pom</packaging>
   <description>内部支撑工具</description>
-
+    
   <modules>
-    <!-- 启动图标 -->
-    <module>banner-spring-boot-starter</module>
-  	<!-- 基础能力配置-->
-    <module>base-spring-boot-starter</module>
-  	<!-- 公共实体类配置 -->
-  	<module>common-spring-boot-starter</module>
-  	<!-- 统一配置-->
-    <module>config-spring-boot-starter</module>
-    <!-- 关系型数据库配置-->
+  	<!-- 关系型数据库配置-->
   	<module>db-spring-boot-starter</module>
-  	<!-- 数据库版本控制 -->
-    <module>flyway-spring-boot-starter</module>
   	<!-- 非关系型数据库配置-->
   	<module>redis-spring-boot-starter</module>
   	<!-- 日志统一配置 -->
   	<module>log-spring-boot-starter</module>
+  	<!-- 公共实体类配置 -->
+  	<module>common-spring-boot-starter</module>
   	<!-- API文档配置 -->
   	<module>swagger-spring-boot-starter</module>
   	<!-- 资源服务器配置 -->
-   <module>uaa-client-spring-boot-starter</module> 
+  	<module>uaa-client-spring-boot-starter</module>
   	<!-- 认证服务器配置 -->
   	<module>uaa-server-spring-boot-starter</module>
+  	<!-- mq -->
+  	<module>rabbitmq-spring-boot-starter</module>
   	<!-- 自定义负载均衡策略-->
-  	<module>loadbalancer-spring-boot-starter</module>
-  	<!-- 限流 -->
-    <module>sentinel-spring-boot-starter</module> 
-    <!--规则引擎 -->
-    <module>rules-spring-boot-starter</module>
-    <!--oss存储 -->
-    <module>oss-spring-boot-starter</module>
-    <!-- 序列生成器 -->
-    <module>uid-spring-boot-starter</module>
-    <!-- 极光推送 -->
-    <module>jpush-spring-boot-starter</module>
+  	<module>ribbon-spring-boot-starter</module>
   </modules>
 </project>

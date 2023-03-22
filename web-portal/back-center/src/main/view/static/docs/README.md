@@ -283,7 +283,7 @@ menus: [{
     subMenus: [{
         name: '用户管理',
         url: '#!user',  // 这里url不能带斜杠
-        path: user_search.html,
+        path: 'system/user.html',
         auth: 'post:/user/query'
     }, {
         name: '角色管理',
@@ -489,7 +489,7 @@ end | 方法 | 否 | 弹窗关闭的回调
             // 这里是用admin封装的ajax请求
             admin.req('user', data.field, function (data) {
                 layer.closeAll('loading');
-                if (data.statusCodeValue == 200) {
+                if (data.code == 200) {
                     layer.msg('添加成功', {icon: 1});
                     
                     // 这里是关键，调用这个方法就触发finish回调并且关闭弹窗
@@ -1138,7 +1138,7 @@ treeTable项目地址：[https://gitee.com/whvse/treetable-lay](https://gitee.co
 
 - **2018-07-22 - 增加树形表格的功能**
 
-    - 增加树形表格的功能 [treeTable](#_312树形表格treeTable)
+###    - 增加树形表格的功能 [treeTable]  (#_312树形表格treeTable)
 
 - **2018-07-20 - 发布不分离版的easyweb-shiro稳定版本**
 
@@ -1148,7 +1148,7 @@ treeTable项目地址：[https://gitee.com/whvse/treetable-lay](https://gitee.co
 - **2018-07-12 - 增加主题、多标签**
     
     - 增加多标签tab功能，并且增加自由切换是否开启多标签功能
-    - 增加主题切换功能，上线 [主题生成器](#_310主题功能) ，自由生成主题样式
+#    - 增加主题切换功能，上线 [主题生成器](#_310主题功能) ，自由生成主题样式
     
 - **2018-06-28 - 发布全新2.0版本**
 

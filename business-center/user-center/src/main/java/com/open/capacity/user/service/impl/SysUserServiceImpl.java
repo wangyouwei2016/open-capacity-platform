@@ -1,288 +1,470 @@
 package com.open.capacity.user.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.open.capacity.common.constant.CommonConstant;
+import com.open.capacity.common.auth.details.LoginAppUser;
 import com.open.capacity.common.constant.UserType;
-import com.open.capacity.common.dto.PageResult;
-import com.open.capacity.common.exception.BusinessException;
-import com.open.capacity.common.model.BaseEntity;
-import com.open.capacity.common.model.LoginAppUser;
-import com.open.capacity.common.model.SysMenu;
+import com.open.capacity.common.exception.service.ServiceException;
+import com.open.capacity.common.model.SysPermission;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.model.SysUser;
-import com.open.capacity.common.utils.EntityUtils;
-import com.open.capacity.user.mapper.SysRoleMenuMapper;
-import com.open.capacity.user.mapper.SysUserMapper;
-import com.open.capacity.user.model.SysRoleUser;
+import com.open.capacity.common.util.PageUtil;
+import com.open.capacity.common.util.SysUserUtil;
+import com.open.capacity.common.util.ValidatorUtil;
+import com.open.capacity.common.web.PageResult;
+import com.open.capacity.common.web.Result;
+import com.open.capacity.user.dao.SysUserDao;
+import com.open.capacity.user.dao.SysUserRoleDao;
 import com.open.capacity.user.model.SysUserExcel;
-import com.open.capacity.user.service.ISysRoleUserService;
-import com.open.capacity.user.service.ISysUserService;
+import com.open.capacity.user.service.SysPermissionService;
+import com.open.capacity.user.service.SysUserService;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author 作者 owen E-mail: 624191343@qq.com
+ * @author 作者 owen 
+ * @version 创建时间：2017年11月12日 上午22:57:51
  */
 @Slf4j
 @Service
-public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
+public class SysUserServiceImpl implements SysUserService {
 
 	@Autowired
+	private SysUserDao sysUserDao;
+	@Autowired
 	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private SysPermissionService sysPermissionService;
+	@Autowired
+	private SysUserRoleDao userRoleDao;
 
-	@Resource
-	private ISysRoleUserService roleUserService;
+	@Autowired(required = false)
+	private TokenStore redisTokenStore;
 
-	@Resource
-	private SysRoleMenuMapper roleMenuMapper;
-
+	
 	@Override
-	public LoginAppUser findByUsername(String username) {
-		SysUser sysUser = this.selectByUsername(username);
-		return getLoginAppUser(sysUser);
-	}
+	@Transactional
+	public void addSysUser(SysUser sysUser)  throws ServiceException {
+		try {
+			String username = sysUser.getUsername();
+			if (StringUtils.isBlank(username)) {
+				throw new IllegalArgumentException("用户名不能为空");
+			}
 
-	@Override
-	public LoginAppUser findByOpenId(String username) {
-		SysUser sysUser = this.selectByOpenId(username);
-		return getLoginAppUser(sysUser);
-	}
+			if (ValidatorUtil.checkPhone(username)) {// 防止用手机号直接当用户名，手机号要发短信验证
+				throw new IllegalArgumentException("用户名要包含英文字符");
+			}
 
-	@Override
-	public LoginAppUser findByMobile(String username) {
-		SysUser sysUser = this.selectByMobile(username);
-		return getLoginAppUser(sysUser);
-	}
+			if (username.contains("@")) {// 防止用邮箱直接当用户名，邮箱也要发送验证（暂未开发）
+				throw new IllegalArgumentException("用户名不能包含@");
+			}
 
-	/**
-	 * 根据用户名查询用户
-	 * 
-	 * @param username
-	 * @return
-	 */
-	@Override
-	public SysUser selectByUsername(String username) {
-		List<SysUser> users = baseMapper.selectList(Wrappers.<SysUser>lambdaQuery().eq(SysUser::getUsername, username));
-		return getUser(users);
-	}
+			if (username.contains("|")) {
+				throw new IllegalArgumentException("用户名不能包含|字符");
+			}
 
-	/**
-	 * 根据手机号查询用户
-	 * 
-	 * @param mobile
-	 * @return
-	 */
-	@Override
-	public SysUser selectByMobile(String mobile) {
-		List<SysUser> users = baseMapper.selectList(Wrappers.<SysUser>lambdaQuery().eq(SysUser::getMobile, mobile));
-		return getUser(users);
-	}
+			if (StringUtils.isBlank(sysUser.getPassword())) {
+				throw new IllegalArgumentException("密码不能为空");
+			}
 
-	/**
-	 * 根据openId查询用户
-	 * 
-	 * @param openId
-	 * @return
-	 */
-	@Override
-	public SysUser selectByOpenId(String openId) {
-		List<SysUser> users = baseMapper.selectList(Wrappers.<SysUser>lambdaQuery().eq(SysUser::getOpenId, openId));
-		return getUser(users);
-	}
+			if (StringUtils.isBlank(sysUser.getNickname())) {
+				sysUser.setNickname(username);
+			}
 
-	/**
-	 * 根据userId查询用户
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public LoginAppUser findByUserId(String userId) {
+			if (StringUtils.isBlank(sysUser.getType())) {
+				sysUser.setType(UserType.APP.name());
+			}
 
-		SysUser sysUser = baseMapper.selectById(userId);
-		return getLoginAppUser(sysUser);
-	}
+			SysUser persistenceUser = sysUserDao.findByUsername(sysUser.getUsername());
+			if (persistenceUser != null && persistenceUser.getUsername() != null) {
+				throw new IllegalArgumentException("用户名已存在");
 
-	private SysUser getUser(List<SysUser> users) {
-		SysUser user = null;
-		if (users != null && !users.isEmpty()) {
-			user = users.get(0);
+			}
+
+			sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
+			sysUser.setEnabled(Boolean.TRUE);
+			sysUser.setCreateTime(new Date());
+			sysUser.setUpdateTime(sysUser.getCreateTime());
+			sysUserDao.save(sysUser);
+			log.info("添加用户：{}", sysUser);
+		} catch (Exception e) {
+			throw new ServiceException(e);
 		}
-		return user;
+	}
+
+	
+	@Override
+	@Transactional
+	public SysUser updateSysUser(SysUser sysUser)  throws ServiceException {
+		try {
+			sysUser.setUpdateTime(new Date());
+
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+			if (authentication instanceof OAuth2Authentication) {
+				OAuth2Authentication oAuth2Auth = (OAuth2Authentication) authentication;
+				authentication = oAuth2Auth.getUserAuthentication();
+
+				OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) oAuth2Auth.getDetails();
+
+				LoginAppUser user = SysUserUtil.getLoginAppUser();
+
+				if (user != null) {
+
+					if ( !ObjectUtils.notEqual(user.getId(),sysUser.getId()) ) {
+
+						OAuth2AccessToken token = redisTokenStore.readAccessToken(details.getTokenValue());
+
+						if (token != null) {
+
+							if (!StringUtils.isBlank(sysUser.getHeadImgUrl())) {
+								user.setHeadImgUrl(sysUser.getHeadImgUrl());
+							}
+
+							if (!StringUtils.isBlank(sysUser.getNewPassword())) {
+								user.setPassword(sysUser.getNewPassword());
+							}
+
+							if (!StringUtils.isBlank(sysUser.getNewPassword())) {
+								user.setPassword(sysUser.getNewPassword());
+							}
+
+							if (!StringUtils.isBlank(sysUser.getNickname())) {
+								user.setNickname(sysUser.getNickname());
+							}
+
+							if (!StringUtils.isBlank(sysUser.getPhone())){
+								user.setPhone(sysUser.getPhone());
+							}
+
+							if (sysUser.getSex() != null) {
+								user.setSex(sysUser.getSex());
+							}
+
+							UsernamePasswordAuthenticationToken userAuthentication = new UsernamePasswordAuthenticationToken(user,
+			                        null, user.getAuthorities());
+
+							OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Auth.getOAuth2Request(), userAuthentication);
+							oAuth2Authentication.setAuthenticated(true);
+							redisTokenStore.storeAccessToken(token, oAuth2Authentication);
+
+						}
+
+					}
+
+				}
+			}
+
+			sysUserDao.updateByPrimaryKey(sysUser);
+			log.info("修改用户：{}", sysUser);
+			return sysUser;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	
+	@Override
+	@Transactional
+	public LoginAppUser findByUsername(String username)  throws ServiceException{
+		try {
+			SysUser sysUser = sysUserDao.findUserByUsername(username);
+			if (sysUser != null) {
+				LoginAppUser loginAppUser = new LoginAppUser();
+				BeanUtils.copyProperties(sysUser, loginAppUser);
+
+				Set<SysRole> sysRoles = userRoleDao.findRolesByUserId(sysUser.getId());
+				loginAppUser.setSysRoles(sysRoles);// 设置角色
+
+				if (!CollectionUtils.isEmpty(sysRoles)) {
+					Set<Long> roleIds = sysRoles.parallelStream().map(r -> r.getId()).collect(Collectors.toSet());
+					Set<SysPermission> sysPermissions = sysPermissionService.findByRoleIds(roleIds);
+					if (!CollectionUtils.isEmpty(sysPermissions)) {
+						Set<String> permissions = sysPermissions.parallelStream().map(p -> p.getPermission())
+								.collect(Collectors.toSet());
+
+						loginAppUser.setPermissions(permissions);// 设置权限集合
+					}
+
+				}
+
+				return loginAppUser;
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+
+		return null;
+	}
+
+
+	
+	@Override
+	@Transactional
+	public LoginAppUser findByMobile(String mobile)  throws ServiceException {
+		try {
+			SysUser sysUser = sysUserDao.findUserByMobile(mobile);
+			if (sysUser != null) {
+				LoginAppUser loginAppUser = new LoginAppUser();
+				BeanUtils.copyProperties(sysUser, loginAppUser);
+
+				Set<SysRole> sysRoles = userRoleDao.findRolesByUserId(sysUser.getId());
+				loginAppUser.setSysRoles(sysRoles);// 设置角色
+
+				if (!CollectionUtils.isEmpty(sysRoles)) {
+					Set<Long> roleIds = sysRoles.parallelStream().map(r -> r.getId()).collect(Collectors.toSet());
+					Set<SysPermission> sysPermissions = sysPermissionService.findByRoleIds(roleIds);
+					if (!CollectionUtils.isEmpty(sysPermissions)) {
+						Set<String> permissions = sysPermissions.parallelStream().map(p -> p.getPermission())
+								.collect(Collectors.toSet());
+
+						loginAppUser.setPermissions(permissions);// 设置权限集合
+					}
+
+				}
+
+				return loginAppUser;
+			}
+
+			return null;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public SysUser findById(Long id)  throws ServiceException {
+		try {
+			return sysUserDao.findById(id);
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	/**
 	 * 给用户设置角色
 	 */
-	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public void setRoleToUser(Long id, Set<Long> roleIds) {
-		SysUser sysUser = baseMapper.selectById(id);
-		if (sysUser == null) {
-			throw new IllegalArgumentException("用户不存在");
-		}
-
-		roleUserService.deleteUserRole(id, null);
-		if (!CollectionUtils.isEmpty(roleIds)) {
-			List<SysRoleUser> roleUsers = new ArrayList<>(roleIds.size());
-			roleIds.forEach(roleId -> roleUsers.add(SysRoleUser.builder().userId(id).roleId(roleId).build()));
-			roleUserService.saveBatch(roleUsers);
-		}
-	}
-
 	@Transactional
-	@Override
-	public boolean updatePassword(Long id, String oldPassword, String newPassword) {
+	public void setRoleToUser(Long id, Set<Long> roleIds)  throws ServiceException {
+		try {
+			SysUser sysUser = sysUserDao.findById(id);
+			if (sysUser == null) {
 
-		boolean flag = false;
-		SysUser sysUser = baseMapper.selectById(id);
-		if (StrUtil.isNotBlank(oldPassword)) {
-			if (!passwordEncoder.matches(oldPassword, sysUser.getPassword())) {
-				throw new BusinessException("更新异常");
+				throw new IllegalArgumentException("用户不存在");
 			}
-		}
-		if (StrUtil.isBlank(newPassword)) {
-			newPassword = CommonConstant.DEF_USER_PASSWORD;
-		}
-		SysUser user = new SysUser();
-		user.setId(id);
-		user.setPassword(passwordEncoder.encode(newPassword));
-		flag = baseMapper.updateById(user) > 0 ? true : false;
-		return flag;
-	}
 
-	@Override
-	public PageResult<SysUser> findUsers(Map<String, Object> params) {
-		Page<SysUser> page = new Page<>(MapUtils.getInteger(params, "page"), MapUtils.getInteger(params, "limit"));
-		List<SysUser> list = baseMapper.findList(page, params);
-		
-		if (!CollectionUtils.isEmpty(list)) {
-			List<Long> userIds = EntityUtils.toList(list, SysUser::getId) ;
-			List<SysRole> sysRoles = roleUserService.findRolesByUserIds(userIds);
-			list.forEach(u -> u.setRoles(sysRoles.stream().filter(r -> !ObjectUtils.notEqual(u.getId(), r.getUserId()))
-					.collect(Collectors.toList())));
-		}
-		return PageResult.<SysUser>builder().data(list).statusCodeValue(0).count(page.getTotal()).build();
-	}
-
-	@Override
-	public List<SysRole> findRolesByUserId(Long userId) {
-		return roleUserService.findRolesByUserId(userId);
-	}
-
-	@Override
-	public int updateEnabled(Map<String, Object> params) {
-		int i = 0;
-		Long id = MapUtils.getLong(params, "id");
-		Boolean enabled = MapUtils.getBoolean(params, "enabled");
-		SysUser appUser = baseMapper.selectById(id);
-		appUser.setEnabled(enabled);
-		appUser.setUpdateTime(new Date());
-		i = baseMapper.updateById(appUser);
-		log.info("修改用户：{}", appUser);
-		return i;
-	}
-
-	@Transactional(rollbackFor = Exception.class)
-	@Override
-	public boolean saveOrUpdateUser(SysUser sysUser) {
-
-		boolean flag = false;
-
-		if (sysUser.getId() == null) {
-			
-			long count = this.count(Wrappers.<SysUser>lambdaQuery().eq(SysUser::getUsername, sysUser.getUsername()));
-			if(count > 0) {
-				throw new BusinessException(String.format("%s用户已存在",sysUser.getUsername()));
+			userRoleDao.deleteUserRole(id, null);
+			if (!CollectionUtils.isEmpty(roleIds)) {
+				roleIds.forEach(roleId -> {
+					userRoleDao.saveUserRoles(id, roleId);
+				});
 			}
-			
+
+			log.info("修改用户：{}的角色，{}", sysUser.getUsername(), roleIds);
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	
+	@Override
+	@Transactional
+	public Result updatePassword(Long id, String oldPassword, String newPassword)  throws ServiceException {
+		try {
+			SysUser sysUser = sysUserDao.findById(id);
+			if (StringUtils.isNoneBlank(oldPassword)) {
+				if (!passwordEncoder.matches(oldPassword, sysUser.getPassword())) {
+					return Result.failed("旧密码错误");
+				}
+			}
+
+			SysUser user = new SysUser();
+			user.setId(id);
+			user.setPassword(passwordEncoder.encode(newPassword));
+
+			updateSysUser(user);
+			log.info("修改密码：{}", user);
+			return Result.succeed("修改成功");
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public PageResult<SysUser> findUsers(Map<String, Object> params)  throws ServiceException {
+		try {
+			int total = sysUserDao.count(params);
+			List<SysUser> list = Collections.emptyList();
+			if (total > 0) {
+				PageUtil.pageParamConver(params, true);
+				list = sysUserDao.findList(params);
+
+				List<Long> userIds = list.stream().map(SysUser::getId).collect(Collectors.toList());
+
+				List<SysRole> sysRoles = userRoleDao.findRolesByUserIds(userIds);
+
+				list.forEach(u -> {
+					u.setRoles(sysRoles.stream().filter(r -> !ObjectUtils.notEqual(u.getId(), r.getUserId()))
+							.collect(Collectors.toList()));
+				});
+			}
+			return PageResult.<SysUser>builder().data(list).code(0).count((long)total).build();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public Set<SysRole> findRolesByUserId(Long userId)  throws ServiceException {
+		try {
+			return userRoleDao.findRolesByUserId(userId);
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public Result updateEnabled(Map<String, Object> params)  throws ServiceException {
+		try {
+			Long id = MapUtils.getLong(params, "id");
+			Boolean enabled = MapUtils.getBoolean(params, "enabled");
+
+			SysUser appUser = sysUserDao.findById(id);
+			if (appUser == null) {
+				return Result.failed("用户不存在");
+				//throw new IllegalArgumentException("用户不存在");
+			}
+			appUser.setEnabled(enabled);
+			appUser.setUpdateTime(new Date());
+
+			int i = sysUserDao.updateByPrimaryKey(appUser);
+			log.info("修改用户：{}", appUser);
+
+			return i > 0 ? Result.succeed(appUser, "更新成功") : Result.failed("更新失败");
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	
+	@Override
+	@Transactional
+	public Result saveOrUpdate(SysUser sysUser)  throws ServiceException {
+		try {
+			String username = sysUser.getUsername();
+			if (StringUtils.isBlank(username)) {
+				//throw new IllegalArgumentException("用户名不能为空");
+				return Result.failed("用户名不能为空");
+			}
+
+			if (ValidatorUtil.checkPhone(username)) {// 防止用手机号直接当用户名，手机号要发短信验证
+				//throw new IllegalArgumentException("用户名要包含英文字符");
+				return Result.failed("用户名要包含英文字符");
+			}
+
+			if (username.contains("@")) {// 防止用邮箱直接当用户名，邮箱也要发送验证（暂未开发）
+				//throw new IllegalArgumentException("用户名不能包含@");
+				return Result.failed("用户名不能包含@");
+			}
+
+			if (username.contains("|")) {
+				//throw new IllegalArgumentException("用户名不能包含|字符");
+				return Result.failed("用户名不能包含|字符");
+			}
+
+			if (StringUtils.isBlank(sysUser.getNickname())) {
+				sysUser.setNickname(username);
+			}
+
 			if (StringUtils.isBlank(sysUser.getType())) {
 				sysUser.setType(UserType.BACKEND.name());
 			}
-			sysUser.setPassword(passwordEncoder.encode(CommonConstant.DEF_USER_PASSWORD));
-			sysUser.setEnabled(Boolean.TRUE);
-		} 
-		this.saveOrUpdate(sysUser);
-		if (StrUtil.isNotEmpty(sysUser.getRoleId())) {
-			// 更新角色
-			roleUserService.deleteUserRole(sysUser.getId(), null);
-			List roleIds = Convert.toList(sysUser.getRoleId());
-			if (!CollectionUtils.isEmpty(roleIds)) {
-				List<SysRoleUser> roleUsers = new ArrayList<>(roleIds.size());
-				roleIds.forEach(roleId -> roleUsers.add(SysRoleUser.builder().userId(sysUser.getId())
-						.roleId(Long.parseLong(roleId.toString())).build()));
-				flag = roleUserService.saveBatch(roleUsers);
-			}
-		}
-
-		return flag;
-	}
-
-	@Transactional(rollbackFor = Exception.class)
-	@Override
-	public boolean delUser(Long id) {
-		roleUserService.deleteUserRole(id, null);
-		return baseMapper.deleteById(id) > 0;
-	}
-
-	@Override
-	public List<SysUserExcel> findAllUsers(Map<String, Object> params) {
-		List<SysUserExcel> sysUserExcels = new ArrayList<>();
-		List<SysUser> list = baseMapper.findList(new Page<>(1, -1), params);
-
-		for (SysUser sysUser : list) {
-			SysUserExcel sysUserExcel = new SysUserExcel();
-			BeanUtils.copyProperties(sysUser, sysUserExcel);
-			sysUserExcels.add(sysUserExcel);
-		}
-		return sysUserExcels;
-	}
-
-	@Override
-	public LoginAppUser getLoginAppUser(SysUser sysUser) {
-		if (sysUser != null) {
-			LoginAppUser loginAppUser = new LoginAppUser();
-			BeanUtils.copyProperties(sysUser, loginAppUser);
-
-			List<SysRole> sysRoles = roleUserService.findRolesByUserId(sysUser.getId());
-			// 设置角色
-			loginAppUser.setRoles(sysRoles);
-
-			if (!CollectionUtils.isEmpty(sysRoles)) {
-				Set<Long> roleIds = sysRoles.stream().map(BaseEntity::getId).collect(Collectors.toSet());
-				List<SysMenu> menus = roleMenuMapper.findMenusByRoleIds(roleIds, CommonConstant.PERMISSION);
-				if (!CollectionUtils.isEmpty(menus)) {
-					Set<String> permissions = menus.stream().map(p -> p.getPath()).collect(Collectors.toSet());
-					// 设置权限集合
-					loginAppUser.setPermissions(permissions);
+			
+			if (!StringUtils.isBlank(sysUser.getPhone())) {
+				
+				if (!ValidatorUtil.checkPhone(sysUser.getPhone())) {// 防止用手机号直接当用户名，手机号要发短信验证
+					//throw new IllegalArgumentException("用户名要包含英文字符");
+					return Result.failed("手机号格式不正确");
 				}
+				
 			}
-			return loginAppUser;
+			
+			
+
+			sysUser.setPassword(passwordEncoder.encode("123456"));
+			sysUser.setEnabled(Boolean.TRUE);
+			sysUser.setCreateTime(new Date());
+
+			int i = 0;
+
+			if (sysUser.getId() == null) {
+				SysUser persistenceUser = sysUserDao.findByUsername(sysUser.getUsername());
+				if (persistenceUser != null && persistenceUser.getUsername() != null) {
+					//throw new IllegalArgumentException("用户名已存在");
+					return Result.failed("用户名已存在");
+				}
+				sysUser.setUpdateTime(sysUser.getCreateTime());
+				i = sysUserDao.insert(sysUser);
+			} else {
+				sysUser.setUpdateTime(new Date());
+				i = sysUserDao.updateByPrimaryKey(sysUser);
+			}
+
+			userRoleDao.deleteUserRole(sysUser.getId(), null);
+			List roleIds = Arrays.asList(sysUser.getRoleId().split(","));
+			if (!CollectionUtils.isEmpty(roleIds)) {
+				roleIds.forEach(roleId -> {
+					userRoleDao.saveUserRoles(sysUser.getId(), Long.parseLong(roleId.toString()));
+				});
+			}
+
+			return i > 0 ? Result.succeed(sysUser, "操作成功") : Result.failed("操作失败");
+		} catch (Exception e) {
+			throw new ServiceException(e);
 		}
-		return null;
+	}
+
+	@Override
+	public List<SysUserExcel> findAllUsers(Map<String, Object> params)  throws ServiceException {
+		try {
+			List<SysUserExcel> sysUserExcels = new ArrayList<>();
+			List<SysUser> list = sysUserDao.findList(params);
+
+			for (SysUser sysUser : list){
+				SysUserExcel sysUserExcel = new SysUserExcel();
+				BeanUtils.copyProperties(sysUser,sysUserExcel);
+				sysUserExcels.add(sysUserExcel);
+			}
+			return sysUserExcels;
+		} catch (BeansException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 }

@@ -1,12 +1,11 @@
 package com.xxl.job.admin.service;
 
 
-import java.util.Date;
-import java.util.Map;
-
-import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.core.biz.model.ReturnT;
+
+import java.util.Date;
+import java.util.Map;
 
 /**
  * core job action for xxl-job
@@ -23,10 +22,10 @@ public interface XxlJobService {
 	 * @param jobGroup
 	 * @param jobDesc
 	 * @param executorHandler
-	 * @param author
+	 * @param filterTime
 	 * @return
 	 */
-	public Map<String, Object> pageList(int start, int length, int jobGroup, int triggerStatus, String jobDesc, String executorHandler, String author);
+	public Map<String, Object> pageList(int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime);
 
 	/**
 	 * add job
@@ -46,27 +45,35 @@ public interface XxlJobService {
 
 	/**
 	 * remove job
-	 * 	 *
+	 *
 	 * @param id
 	 * @return
 	 */
 	public ReturnT<String> remove(int id);
 
 	/**
-	 * start job
+	 * pause job
 	 *
 	 * @param id
 	 * @return
 	 */
-	public ReturnT<String> start(int id);
+	public ReturnT<String> pause(int id);
 
 	/**
-	 * stop job
+	 * resume job
 	 *
 	 * @param id
 	 * @return
 	 */
-	public ReturnT<String> stop(int id);
+	public ReturnT<String> resume(int id);
+
+	/**
+	 * trigger job
+	 *
+	 * @param id
+	 * @return
+	 */
+	public ReturnT<String> triggerJob(int id);
 
 	/**
 	 * dashboard info
@@ -83,14 +90,5 @@ public interface XxlJobService {
 	 * @return
 	 */
 	public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
-
-	/**
-	 * 获取注册中心中服务实例
-	 * 保存于数据库中
-	 * @param xxlJobGroup job组
-	 * @param group registGroup 分组 如 EXECUTOR
-	 * @return SUCCESS | FAIL
-	 */
-	public ReturnT<String> registryByDiscovery(XxlJobGroup xxlJobGroup, String group);
 
 }

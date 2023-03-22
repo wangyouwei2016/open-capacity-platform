@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <#import "../common/common.macro.ftl" as netCommon>
-    <@netCommon.commonStyle />
-    <title>${I18n.admin_name}</title>
+    <title>任务调度中心</title>
+<#import "common/common.macro.ftl" as netCommon>
+<@netCommon.commonStyle />
 </head>
 <body class="hold-transition skin-blue layout-top-nav">
 
@@ -12,9 +12,9 @@
     <header class="main-header">
         <nav class="navbar navbar-static-top">
             <div class="container">
-                <#-- icon -->
+            <#-- icon -->
                 <div class="navbar-header">
-                    <a class="navbar-brand"><b>${I18n.joblog_rolling_log}</b> Console</a>
+                    <a class="navbar-brand"><b>执行日志</b>Console</a>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
                         <i class="fa fa-bars"></i>
                     </button>
@@ -33,7 +33,7 @@
                         <li>
                             <a href="javascript:window.location.reload();" >
                                 <i class="fa fa-fw fa-refresh" ></i>
-                                ${I18n.joblog_rolling_log_refresh}
+                                刷新
                             </a>
                         </li>
                     </ul>
@@ -48,12 +48,11 @@
             <pre style="font-size:12px;position:relative;" >
                 <div id="logConsole"></div>
                 <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
+                <div><hr><hr></div>
             </pre>
         </section>
     </div>
 
-    <!-- footer -->
-    <@netCommon.commonFooter />
 
 </div>
 
@@ -62,11 +61,11 @@
     // 参数
     var triggerCode = '${triggerCode}';
     var handleCode = '${handleCode}';
-    var executorAddress = '${executorAddress!}';
-    var triggerTime = '${triggerTime?c}';
+    var executorAddress = '${executorAddress}';
+    var triggerTime = '${triggerTime}';
     var logId = '${logId}';
 </script>
-<script src="${request.contextPath}/static/js/joblog.detail.1.js"></script>
+<script src="/js/joblog.detail.1.js"></script>
 
 </body>
 </html>
