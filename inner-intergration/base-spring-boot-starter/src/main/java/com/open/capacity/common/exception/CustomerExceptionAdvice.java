@@ -19,6 +19,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import com.open.capacity.common.dto.ResponseEntity;
+import com.open.capacity.log.annotation.ExceptionNoticeLog;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,49 +35,56 @@ public class CustomerExceptionAdvice {
      * IllegalArgumentException异常处理返回json
      * 返回状态码:400
      */
+	@ExceptionNoticeLog
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity badRequestException(IllegalArgumentException e) {
         return defHandler("参数解析失败", e);
     }
 
+	@ExceptionNoticeLog
     @ExceptionHandler(MissingServletRequestParameterException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity handleError(MissingServletRequestParameterException e) {
     	 return defHandler("参数解析失败", e);
 	}
 
-    
+	@ExceptionNoticeLog
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity handleError(MethodArgumentTypeMismatchException e) {
     	return defHandler("参数解析失败", e);
 	}
 
+	@ExceptionNoticeLog
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity handleError(MethodArgumentNotValidException e) {
 		return defHandler("参数解析失败", e);
 	}
 
+	@ExceptionNoticeLog
 	@ExceptionHandler(BindException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity handleError(BindException e) {
 		return defHandler("参数解析失败", e);
 	}
 
+	@ExceptionNoticeLog
 	@ExceptionHandler(ConstraintViolationException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity handleError(ConstraintViolationException e) {
 		return defHandler("参数解析失败", e);
 	}
 	
+	@ExceptionNoticeLog
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity handleError(HttpMessageNotReadableException e) {
 		  return defHandler("http请求参数转换异常", e);
 	}
 	
+	@ExceptionNoticeLog
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity handleAccessDeniedException(MaxUploadSizeExceededException e) {
@@ -87,6 +95,7 @@ public class CustomerExceptionAdvice {
      * AccessDeniedException异常处理返回json
      * 返回状态码:403
      */
+	@ExceptionNoticeLog
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity badMethodExpressException(AccessDeniedException e) {
@@ -96,6 +105,7 @@ public class CustomerExceptionAdvice {
     /**
      * 返回状态码:405
      */
+	@ExceptionNoticeLog
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     public ResponseEntity handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
@@ -105,6 +115,7 @@ public class CustomerExceptionAdvice {
     /**
      * 返回状态码:415
      */
+	@ExceptionNoticeLog
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
     public ResponseEntity handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
@@ -115,6 +126,7 @@ public class CustomerExceptionAdvice {
      * SQLException sql异常处理
      * 返回状态码:500
      */
+	@ExceptionNoticeLog
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({SQLException.class})
     public ResponseEntity handleSQLException(SQLException e) {
@@ -125,6 +137,7 @@ public class CustomerExceptionAdvice {
      * RemoteCallException 服务调用异常处理
      * 返回状态码:500
      */
+	@ExceptionNoticeLog
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({RemoteCallException.class})
     public ResponseEntity handleRemoteCallException(RemoteCallException e) {
@@ -137,6 +150,7 @@ public class CustomerExceptionAdvice {
      * BusinessException 业务异常处理
      * 返回状态码:500
      */
+	@ExceptionNoticeLog
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity handleException(BusinessException e) {
@@ -147,6 +161,7 @@ public class CustomerExceptionAdvice {
      * IdempotencyException 幂等性异常
      * 返回状态码:200
      */
+    @ExceptionNoticeLog
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(IdempotencyException.class)
     public ResponseEntity handleException(IdempotencyException e) {

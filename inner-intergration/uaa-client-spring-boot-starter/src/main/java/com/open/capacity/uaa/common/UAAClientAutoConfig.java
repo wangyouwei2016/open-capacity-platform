@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.bootstrap.encrypt.KeyProperties;
@@ -27,6 +26,7 @@ import org.springframework.util.AntPathMatcher;
 
 import com.open.capacity.common.constant.CommonConstant;
 import com.open.capacity.common.properties.BlackListProperties;
+import com.open.capacity.common.properties.ExceptionNoticeProperties;
 import com.open.capacity.common.properties.SecurityProperties;
 import com.open.capacity.common.properties.TokenStoreProperties;
 import com.open.capacity.uaa.common.authorize.AuthorizeConfigManager;
@@ -42,7 +42,7 @@ import com.open.capacity.uaa.common.config.DefaultSecurityHandlerConfig;
  */
 @ComponentScan
 @Configuration
-@EnableConfigurationProperties({ BlackListProperties.class,SecurityProperties.class,TokenStoreProperties.class , KeyProperties.class })
+@EnableConfigurationProperties({ BlackListProperties.class,SecurityProperties.class,TokenStoreProperties.class , KeyProperties.class ,ExceptionNoticeProperties.class})
 public class UAAClientAutoConfig {
 
 	@Configuration
