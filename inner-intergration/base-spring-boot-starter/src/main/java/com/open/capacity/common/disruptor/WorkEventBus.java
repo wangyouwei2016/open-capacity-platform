@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import com.lmax.disruptor.EventFactory;
 import com.lmax.disruptor.EventTranslator;
 import com.lmax.disruptor.WorkHandler;
-import com.lmax.disruptor.YieldingWaitStrategy;
+import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import com.open.capacity.common.disruptor.event.BaseEvent;
@@ -36,7 +36,7 @@ public class WorkEventBus<E> {
                 ringBufferSize, // 4096
                 DaemonThreadFactory.getInstance("WorkEventBus") ,
                 ProducerType.MULTI,
-                new YieldingWaitStrategy()
+                new SleepingWaitStrategy()
         );
 
         WorkHandler<E>[] workHandlers = new WorkHandler[workerHandlerNum]; // 1
