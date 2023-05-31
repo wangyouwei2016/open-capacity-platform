@@ -11,7 +11,7 @@
 	<artifactId>db-spring-boot-starter</artifactId>
 	<description>数据库支撑</description>
 	<properties>
-		<dynamic-datasource.version>3.5.0</dynamic-datasource.version>
+		<dynamic-datasource.version>3.6.1</dynamic-datasource.version>
 	</properties>
 	<dependencies>
 
