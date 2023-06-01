@@ -1,27 +1,36 @@
 package com.open.capacity.uaa.config;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.open.capacity.common.exception.RemoteCallException;
 import com.open.capacity.uaa.common.exception.DefaultOAuth2Exception;
 import com.open.capacity.uaa.common.exception.ForbiddenException;
 import com.open.capacity.uaa.common.exception.InvalidException;
 import com.open.capacity.uaa.common.exception.MethodNotAllowedException;
+import com.open.capacity.uaa.common.exception.RemoteCallAuthException;
 import com.open.capacity.uaa.common.exception.ServerErrorException;
 import com.open.capacity.uaa.common.exception.UnauthorizedException;
-import com.open.capacity.uaa.exception.ValidateCodeException;
 import com.open.capacity.uaa.handler.OauthLogoutHandler;
 import com.open.capacity.uaa.handler.OauthLogoutSuccessHandler;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.DefaultThrowableAnalyzer;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.exceptions.*;
+import org.springframework.security.oauth2.common.exceptions.ClientAuthenticationException;
+import org.springframework.security.oauth2.common.exceptions.InsufficientScopeException;
+import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -31,10 +40,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.util.ThrowableAnalyzer;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *  认证错误处理
@@ -95,6 +101,12 @@ public class SecurityHandlerConfig {
 
 				if (ase != null) {
 					return handleOAuth2Exception((OAuth2Exception) ase);
+				}
+	 
+				ase = (RemoteCallException) throwableAnalyzer.getFirstThrowableOfType(RemoteCallException.class,
+						causeChain);
+				if (ase != null) {
+					return handleOAuth2Exception(new RemoteCallAuthException(ase.getMessage(), ase));
 				}
 
 				return handleOAuth2Exception(
