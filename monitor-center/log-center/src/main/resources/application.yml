@@ -45,6 +45,7 @@ spring:
         timeoutConnection: 50000
         timeoutSocket: 50000
   shardingsphere:
+    enabled: true
     sharding:
       default-data-source-name: ds0
       default-key-generator:

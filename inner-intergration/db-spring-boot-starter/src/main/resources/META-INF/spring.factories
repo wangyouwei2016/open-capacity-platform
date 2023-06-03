@@ -5,4 +5,6 @@ com.open.capacity.db.config.MybatisPlusAutoConfigure,\
 com.open.capacity.db.config.TransactionConfiguration,\
 com.open.capacity.db.config.DataSourceHealthAutoConfiguration,\
 com.open.capacity.db.metrics.DruidMetricsConfiguration,\
-com.open.capacity.db.metrics.HikaricpMetricsConfiguration
+com.open.capacity.db.metrics.HikaricpMetricsConfiguration,\
+com.open.capacity.db.DynamicDataSourceAutoConfig,\
+com.open.capacity.db.ShardingDataSourceAutoConfig

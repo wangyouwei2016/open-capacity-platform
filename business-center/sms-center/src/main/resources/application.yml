@@ -16,6 +16,7 @@ aliyun:
     
 spring:
   shardingsphere:
+    enabled: true
     sharding:
       default-data-source-name: ds0
       default-key-generator:

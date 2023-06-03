@@ -19,6 +19,7 @@ spring:
     job:
       enabled: false
   shardingsphere:
+    enabled: true
     sharding:
       default-data-source-name: ds0
       default-key-generator:
