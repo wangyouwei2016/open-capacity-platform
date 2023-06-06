@@ -112,7 +112,7 @@ public class ParameterDiff {
     private Property mapToProperty(Parameter rightPara) {
         Property prop = new StringProperty();
         prop.setAccess(rightPara.getAccess());
-        prop.setAllowEmptyValue(rightPara.getAllowEmptyValue());
+//        prop.setAllowEmptyValue(rightPara.getAllowEmptyValue());
         prop.setDescription(rightPara.getDescription());
         prop.setName(rightPara.getName());
         prop.setReadOnly(rightPara.isReadOnly());

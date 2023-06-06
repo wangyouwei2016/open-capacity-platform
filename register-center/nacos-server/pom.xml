@@ -7,12 +7,13 @@
   </parent>
   <artifactId>nacos-server</artifactId>
   <properties>
-  	<nacos.version>2.0.4</nacos.version>
+  	<nacos.version>2.0.4.RELEASE</nacos.version>
+  	<protobuf-java.version>3.16.1</protobuf-java.version>
   </properties>
   
   <dependencies>
         <dependency>
-            <groupId>org.jeecgframework.nacos</groupId>
+            <groupId>com.ieooc.nacos</groupId>
             <artifactId>nacos-config</artifactId>
             <version>${nacos.version}</version>
         </dependency>
@@ -21,13 +22,13 @@
             <artifactId>tomcat-embed-jasper</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jeecgframework.nacos</groupId>
+            <groupId>com.ieooc.nacos</groupId>
             <artifactId>nacos-naming</artifactId>
             <version>${nacos.version}</version>
         </dependency>
         
         <dependency>
-            <groupId>org.jeecgframework.nacos</groupId>
+            <groupId>com.ieooc.nacos</groupId>
             <artifactId>nacos-istio</artifactId>
             <version>${nacos.version}</version>
         </dependency>
@@ -53,6 +54,17 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
     </dependencies>
+    
+    <dependencyManagement>
+    	<dependencies>
+    		 <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf-java.version}</version>
+            </dependency>
+            
+    	</dependencies>
+    </dependencyManagement>
     
     <!-- 形成带第三方jar包的可执行jar包，jar包目录结构如下 application.properties lib META-INF mybatis 
 		org -->
