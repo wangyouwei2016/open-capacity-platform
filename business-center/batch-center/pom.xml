@@ -42,10 +42,10 @@
 			<artifactId>config-spring-boot-starter</artifactId>
 		</dependency>
 		 <!-- 通用基础能力模块 -->
-        <dependency>
-            <groupId>com.open.capacity</groupId>
-            <artifactId>common-spring-boot-starter</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.open.capacity</groupId>-->
+<!--            <artifactId>common-spring-boot-starter</artifactId>-->
+<!--        </dependency>-->
 		<!-- 日志 -->
 		<dependency>
   			<groupId>com.open.capacity</groupId>

@@ -42,7 +42,7 @@ import com.open.capacity.uaa.common.config.DefaultSecurityHandlerConfig;
  */
 @ComponentScan
 @Configuration
-@EnableConfigurationProperties({ BlackListProperties.class,SecurityProperties.class,TokenStoreProperties.class , KeyProperties.class ,ExceptionNoticeProperties.class})
+@EnableConfigurationProperties({ BlackListProperties.class,SecurityProperties.class,TokenStoreProperties.class , KeyProperties.class })
 public class UAAClientAutoConfig {
 
 	@Configuration
