@@ -38,6 +38,7 @@
     <module>sentinel-spring-boot-starter</module> 
     <!--规则引擎 -->
     <module>rules-spring-boot-starter</module>
+    <module>liteflow-spring-boot-starter</module>
     <!--oss存储 -->
     <module>oss-spring-boot-starter</module>
     <!-- 序列生成器 -->
