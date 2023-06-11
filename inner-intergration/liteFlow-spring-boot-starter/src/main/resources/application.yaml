@@ -8,10 +8,10 @@ liteflow:
   #liteflow的banner打印是否开启
   print-banner: false
   rule-source-ext-data-map:
-    url: jdbc:mysql://localhost:3306/poseidon
-    driverClassName: com.mysql.cj.jdbc.Driver
-    username: root
-    password: root
+#    url: jdbc:mysql://${ocp.datasource.ip:192.168.92.216}:3306/poseidon?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    username: ${ocp.datasource.username}
+#    password: ${ocp.datasource.password}
     applicationName: demo
     #以下是chain表的配置，这个一定得有
     chainTableName: chain

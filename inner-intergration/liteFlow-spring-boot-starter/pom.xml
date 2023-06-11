@@ -37,9 +37,5 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.open.capacity</groupId>
-			<artifactId>base-spring-boot-starter</artifactId>
-		</dependency>
 	</dependencies>
 </project>

@@ -16,7 +16,6 @@
     <module>test-disruptor-spring-boot-starter</module>
     <module>test-log-spring-boot-starter</module>
     <module>test-jmh-spring-boot-starter</module>
-    <module>test-rule-spring-boot-starter</module>
     <module>test-generator-starter</module>
     <module>test-liteFlow-spring-boot-starter</module>
   </modules>
