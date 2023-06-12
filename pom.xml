@@ -158,6 +158,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
 	<dependencyManagement>
 		<dependencies>
 			<!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client-bom -->
