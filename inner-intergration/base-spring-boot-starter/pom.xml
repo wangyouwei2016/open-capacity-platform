@@ -51,6 +51,10 @@
 			<artifactId>hdiv-config</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.github.ulisesbocchio</groupId>
+			<artifactId>jasypt-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
 	  		<groupId>com.belerweb</groupId>
 	  		<artifactId>pinyin4j</artifactId>
 		</dependency>
