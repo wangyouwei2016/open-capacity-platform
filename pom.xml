@@ -72,6 +72,7 @@
 		<easypoi.version>4.4.0</easypoi.version>
 		<problem.version>0.27.0</problem.version>
 		<antisamy.version>1.5.7</antisamy.version>
+		<retrofit.versoin>2.9.0</retrofit.versoin>
 		<fastjson.version>1.2.83</fastjson.version>
 		<jsoniter.version>0.9.23</jsoniter.version>
 		<easyexcel.version>2.2.6</easyexcel.version>
@@ -225,17 +226,17 @@
 			<dependency>
 				<groupId>com.squareup.retrofit2</groupId>
 				<artifactId>retrofit</artifactId>
-				<version>2.9.0</version>
+				<version>${retrofit.versoin}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.squareup.retrofit2</groupId>
 				<artifactId>converter-jackson</artifactId>
-				<version>2.9.0</version>
+				<version>${retrofit.versoin}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.squareup.retrofit2</groupId>
 				<artifactId>adapter-rxjava2</artifactId>
-				<version>2.9.0</version>
+				<version>${retrofit.versoin}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.squareup.okhttp3</groupId>
@@ -316,6 +317,11 @@
 	  			<groupId>com.belerweb</groupId>
 	  			<artifactId>pinyin4j</artifactId>
 	  			<version>2.5.0</version>
+			</dependency>
+			<dependency>
+			    <groupId>com.massisframework</groupId>
+			    <artifactId>j-text-utils</artifactId>
+			    <version>0.3.4</version>
 			</dependency>
 			<!--敏感配置保护-->
 			<dependency>

@@ -44,5 +44,7 @@
     <module>uid-spring-boot-starter</module>
     <!-- 极光推送 -->
     <module>jpush-spring-boot-starter</module>
+    <!-- 分布式事务 -->
+    <module>seata-spring-boot-starter</module>
   </modules>
 </project>
