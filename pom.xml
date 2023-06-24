@@ -53,6 +53,7 @@
 		<jjwt.version>0.9.1</jjwt.version>
 		<hdiv.version>3.4.0</hdiv.version>
 		<chaos.version>2.1.1</chaos.version>
+		<esper.version>7.1.0</esper.version>
 		<togglz.vision>3.1.2</togglz.vision>
 		<orika-version>1.5.2</orika-version>
 		<zxing.version>3.3.3</zxing.version>
@@ -573,7 +574,11 @@
 				<artifactId>redisson-spring-boot-starter</artifactId>
 				<version>${redisson-starter.version}</version>
 			</dependency>
-
+			<dependency>
+			    <groupId>com.espertech</groupId>
+			    <artifactId>esper</artifactId>
+			    <version>${esper.version}</version>
+			</dependency>
 			<!-- hutool java工具类库 -->
 			<dependency>
 				<groupId>cn.hutool</groupId>

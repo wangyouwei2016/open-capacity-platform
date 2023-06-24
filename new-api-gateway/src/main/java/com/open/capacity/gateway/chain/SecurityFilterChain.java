@@ -14,6 +14,8 @@ public class SecurityFilterChain extends ChainBase implements InitializingBean {
 	@Resource
 	private BlackListCommand blackListCommand;
 	@Resource
+	private HighFrequencyCommand highFrequencyCommand ;
+	@Resource
 	private RateLimitCommand rateLimitCommand;
 
 	@Override
@@ -21,6 +23,7 @@ public class SecurityFilterChain extends ChainBase implements InitializingBean {
 		// 将请求处理者角色加入链中
 		addCommand(actuatorCommand);
 		addCommand(blackListCommand);
+		addCommand(highFrequencyCommand);
 		addCommand(rateLimitCommand);
 
 	}

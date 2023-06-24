@@ -63,7 +63,10 @@
 			<groupId>org.zalando</groupId>
 			<artifactId>problem-spring-webflux</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>com.espertech</groupId>
+			<artifactId>esper</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>commons-chain</groupId>
 			<artifactId>commons-chain</artifactId>

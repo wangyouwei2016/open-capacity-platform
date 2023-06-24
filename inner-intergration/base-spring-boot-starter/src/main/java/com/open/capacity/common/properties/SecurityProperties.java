@@ -23,6 +23,8 @@ public class SecurityProperties {
     private PermitProperties ignore = new PermitProperties();
     
     private RateLimitProperties ratelimit = new RateLimitProperties() ;
+    
+    private HighFrequencyProperties highFrequency = new HighFrequencyProperties();
 
     private ValidateCodeProperties code = new ValidateCodeProperties();
 }
