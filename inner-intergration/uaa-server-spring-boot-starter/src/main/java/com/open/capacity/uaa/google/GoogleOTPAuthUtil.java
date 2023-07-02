@@ -14,21 +14,15 @@ import javax.crypto.spec.SecretKeySpec;
 import com.open.capacity.common.algorithm.Base32Util;
 import com.open.capacity.common.algorithm.HexEncoding;
 
+import io.vavr.control.Try;
+
 /**
  * 二次验证工具类
  * 
  */
 public class GoogleOTPAuthUtil {
 	public static enum LEVEL {
-		ZERO,
-		ONE,
-		TWO,
-		THREE,
-		FOUR,
-		FIVE,
-		SIX,
-		SEVEN,
-		EIGHT
+		ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT
 	}
 
 	// 加密强度，对应 0 1 2 3 4 5 6 7 8 几个等级
@@ -48,7 +42,6 @@ public class GoogleOTPAuthUtil {
 	// 协议前缀字符串
 	private static final String PROTOCOL_PREFIX = "otpauth://totp/";
 	private static final String PROTOCOL_SUFFEX = "?secret=";
-	
 
 	/**
 	 * HMAC通过crypto参数计算哈希值
@@ -106,7 +99,7 @@ public class GoogleOTPAuthUtil {
 		// 将所选字节放入结果
 		int offset = hash[hash.length - 1] & 0xf;
 		int binary = ((hash[offset] & 0x7f) << 24) | ((hash[offset + 1] & 0xff) << 16)
-					| ((hash[offset + 2] & 0xff) << 8) | (hash[offset + 3] & 0xff);
+				| ((hash[offset + 2] & 0xff) << 8) | (hash[offset + 3] & 0xff);
 		int otp = binary % DIGITS_POWER[level];
 		result = Integer.toString(otp);
 		while (result.length() < level) {
@@ -120,7 +113,7 @@ public class GoogleOTPAuthUtil {
 	 * 
 	 */
 	public static boolean verify(String secret, String code) {
-		return generateCode(secret).equals(code);
+		return Try.of(() -> generateCode(secret).equals(code)).getOrElse(false);
 	}
 
 	/**

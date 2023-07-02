@@ -199,8 +199,9 @@ public class ValidateCodeServiceImpl implements IValidateCodeService {
         if (secret == null) {
             throw new ValidateCodeException("应用密钥不存在或已过期");
         }
-        Assert.notNull( GoogleOTPAuthUtil.verify(secret, validCode),"动态口令校验异常");
-        
+        if(!GoogleOTPAuthUtil.verify(secret, validCode)) {
+        	 throw new ValidateCodeException("动态口令校验异常");
+        }
         this.remove(String.format("%s:%s", SecurityConstants.QR_CODE_KEY,deviceId) );
 	}
 
