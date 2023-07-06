@@ -12,6 +12,8 @@ public class SecurityFilterChain extends ChainBase implements InitializingBean {
 	@Resource
 	private ActuatorCommand actuatorCommand;
 	@Resource
+	private AntiReplayCommand antiReplayCommand;
+	@Resource
 	private BlackListCommand blackListCommand;
 	@Resource
 	private HighFrequencyCommand highFrequencyCommand ;
@@ -22,6 +24,7 @@ public class SecurityFilterChain extends ChainBase implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		// 将请求处理者角色加入链中
 		addCommand(actuatorCommand);
+		addCommand(antiReplayCommand);
 		addCommand(blackListCommand);
 		addCommand(highFrequencyCommand);
 		addCommand(rateLimitCommand);

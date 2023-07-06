@@ -25,6 +25,8 @@ public class SecurityProperties {
     private RateLimitProperties ratelimit = new RateLimitProperties() ;
     
     private HighFrequencyProperties highFrequency = new HighFrequencyProperties();
+    
+    private AntiReplayProperties replay = new AntiReplayProperties();
 
     private ValidateCodeProperties code = new ValidateCodeProperties();
 }
