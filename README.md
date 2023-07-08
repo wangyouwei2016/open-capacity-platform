@@ -6,9 +6,9 @@
  <img src="https://img.shields.io/badge/buildi%20-success-green.svg" alt="Build Status"/>
  <img src="https://img.shields.io/badge/easyweb%20-green.svg" alt="es"/>
  <img src="https://img.shields.io/badge/elasticsearch%20-6.5.4-green.svg" alt="es"/>
- <img src="https://img.shields.io/badge/Spring%20Boot-2.5.14-blue.svg" alt="sb">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2020.0.5-blue.svg" alt="sc">
- <img src="https://img.shields.io/badge/Spring%20Cloud%20Alibaba-2021.1-blue.svg" alt="sc">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.6.3-blue.svg" alt="sb">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2021.0.5-blue.svg" alt="sc">
+ <img src="https://img.shields.io/badge/Spring%20Cloud%20Alibaba-2021.0.4.0-blue.svg" alt="sc">
 </p>
 
 [![star](https://gitee.com/owenwangwen/open-capacity-platform/badge/star.svg?theme=white)](https://gitee.com/owenwangwen/open-capacity-platform/stargazers)
