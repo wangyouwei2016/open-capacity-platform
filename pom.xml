@@ -68,10 +68,11 @@
 		<aliyun-sdk-oss>3.8.1</aliyun-sdk-oss>
 		<qiniu-java-sdk>7.2.28</qiniu-java-sdk>
 		<tracer.version>0.17.2</tracer.version>
-		<hutool.version>5.8.5</hutool.version>
+		<hutool.version>5.8.16</hutool.version>
 		<kaptcha.version>1.1.0</kaptcha.version>
 		<easypoi.version>4.4.0</easypoi.version>
 		<problem.version>0.27.0</problem.version>
+		<justauth.version>1.16.5</justauth.version>
 		<antisamy.version>1.5.7</antisamy.version>
 		<retrofit.versoin>2.9.0</retrofit.versoin>
 		<fastjson.version>1.2.83</fastjson.version>
@@ -308,6 +309,11 @@
 				<groupId>org.hdiv</groupId>
 				<artifactId>hdiv-config</artifactId>
 				<version>${hdiv.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>me.zhyd.oauth</groupId>
+			    <artifactId>JustAuth</artifactId>
+			    <version>${justauth.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mitre</groupId>

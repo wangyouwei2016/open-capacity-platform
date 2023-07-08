@@ -7,17 +7,6 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import com.open.capacity.common.constant.CommonConstant;
 import com.open.capacity.common.dto.ResponseEntity;
 import com.open.capacity.common.exception.BusinessException;
@@ -29,16 +18,35 @@ import com.open.capacity.common.utils.UUIDUtils;
 import com.open.capacity.common.utils.UserUtils;
 import com.open.capacity.uaa.common.util.AuthUtils;
 import com.open.capacity.uaa.service.ISysTokenService;
+import com.xkcoding.http.HttpUtil;
+import com.xkcoding.http.support.httpclient.HttpClientImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import me.zhyd.oauth.config.AuthConfig;
+import me.zhyd.oauth.model.AuthCallback;
+import me.zhyd.oauth.request.AuthGiteeRequest;
+import me.zhyd.oauth.request.AuthRequest;
+import me.zhyd.oauth.utils.AuthStateUtils;
 
 /**
  * @author 作者 owen
- * @version 创建时间：2018年4月28日 下午2:18:54 
- * 类说明
+ * @version 创建时间：2018年4月28日 下午2:18:54 类说明
  */
 @Slf4j
 @RestController
@@ -51,6 +59,29 @@ public class OAuth2Controller {
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
 
+	@RequestMapping("/oauth/render")
+	@SneakyThrows
+	public void render(HttpServletResponse response) {
+		AuthRequest authRequest = getAuthRequest();
+		response.sendRedirect(authRequest.authorize(AuthStateUtils.createState()));
+	}
+
+	@RequestMapping("/oauth/callback")
+	@SneakyThrows
+	public Object callback(AuthCallback callback) {
+		AuthRequest authRequest = getAuthRequest();
+		return authRequest.login(callback);
+	}
+	private AuthRequest getAuthRequest() {
+		
+		AuthConfig authConfig = new AuthConfig();
+		authConfig.setClientId("");
+		authConfig.setClientSecret("");
+		authConfig.setRedirectUri("http://localhost:8000/api-auth/oauth/callback");
+		HttpUtil.setHttp(new HttpClientImpl());
+		return new AuthGiteeRequest(authConfig);
+	}
+
 	@ApiOperation(value = "clientId获取token")
 	@PostMapping("/oauth/client/token")
 	public void getClientTokenInfo() {
@@ -59,22 +90,16 @@ public class OAuth2Controller {
 				.getRequestAttributes();
 		HttpServletRequest request = servletRequestAttributes.getRequest();
 		HttpServletResponse response = servletRequestAttributes.getResponse();
-
 		try {
 			String clientId = request.getHeader("client_id");
 			String clientSecret = request.getHeader("client_secret");
 			OAuth2AccessToken oAuth2AccessToken = sysTokenService.getClientTokenInfo(clientId, clientSecret);
-
 			ResponseUtil.renderJson(response, oAuth2AccessToken);
-
 		} catch (Exception e) {
-
 			Map<String, String> rsp = new HashMap<>();
 			rsp.put(CommonConstant.STATUS, HttpStatus.UNAUTHORIZED.value() + "");
 			rsp.put("msg", e.getMessage());
-
 			ResponseUtil.renderJsonError(response, rsp, HttpStatus.UNAUTHORIZED.value());
-
 		}
 	}
 
@@ -89,29 +114,22 @@ public class OAuth2Controller {
 		HttpServletRequest request = servletRequestAttributes.getRequest();
 		HttpServletResponse response = servletRequestAttributes.getResponse();
 		try {
-
 			String clientId = request.getHeader("client_id");
 			String clientSecret = request.getHeader("client_secret");
-
 			OAuth2AccessToken oAuth2AccessToken = sysTokenService.getUserTokenInfo(clientId, clientSecret, username,
 					password);
-
 			ResponseUtil.renderJson(response, oAuth2AccessToken);
-
 		} catch (Exception e) {
-
 			Map<String, String> rsp = new HashMap<>();
 			rsp.put(CommonConstant.STATUS, HttpStatus.UNAUTHORIZED.value() + "");
 			rsp.put("msg", e.getMessage());
 			ResponseUtil.renderJsonError(response, rsp, HttpStatus.UNAUTHORIZED.value());
-
 		}
 	}
 
 	@ApiOperation(value = "获取token信息")
 	@PostMapping(value = "/oauth/get/token", params = "access_token")
 	public OAuth2AccessToken getTokenInfo(String access_token) {
-
 		return sysTokenService.getTokenInfo(access_token);
 
 	}
@@ -142,6 +160,7 @@ public class OAuth2Controller {
 
 	/**
 	 * 单点登录获取uuid（密码）
+	 * 
 	 * @param userName
 	 * @return
 	 */
@@ -163,13 +182,14 @@ public class OAuth2Controller {
 
 	/**
 	 * 自定义sso
-	 * @param params	client_id client_secret username password
+	 * 
+	 * @param params   client_id client_secret username password
 	 * @param request
 	 * @param response
 	 */
 	@PostMapping("/oauth/ssoSysLogin")
-	public void ssoSysLogin(@RequestParam Map<String, Object> params,
-							HttpServletRequest request, HttpServletResponse response) {
+	public void ssoSysLogin(@RequestParam Map<String, Object> params, HttpServletRequest request,
+			HttpServletResponse response) {
 		String clientId = request.getParameter("client_id");
 		String clientSecret = request.getParameter("client_secret");
 		try {
