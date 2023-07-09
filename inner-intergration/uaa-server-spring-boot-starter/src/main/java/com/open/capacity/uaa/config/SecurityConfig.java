@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-
+import org.hdiv.config.annotation.EnableHdivWebSecurity;
 import com.open.capacity.common.config.DefaultPasswordConfig;
 import com.open.capacity.common.constant.SecurityConstants;
 import com.open.capacity.common.properties.TenantProperties;
@@ -46,6 +46,7 @@ import com.open.capacity.uaa.tenant.TenantUsernamePasswordAuthenticationFilter;
  */
 @Configuration
 @EnableWebSecurity//(debug = true)
+@EnableHdivWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Import(DefaultPasswordConfig.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

@@ -1,19 +1,14 @@
 package com.open.capacity.gateway.error;
 
-import org.springframework.beans.factory.parsing.Problem;
-import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.open.capacity.common.utils.WebfluxResponseUtil;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.zalando.problem.spring.webflux.advice.security.SecurityAdviceTrait;
-import org.zalando.problem.spring.webflux.advice.security.SecurityProblemSupport;
-import org.zalando.problem.spring.webflux.advice.utils.AdviceUtils;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.open.capacity.common.utils.WebfluxResponseUtil;
 
 import reactor.core.publisher.Mono;
 /**

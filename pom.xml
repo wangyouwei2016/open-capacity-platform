@@ -202,16 +202,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.zalando</groupId>
-				<artifactId>problem-spring-web-starter</artifactId>
-				<version>${problem.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.zalando</groupId>
-				<artifactId>tracer-core</artifactId>
-				<version>${tracer.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.zalando</groupId>
 				<artifactId>problem-spring-webflux</artifactId>
 				<version>${problem.version}</version>
 			</dependency>
