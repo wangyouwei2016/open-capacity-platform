@@ -41,7 +41,7 @@ public class CustomerExceptionHandler implements SecurityAdviceTrait, ProblemHan
 
 	@Override
     public boolean isCausalChainsEnabled() {
-        return true;
+        return false;
     }
 
 	@ExceptionHandler({ IllegalArgumentException.class })
@@ -146,7 +146,12 @@ public class CustomerExceptionHandler implements SecurityAdviceTrait, ProblemHan
 
 	private Mono<ResponseEntity<Problem>> handleAllException(Status status, Throwable ex, ServerWebExchange request) {
 		CustomerThrowableProblem toProblem = new CustomerThrowableProblem( request.getRequest().getURI() , ex.getMessage(), status);
-		toProblem.setMsg( ex.getMessage());
+		toProblem.setMsg(ex.getMessage());
+		if(!isCausalChainsEnabled()) {
+			toProblem.setStackTrace( new StackTraceElement[] {
+				    new StackTraceElement("", "", "", 0),
+				});
+		}
 		return create(ex, toProblem, request);
 	};
 }
