@@ -18,6 +18,8 @@
   	<module>common-spring-boot-starter</module>
   	<!-- 统一配置-->
     <module>config-spring-boot-starter</module>
+	<!-- 加密配置-->
+    <module>jasypt-spring-boot-starter</module>
     <!-- 关系型数据库配置-->
   	<module>db-spring-boot-starter</module>
   	<!-- 数据库版本控制 -->

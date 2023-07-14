@@ -51,16 +51,16 @@
 			<artifactId>hdiv-config</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.ulisesbocchio</groupId>
+			<groupId>com.open.capacity</groupId>
 			<artifactId>jasypt-spring-boot-starter</artifactId>
 		</dependency>
 		<dependency>
-	  		<groupId>com.belerweb</groupId>
-	  		<artifactId>pinyin4j</artifactId>
+			<groupId>com.belerweb</groupId>
+			<artifactId>pinyin4j</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>com.jsoniter</groupId>
-		    <artifactId>jsoniter</artifactId>
+			<groupId>com.jsoniter</groupId>
+			<artifactId>jsoniter</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>eu.bitwalker</groupId>
