@@ -1,7 +1,7 @@
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://${ocp.datasource.ip:192.168.92.216}:3306/oauth-center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false 
+      url: jdbc:mysql://${ocp.datasource.ip:192.168.92.216}:${ocp.datasource.port:3306}/oauth-center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
       username: ${ocp.datasource.username}
       password: ${ocp.datasource.password}
       driver-class-name:  com.mysql.cj.jdbc.Driver

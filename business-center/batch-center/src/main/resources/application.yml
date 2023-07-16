@@ -33,7 +33,7 @@ spring:
       ds0:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://${ocp.datasource.ip:192.168.92.216}:3306/batch-center?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://${ocp.datasource.ip:192.168.92.216}:${ocp.datasource.port:3306}/batch-center?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
         username: ${ocp.datasource.username}
         password: ${ocp.datasource.password}
         #初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时
