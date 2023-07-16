@@ -27,7 +27,7 @@ spring:
         type: com.zaxxer.hikari.HikariDataSource
         username: root
         password: 520owenwangwenQ_s
-        jdbc-url: jdbc:mysql://114.67.115.7:3306/user-center1?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+        jdbc-url: jdbc:mysql://114.67.115.7:${ocp.datasource.port:3306}/user-center1?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
     
 
 
