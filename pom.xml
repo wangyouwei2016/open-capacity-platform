@@ -481,6 +481,13 @@
 				<artifactId>swagger-spring-boot-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>com.open.capacity</groupId>
+				<artifactId>preview-spring-boot-starter</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			
 			<!-- oss管理 -->
 			<dependency>
 				<groupId>com.open.capacity</groupId>

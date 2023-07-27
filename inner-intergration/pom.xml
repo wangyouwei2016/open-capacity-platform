@@ -48,5 +48,7 @@
     <module>jpush-spring-boot-starter</module>
     <!-- 分布式事务 -->
     <module>seata-spring-boot-starter</module>
+    <!-- 预览服务 -->
+    <module>preview-spring-boot-starter</module>
   </modules>
 </project>
