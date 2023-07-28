@@ -23,6 +23,10 @@
 		<dependency>
 			<groupId>org.xerial.snappy</groupId>
 			<artifactId>snappy-java</artifactId>
+		</dependency> 
+		<dependency>
+			<groupId>org.furyio</groupId>
+			<artifactId>fury-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>de.ruedigermoeller</groupId>

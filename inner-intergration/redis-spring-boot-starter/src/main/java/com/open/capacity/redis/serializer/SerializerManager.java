@@ -1,6 +1,7 @@
 package com.open.capacity.redis.serializer;
 
 import com.open.capacity.redis.serializer.fst.FSTRedisSerializer;
+import com.open.capacity.redis.serializer.fury.FuryRedisSerializer;
 import com.open.capacity.redis.serializer.hessian.HessianSerializer;
 import com.open.capacity.redis.serializer.jdk.JdkSerializer;
 import com.open.capacity.redis.serializer.kryo.KryoSerializer;
@@ -24,6 +25,8 @@ public class SerializerManager {
 	public static final byte SNAPPY_FST = 5;
 	public static final byte KRYO = 6;
 	public static final byte SNAPPY_KRYO = 7;
+	public static final byte FURY = 8;
+	public static final byte SNAPPY_FURY = 9;
 
 	static {
 		addSerializer(JDK, new JdkSerializer());
@@ -35,6 +38,8 @@ public class SerializerManager {
 		addSerializer(SNAPPY_FST, new SnappyRedisSerializer(new FSTRedisSerializer()));
 		addSerializer(KRYO, new KryoSerializer());
 		addSerializer(SNAPPY_KRYO, new SnappyRedisSerializer(new KryoSerializer()));
+		addSerializer(FURY, new FuryRedisSerializer());
+		addSerializer(SNAPPY_FURY, new SnappyRedisSerializer(new FuryRedisSerializer()));
 
 	}
 
