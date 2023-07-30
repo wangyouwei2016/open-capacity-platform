@@ -6,15 +6,18 @@ import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
@@ -78,10 +81,24 @@ public class CustomerExceptionAdvice {
 	}
 	
 	@ExceptionNoticeLog
+	@ExceptionHandler(MissingPathVariableException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity handleError(MissingPathVariableException e) {
+		  return defHandler("参数解析失败", e);
+	}
+	
+	@ExceptionNoticeLog
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity handleError(HttpMessageNotReadableException e) {
 		  return defHandler("http请求参数转换异常", e);
+	}
+	
+	@ExceptionNoticeLog
+	@ExceptionHandler(HttpMessageNotWritableException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity handleError(HttpMessageNotWritableException e) {
+		  return defHandler("http响应参数转换异常", e);
 	}
 	
 	@ExceptionNoticeLog
@@ -144,7 +161,17 @@ public class CustomerExceptionAdvice {
         return defHandler("服务调用异常", e);
     }
     
-    
+	 /**
+     * AsyncRequestTimeoutException 异步处理超时
+     * 返回状态码:500
+     */
+	@ExceptionNoticeLog
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({AsyncRequestTimeoutException.class})
+    public ResponseEntity handleRemoteCallException(AsyncRequestTimeoutException e) {
+        return defHandler("异步处理超时", e);
+    }
+	
 
     /**
      * BusinessException 业务异常处理
