@@ -1,5 +1,8 @@
 package com.open.capacity.common.disruptor;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.esotericsoftware.minlog.Log;
 import com.lmax.disruptor.EventTranslator;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.open.capacity.common.disruptor.autoconfigure.BossConfig;
@@ -11,6 +14,7 @@ import com.open.capacity.common.disruptor.thread.DaemonThreadFactory;
 import com.open.capacity.common.disruptor.thread.DisruptorShutdownHook;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author someday
@@ -18,6 +22,7 @@ import lombok.Data;
  * code: https://gitee.com/owenwangwen/open-capacity-platform
  */
 @Data
+@Slf4j
 public class BossEventBus {
 
     private final Disruptor<BossEvent> bossRingBuffer;
@@ -50,6 +55,7 @@ public class BossEventBus {
             e.setChannel(channel);
             e.setEvent(event);
             e.setContext(context);
+            e.setAction(() -> log.error("消费通道{},消费数据{}发生异常！",channel,JSONObject.toJSONString(event)));
         };
         
         return  bossRingBuffer.getRingBuffer().tryPublishEvent(translator);

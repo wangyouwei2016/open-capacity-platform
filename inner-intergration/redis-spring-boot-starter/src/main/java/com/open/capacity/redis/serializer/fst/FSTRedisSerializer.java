@@ -14,6 +14,10 @@ import com.open.capacity.redis.serializer.Serializer;
 @SuppressWarnings("unchecked")
 public class FSTRedisSerializer implements Serializer {
 	private static FSTConfiguration fstConfiguration = FSTConfiguration.createDefaultConfiguration();
+	
+//	static {
+//		 fstConfiguration.setForceSerializable(true);
+//	}
 
 	@Override
 	public byte[] serialize(Object obj) throws SerializationException {

@@ -38,7 +38,9 @@ public class BossEventHandler implements WorkHandler<BossEvent> {
             e.setContext(event.getContext());   
             e.setListeners(eventListeners);  
         };
-        workEventBus.publish(translator);
-         
+        boolean success =  workEventBus.publish(translator);
+        if (!success) {
+        	event.getAction().execute();
+        }
     }
 }

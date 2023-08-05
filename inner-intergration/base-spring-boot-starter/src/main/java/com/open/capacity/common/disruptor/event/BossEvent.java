@@ -1,6 +1,7 @@
 package com.open.capacity.common.disruptor.event;
 
 import com.open.capacity.common.disruptor.AsyncContext;
+import com.open.capacity.common.disruptor.callback.Action;
 
 import lombok.Data;
 
@@ -18,6 +19,8 @@ public class BossEvent {
     private BaseEvent event;
 
     private AsyncContext context;
+    
+    private Action action;
 
     public void clear() {
         channel = null;
