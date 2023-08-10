@@ -26,7 +26,9 @@ import org.springframework.http.codec.CodecConfigurer;
 import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -58,7 +60,7 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 	private SecurityFilterChain securityFilterChain;
 	private static final String MSG = "安全攻击拦截";
 	private static final String ERROR_MSG = "您的请求参数中含有非法字符!";
-
+	private AntPathMatcher antPathMatcher = new AntPathMatcher();
 	@Autowired
 	private ObjectMapper objectMapper;
 	private List<Pattern> hdivRules = new ArrayList<>();
@@ -79,7 +81,7 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 	}
 
 	public SecurityChainFilter(ObjectMapper objectMapper, CodecConfigurer codecConfigurer,
-			CodecProperties codecProperties) {
+							   CodecProperties codecProperties) {
 		hander.readDefaultValidations();
 		List<Map<DefaultSecurityHandler.ValidationParam, String>> validations = hander.getValidations();
 		validations.forEach(val -> {
@@ -92,7 +94,7 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 	}
 
 	private List<HttpMessageReader<?>> fetchMessageReaders(CodecConfigurer codecConfigurer,
-			CodecProperties codecProperties) {
+														   CodecProperties codecProperties) {
 		PropertyMapper propertyMapper = PropertyMapper.get();
 		CodecConfigurer.DefaultCodecs defaultCodecs = codecConfigurer.defaultCodecs();
 		propertyMapper.from(codecProperties.getMaxInMemorySize()).whenNonNull().asInt(DataSize::toBytes)
@@ -119,22 +121,25 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 		} else {
 			// 基于xss的安全防护需要额外处理
 			if (securityProperties.getXss().getEnable()) {
-				long contentLength = exchange.getRequest().getHeaders().getContentLength();
-				MediaType contentType = exchange.getRequest().getHeaders().getContentType();
-				Set<String> headers = exchange.getRequest().getHeaders().values().stream()
-						.flatMap(list -> list.stream()).collect(Collectors.toSet());
-				try {
-					// 校验请求头
-					validateParamSet(headers);
-					// 校验请求体
-					if (contentLength > 0 && (MediaType.APPLICATION_JSON.equals(contentType))) {
-						return DataBufferUtils.join(exchange.getRequest().getBody())
-								.flatMap(validateJson(exchange, chain));
+				String path  = exchange.getRequest().getPath().toString() ;
+				boolean flag = securityProperties.getXss().getWhiteHttpUrls().stream().anyMatch( item-> antPathMatcher.match(item,path)) ;
+				if(!flag){
+					long contentLength = exchange.getRequest().getHeaders().getContentLength();
+					MediaType contentType = exchange.getRequest().getHeaders().getContentType();
+					Set<String> headers = exchange.getRequest().getHeaders().values().stream()
+							.flatMap(list -> list.stream()).collect(Collectors.toSet());
+					try {
+						// 校验请求头
+						validateParamSet(headers);
+						// 校验请求体
+						if (contentLength > 0 && (MediaType.APPLICATION_JSON.equals(contentType))) {
+							return DataBufferUtils.join(exchange.getRequest().getBody())
+									.flatMap(validateJson(exchange, chain));
+						}
+					} catch (Exception e) {
+						return WebfluxResponseUtil.responseWrite(exchange, HttpStatus.HTTP_BAD_REQUEST,
+								ResponseEntity.failed(ERROR_MSG));
 					}
-
-				} catch (Exception e) {
-					return WebfluxResponseUtil.responseWrite(exchange, HttpStatus.HTTP_BAD_REQUEST,
-							ResponseEntity.failed(ERROR_MSG));
 				}
 			}
 			return chain.filter(exchange);
@@ -144,13 +149,13 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 
 	/**
 	 * 请求体校验
-	 * 
+	 *
 	 * @param exchange
 	 * @param chain
 	 * @return
 	 */
 	private Function<DataBuffer, Mono<? extends Void>> validateJson(ServerWebExchange exchange,
-			GatewayFilterChain chain) {
+																	GatewayFilterChain chain) {
 		Set<String> params = Sets.newHashSet();
 		return dataBuffer -> {
 			byte[] bytes = new byte[dataBuffer.readableByteCount()];
@@ -185,7 +190,7 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 
 	/**
 	 * hdiv安全校验
-	 * 
+	 *
 	 * @param paramStr
 	 * @param rule
 	 * @return
@@ -197,7 +202,7 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 
 	/**
 	 * 基于请求头的安全防护
-	 * 
+	 *
 	 * @param params
 	 */
 	private void validateParamSet(Set<String> params) {
@@ -216,7 +221,7 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 
 	/**
 	 * 基于requestbodyString的安全防护
-	 * 
+	 *
 	 * @param param
 	 */
 	private void validateParamString(String param) {
