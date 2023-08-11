@@ -22,7 +22,7 @@ public class ResponseEntity<T> implements Serializable {
 
 	private Integer statusCodeValue;
 	private String msg;
-	private T datas;
+	private T data;
 
 	public static <T> ResponseEntity<T> succeed(String msg) {
 		return of(CodeEnum.SUCCESS.getStatusCodeValue(), msg, null);

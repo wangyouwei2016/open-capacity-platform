@@ -24,7 +24,7 @@
             admin.req('api-search/admin/index', {'indexName':indexName}, function (data) {
                 layer.closeAll('loading');
                 if (0 == data.statusCodeValue) {
-                    $('#data').html(syntaxHighlight(data.datas));
+                    $('#data').html(syntaxHighlight(data.data));
                 } else {
                     layer.msg('获取索引信息失败', {icon: 2, time: 500});
                 }

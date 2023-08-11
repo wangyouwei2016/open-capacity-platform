@@ -191,7 +191,7 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
             admin.req('api-user/users/current', {}, function (data) {
                 layer.closeAll('loading');
                 if (data && data.statusCodeValue === 0) {
-                    let user = data.datas;
+                    let user = data.data;
                     config.putUser(user);
                     admin.putTempData("permissions",user.permissions);
                     success(user);

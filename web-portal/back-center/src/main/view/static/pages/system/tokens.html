@@ -62,7 +62,7 @@
             layer.closeAll('loading');
             if (0 === data.statusCodeValue) {
                 let selected = false;
-                $.each(data.datas,function(index,item){
+                $.each(data.data,function(index,item){
                     if (config.clientId === item.clientId) {
                         selected = true;
                     } else {

@@ -58,7 +58,7 @@
         admin.req('api-user/users/current', {}, function (data) {
             // 回显user数据
             if (data && data.statusCodeValue === 0) {
-                let user = data.datas;
+                let user = data.data;
                 user.sex = user.sex.toString();
                 form.val('user-form', user);
                 $('#user-form').attr('method', 'PUT');
@@ -74,7 +74,7 @@
                     $(".layui-nav-img").attr("src",$("[name=headImgUrl]").val());
                     layer.msg("操作成功", {icon: 1, time: 500});
 
-                    form.val('user-form',data.datas);
+                    form.val('user-form',data.data);
                 } else {
                     layer.msg(data.msg, {icon: 2, time: 500});
                 }

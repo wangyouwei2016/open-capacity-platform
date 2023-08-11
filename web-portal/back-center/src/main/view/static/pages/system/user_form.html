@@ -58,8 +58,8 @@
             if (0 == data.statusCodeValue) {
                 // 渲染多选下拉框
                 var roleSelectData = new Array();
-                for (var i = 0; i < data.datas.length; i++) {
-                    roleSelectData.push({name: data.datas[i].name, value: data.datas[i].id});
+                for (var i = 0; i < data.data.length; i++) {
+                    roleSelectData.push({name: data.data[i].name, value: data.data[i].id});
                 }
                 formSelects.data('roleId', 'local', {arr: roleSelectData});
 

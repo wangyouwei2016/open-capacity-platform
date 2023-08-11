@@ -253,7 +253,7 @@
                     //console.log(JSON.stringify(data));
                     debugger ;
                     if (data.statusCodeValue === 0) {
-                        config.putToken(data.datas);
+                        config.putToken(data.data);
                         layer.msg('登录成功', {icon: 1, time: 500}, function () {
                             location.replace('./');
                         });
@@ -320,7 +320,7 @@
                 success: function (data) {
                     //console.log(JSON.stringify(data));
                     if (data.statusCodeValue === 0) {
-                        config.putToken(data.datas);
+                        config.putToken(data.data);
                         layer.msg('登录成功', {icon: 1, time: 500}, function () {
                             location.replace('./');
                         });
@@ -373,7 +373,7 @@
                 success: function (data) {
                     //console.log(JSON.stringify(data));
                     if (data.statusCodeValue === 0) {
-                        config.putToken(data.datas);
+                        config.putToken(data.data);
                         layer.msg('登录成功', {icon: 1, time: 500}, function () {
                             location.replace('./');
                         });
