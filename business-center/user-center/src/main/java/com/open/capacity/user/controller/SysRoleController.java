@@ -45,6 +45,12 @@ public class SysRoleController {
 	public PageResult<SysRole> findRoles(@RequestParam Map<String, Object> params) {
 		return sysRoleService.findRoles(params);
 	}
+	
+	@GetMapping("/roles/{id}")
+	@ApiOperation(value = "根据id查询角色")
+	public ResponseEntity<SysRole> findRoleById(@PathVariable Long id) {
+		return  ResponseEntity.succeed(sysRoleService.getById(id));
+	}
 
 	/**
 	 * 用户管理查询所有角色

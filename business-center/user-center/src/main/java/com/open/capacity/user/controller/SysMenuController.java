@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.open.capacity.common.annotation.Inner;
 import com.open.capacity.common.annotation.LoginUser;
 import com.open.capacity.common.constant.CommonConstant;
 import com.open.capacity.common.dto.PageResult;
@@ -71,7 +72,7 @@ public class SysMenuController {
 
 	@GetMapping("/{roleId}/menus")
 	@ApiOperation(value = "根据roleId获取对应的菜单")
-	public List<Map<String, Object>> findMenusByRoleId(@PathVariable Long roleId) {
+	public ResponseEntity<List<Map<String, Object>>> findMenusByRoleId(@PathVariable Long roleId) {
 		Set<Long> roleIds = new HashSet<>();
 		roleIds.add(roleId);
 		// 获取该角色对应的菜单
@@ -94,9 +95,10 @@ public class SysMenuController {
 			}
 			authTrees.add(authTree);
 		}
-		return authTrees;
+		return ResponseEntity.succeed(authTrees) ;
 	}
 	
+	@Inner
 	@GetMapping("/{roleCodes}")
 	@ApiOperation(value = "根据roleCodes获取对应的权限")
 	@Cacheable(value = "menu", key = "#roleCodes", unless = "#result == null")
@@ -160,16 +162,16 @@ public class SysMenuController {
 	 */
 	@GetMapping("/current")
 	@ApiOperation(value = "查询当前用户菜单")
-	public List<SysMenu> findMyMenu(@LoginUser SysUser user) {
+	public ResponseEntity<List<SysMenu>> findMyMenu(@LoginUser SysUser user) {
 		List<SysRole> roles = user.getRoles();
 		if (CollectionUtil.isEmpty(roles)) {
-			return Collections.emptyList();
+			return ResponseEntity.succeed(Collections.emptyList());
 		}
 		List<SysMenu> menus = menuService
 				.findByRoleCodes(EntityUtils.toSet(roles, SysRole::getCode), CommonConstant.MENU);
 		
-		return TreeUtil.listToTree(menus, SysMenu::setSubMenus ,  SysMenu::getId,
-				SysMenu::getParentId, (node) ->  ObjectUtil.equal(-1L, node.getParentId()));
+		return  ResponseEntity.succeed(TreeUtil.listToTree(menus, SysMenu::setSubMenus ,  SysMenu::getId,
+				SysMenu::getParentId, (node) ->  ObjectUtil.equal(-1L, node.getParentId())));
 		
 	}
 

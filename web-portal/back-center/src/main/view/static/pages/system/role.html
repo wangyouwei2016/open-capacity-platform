@@ -214,8 +214,12 @@
                         }
                     };
                     admin.req('api-user/menus/'+roleId+'/menus', {tenantId: tenantId}, function (data) {
-                        $.fn.zTree.init($('#treeMenu'), setting, data);
-                        layer.closeAll('loading');
+                    	if (0 == data.statusCodeValue) {
+                           $.fn.zTree.init($('#treeMenu'), setting, data.data);
+                           layer.closeAll('loading');
+                        } else {
+                            layer.msg(data.msg, {icon: 2, time: 500});
+                        }
                     }, 'GET');
 
                 },

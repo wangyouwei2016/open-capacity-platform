@@ -39,8 +39,8 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
         initLeftNav: function () {
             admin.req('api-user/menus/current', {}, function (data) {
                 //data = data[1];
-                admin.putTempData("menus",data);
-                var menus = data;
+                admin.putTempData("menus",data.data);
+                var menus = data.data;
                 // 判断权限
                 for (var i = menus.length - 1; i >= 0; i--) {
                     var tempMenu = menus[i];
@@ -206,7 +206,7 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
         //获取菜单
         getMenus: function () {
             admin.req('api-user/menus/current', {}, function (data) {
-                admin.putTempData("menus",data);
+                admin.putTempData("menus",data.data);
             }, 'GET');
         },
         // 页面元素绑定事件监听

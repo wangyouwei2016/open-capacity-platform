@@ -28,24 +28,24 @@ public class ResponseEntity<T> implements Serializable {
 		return of(CodeEnum.SUCCESS.getStatusCodeValue(), msg, null);
 	}
 
-	public static <T> ResponseEntity<T> succeed(T model, String msg) {
-		return of(CodeEnum.SUCCESS.getStatusCodeValue(), msg, model);
+	public static <T> ResponseEntity<T> succeed(T data, String msg) {
+		return of(CodeEnum.SUCCESS.getStatusCodeValue(), msg, data);
 	}
 
-	public static <T> ResponseEntity<T> succeed(T model) {
-		return of(CodeEnum.SUCCESS.getStatusCodeValue(), "", model);
+	public static <T> ResponseEntity<T> succeed(T data) {
+		return of(CodeEnum.SUCCESS.getStatusCodeValue(), "", data);
 	}
 
-	public static <T> ResponseEntity<T> of(Integer statusCodeValue, String msg, T datas) {
-		return new ResponseEntity<>(statusCodeValue, msg, datas);
+	public static <T> ResponseEntity<T> of(Integer statusCodeValue, String msg, T data) {
+		return new ResponseEntity<>(statusCodeValue, msg, data);
 	}
 
 	public static <T> ResponseEntity<T> failed(String msg) {
 		return of(CodeEnum.ERROR.getStatusCodeValue(), msg, null);
 	}
 
-	public static <T> ResponseEntity<T> failed(T model, String msg) {
-		return of(CodeEnum.ERROR.getStatusCodeValue(), msg, model);
+	public static <T> ResponseEntity<T> failed(T data, String msg) {
+		return of(CodeEnum.ERROR.getStatusCodeValue(), msg, data);
 	}
 	
 	public static <T> ResponseEntity<T> succeedWith(T data, Integer status, String msg) {

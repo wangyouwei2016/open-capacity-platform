@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.open.capacity.common.annotation.Inner;
 import com.open.capacity.common.annotation.LoginUser;
 import com.open.capacity.common.constant.CommonConstant;
 import com.open.capacity.common.constant.UserType;
@@ -68,6 +69,7 @@ public class SysUserController implements UserFeignClient{
 	 * @param user
 	 * @return
 	 */
+	@Inner
 	@GetMapping("/users/current")
 	@ApiOperation(value = "根据access_token当前登录用户")
 	public ResponseEntity<LoginAppUser> getLoginAppUser(@LoginUser(isFull = true) SysUser user) {
@@ -80,6 +82,7 @@ public class SysUserController implements UserFeignClient{
 	 * @param username
 	 * @return
 	 */
+	@Inner
 	@GetMapping(value = "/users/name/{username}")
 	@ApiOperation(value = "根据用户名查询用户实体")
 	@Cacheable(value = "user", key = "#username", unless = "#result == null")
@@ -93,6 +96,7 @@ public class SysUserController implements UserFeignClient{
 	 * @param username
 	 * @return
 	 */
+	@Inner
 	@GetMapping(value = "/users-anon/login", params = "username")
 	@ApiOperation(value = "根据用户名查询用户")
 	public LoginAppUser findByUsername(String username) {
@@ -105,6 +109,7 @@ public class SysUserController implements UserFeignClient{
 	 * @param mobile 手机号
 	 * @return
 	 */
+	@Inner
 	@GetMapping(value = "/users-anon/mobile", params = "mobile")
 	@ApiOperation(value = "根据手机号查询用户")
 	public LoginAppUser findByMobile(String mobile) {
@@ -117,6 +122,7 @@ public class SysUserController implements UserFeignClient{
 	 * @param userId  
 	 * @return 
 	 */
+	@Inner
 	@GetMapping(value = "/users-anon/userId", params = "userId")
 	@ApiOperation(value = "根据UserId查询用户")
 	public LoginAppUser findByUserId(String userId) {
@@ -129,6 +135,7 @@ public class SysUserController implements UserFeignClient{
 	 * @param openId  
 	 * @return  
 	 */
+	@Inner
 	@GetMapping(value = "/users-anon/openId", params = "openId")
 	@ApiOperation(value = "根据OpenId查询用户")
 	public LoginAppUser findByOpenId(String openId) {
@@ -143,8 +150,8 @@ public class SysUserController implements UserFeignClient{
 	 */
 	@GetMapping("/users/{id}")
 	@ApiOperation(value = "根据id查询用户")
-	public SysUser findUserById(@PathVariable Long id) {
-		return sysUserService.getById(id);
+	public  ResponseEntity<SysUser> findUserById(@PathVariable Long id) {
+		return ResponseEntity.succeed(sysUserService.getById(id));
 	}
 
 	/**
