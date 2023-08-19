@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.apache.xerces.impl.xpath.regex.RegularExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.codec.CodecProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
@@ -26,7 +25,6 @@ import org.springframework.http.codec.CodecConfigurer;
 import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.unit.DataSize;
@@ -63,7 +61,7 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 	private AntPathMatcher antPathMatcher = new AntPathMatcher();
 	@Autowired
 	private ObjectMapper objectMapper;
-	private List<Pattern> hdivRules = new ArrayList<>();
+	private List<RegularExpression> hdivRules = new ArrayList<>();
 	private DefaultSecurityHandler hander = new DefaultSecurityHandler();
 	private List<HttpMessageReader<?>> messageReaders;
 	@Autowired
@@ -86,7 +84,8 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 		List<Map<DefaultSecurityHandler.ValidationParam, String>> validations = hander.getValidations();
 		validations.forEach(val -> {
 			String regex = val.get(DefaultSecurityHandler.ValidationParam.REGEX);
-			hdivRules.add(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
+			RegularExpression  re = new RegularExpression(regex, "i");
+			hdivRules.add(re);
 		});
 		this.objectMapper = objectMapper;
 		this.messageReaders = fetchMessageReaders(codecConfigurer, codecProperties);
@@ -110,41 +109,35 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 		securityContext.setExchange(exchange);
 		try {
 			securityFilterChain.execute(securityContext);
-		} catch (Exception e) {
-			if (log.isTraceEnabled()) {
-				log.trace(" security chains exception :{}", e.getMessage());
-			}
-		}
-		// 获取处理结果
-		if (securityContext.isResult()) {
-			return WebfluxResponseUtil.responseWrite(exchange, securityContext.getCode(), securityContext.getEntity());
-		} else {
-			// 基于xss的安全防护需要额外处理
-			if (securityProperties.getXss().getEnable()) {
-				String path  = exchange.getRequest().getPath().toString() ;
-				boolean flag = securityProperties.getXss().getWhiteHttpUrls().stream().anyMatch( item-> antPathMatcher.match(item,path)) ;
-				if(!flag){
-					long contentLength = exchange.getRequest().getHeaders().getContentLength();
-					MediaType contentType = exchange.getRequest().getHeaders().getContentType();
-					Set<String> headers = exchange.getRequest().getHeaders().values().stream()
-							.flatMap(list -> list.stream()).collect(Collectors.toSet());
-					try {
+			// 获取处理结果
+			if (securityContext.isResult()) {
+				return WebfluxResponseUtil.responseWrite(exchange, securityContext.getCode(),
+						securityContext.getEntity());
+			} else {
+				// 基于xss的安全防护需要额外处理
+				if (securityProperties.getXss().getEnable()) {
+					String path = exchange.getRequest().getPath().toString();
+					boolean flag = securityProperties.getXss().getWhiteHttpUrls().stream()
+							.anyMatch(item -> antPathMatcher.match(item, path));
+					if (!flag) {
+						long contentLength = exchange.getRequest().getHeaders().getContentLength();
+						MediaType contentType = exchange.getRequest().getHeaders().getContentType();
+						Set<String> headers = exchange.getRequest().getHeaders().values().stream()
+								.flatMap(list -> list.stream()).collect(Collectors.toSet());
 						// 校验请求头
-						validateParamSet(headers);
-						// 校验请求体
+						headers.stream().forEach(item -> validateParamString(item));
 						if (contentLength > 0 && (MediaType.APPLICATION_JSON.equals(contentType))) {
 							return DataBufferUtils.join(exchange.getRequest().getBody())
 									.flatMap(validateJson(exchange, chain));
 						}
-					} catch (Exception e) {
-						return WebfluxResponseUtil.responseWrite(exchange, HttpStatus.HTTP_BAD_REQUEST,
-								ResponseEntity.failed(ERROR_MSG));
 					}
 				}
+				return chain.filter(exchange);
 			}
-			return chain.filter(exchange);
+		} catch (Exception e) {
+			return WebfluxResponseUtil.responseWrite(exchange, HttpStatus.HTTP_BAD_REQUEST,
+					ResponseEntity.failed(ERROR_MSG));
 		}
-
 	}
 
 	/**
@@ -189,46 +182,15 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 	}
 
 	/**
-	 * hdiv安全校验
-	 *
-	 * @param paramStr
-	 * @param rule
-	 * @return
-	 */
-	private boolean validateParam(String paramStr, Pattern rule) {
-		Matcher matcher = rule.matcher(paramStr);
-		return matcher.matches();
-	}
-
-	/**
-	 * 基于请求头的安全防护
-	 *
-	 * @param params
-	 */
-	private void validateParamSet(Set<String> params) {
-		Iterator<String> paramIterator = params.iterator();
-		while (paramIterator.hasNext()) {
-			String param = paramIterator.next();
-			Iterator<Pattern> ruleIterator = hdivRules.iterator();
-			while (ruleIterator.hasNext()) {
-				Pattern rule = ruleIterator.next();
-				if (validateParam(param, rule)) {
-					throw new BusinessException(MSG);
-				}
-			}
-		}
-	}
-
-	/**
 	 * 基于requestbodyString的安全防护
 	 *
 	 * @param param
 	 */
 	private void validateParamString(String param) {
-		Iterator<Pattern> ruleIterator = hdivRules.iterator();
+		Iterator<RegularExpression> ruleIterator = hdivRules.iterator();
 		while (ruleIterator.hasNext()) {
-			Pattern rule = ruleIterator.next();
-			if (validateParam(param, rule)) {
+			RegularExpression  rule = ruleIterator.next();
+			if (rule.matches(param)) {
 				throw new BusinessException(MSG);
 			}
 		}
