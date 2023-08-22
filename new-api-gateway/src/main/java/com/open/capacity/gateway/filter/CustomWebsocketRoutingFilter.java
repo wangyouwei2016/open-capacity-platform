@@ -74,7 +74,17 @@ public class CustomWebsocketRoutingFilter implements GlobalFilter, Ordered {
 			return this.webSocketService.handleRequest(exchange, new CustomWebsocketRoutingFilter.ProxyWebSocketHandler(
 					requestUrl, this.webSocketClient, filtered, protocols));
 		} else {
-			return chain.filter(exchange);
+			// 解决返回多个origin信息问题
+			return chain.filter(exchange).then(Mono.defer(() -> {
+				exchange.getResponse().getHeaders().entrySet().stream().filter(kv -> (kv.getValue() != null && kv.getValue().size() > 1))
+						.filter(kv -> (kv.getKey().equals(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN)
+								|| kv.getKey().equals(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS))).forEach(kv -> {
+							kv.setValue(new ArrayList<String>() {
+								{add(kv.getValue().get(0));}
+							});
+						});
+				return chain.filter(exchange);
+			}));
 		}
 	}
 
