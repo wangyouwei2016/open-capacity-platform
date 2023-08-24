@@ -84,8 +84,7 @@ public class SecurityChainFilter implements GlobalFilter, Ordered {
 		List<Map<DefaultSecurityHandler.ValidationParam, String>> validations = hander.getValidations();
 		validations.forEach(val -> {
 			String regex = val.get(DefaultSecurityHandler.ValidationParam.REGEX);
-			RegularExpression  re = new RegularExpression(regex, "i");
-			hdivRules.add(re);
+			hdivRules.add( new RegularExpression(regex, "i"));
 		});
 		this.objectMapper = objectMapper;
 		this.messageReaders = fetchMessageReaders(codecConfigurer, codecProperties);
