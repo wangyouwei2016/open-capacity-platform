@@ -10,6 +10,7 @@ import org.springframework.cloud.bootstrap.encrypt.KeyProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -49,6 +50,7 @@ public class UAAClientAutoConfig {
 	@EnableResourceServer
 	@Import(DefaultSecurityHandlerConfig.class)
 	@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+	@Order(3)
 	public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		@Autowired
 		private TokenStore tokenStore;
