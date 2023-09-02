@@ -25,6 +25,8 @@ import cn.hutool.json.JSONUtil;
  */
 public class SentinelAutoConfig {
 
+	
+	public static final String MSG ="接口限流了";
 	/**
 	 * 限流、熔断统一处理类
 	 */
@@ -34,8 +36,8 @@ public class SentinelAutoConfig {
 		@Bean
 		public BlockExceptionHandler webmvcBlockExceptionHandler() {
 			return (request, response, e) -> {
-				response.setStatus(429);
-				ResponseEntity result = ResponseEntity.failed(e.getMessage());
+				response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+				ResponseEntity result = ResponseEntity.failed(MSG);
 				response.getWriter().print(JSONUtil.toJsonStr(result));
 			};
 		}
@@ -51,8 +53,8 @@ public class SentinelAutoConfig {
 		public BlockRequestHandler webfluxBlockExceptionHandler() {
 			return (exchange, t) -> {
 				Map<String, Object> map = Maps.newHashMap();
-				map.put(CommonConstant.STATUS, 429);
-				map.put("msg", "接口限流了");
+				map.put(CommonConstant.STATUS, HttpStatus.TOO_MANY_REQUESTS.value());
+				map.put("msg", MSG);
 				return ServerResponse.status(HttpStatus.TOO_MANY_REQUESTS).contentType(MediaType.APPLICATION_JSON)
 						.body(BodyInserters.fromValue(map));
 			};

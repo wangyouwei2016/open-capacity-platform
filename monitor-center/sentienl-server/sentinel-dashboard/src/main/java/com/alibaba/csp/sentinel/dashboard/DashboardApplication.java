@@ -15,14 +15,12 @@
  */
 package com.alibaba.csp.sentinel.dashboard;
 
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import com.alibaba.csp.sentinel.dashboard.rule.nacos.NacosProperties;
 import com.alibaba.csp.sentinel.init.InitExecutor;
-
 
 /**
  * Sentinel dashboard application.

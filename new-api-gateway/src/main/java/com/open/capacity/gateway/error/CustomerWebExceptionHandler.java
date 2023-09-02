@@ -20,6 +20,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.open.capacity.common.constant.CommonConstant;
 import com.open.capacity.gateway.config.RouteAliasConfig;
 
@@ -67,7 +68,10 @@ public class CustomerWebExceptionHandler
 				message = "其他异常！";
 			}
 			errorAttributes.put(CommonConstant.RESPONSE_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
-		}else {
+		}else if (error instanceof BlockException) {
+			errorAttributes.put(CommonConstant.RESPONSE_STATUS, HttpStatus.TOO_MANY_REQUESTS.value());
+			message = "接口限流了！";
+		} else {
 			errorAttributes.put(CommonConstant.RESPONSE_STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
 		}
 		errorAttributes.put(CommonConstant.STATUS, status);

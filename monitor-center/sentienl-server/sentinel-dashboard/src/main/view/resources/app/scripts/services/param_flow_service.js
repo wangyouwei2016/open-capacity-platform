@@ -34,12 +34,8 @@ angular.module('sentinelDashboardApp').service('ParamFlowService', ['$http', fun
   };
 
   this.deleteRule = function (entity) {
-    var param = {
-      app: entity.app
-    };
     return $http({
       url: '/paramFlow/rule/' + entity.id,
-      params: param,
       method: 'DELETE'
     });
   };

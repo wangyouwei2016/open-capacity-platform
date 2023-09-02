@@ -22,7 +22,7 @@ public class AsycTaskProperties {
 	/**
 	 * 队列最大长度
 	 */
-	private int queueCapacity = 10;
+	private int queueCapacity = 50;
 	/**
 	 * 线程池前缀
 	 */

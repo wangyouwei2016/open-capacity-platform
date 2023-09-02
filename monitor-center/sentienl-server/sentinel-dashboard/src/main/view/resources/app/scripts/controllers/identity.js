@@ -1,7 +1,7 @@
 var app = angular.module('sentinelDashboardApp');
 
 app.controller('IdentityCtl', ['$scope', '$stateParams', 'IdentityService',
-  'ngDialog', 'FlowServiceV2', 'DegradeService', 'AuthorityRuleService', 'ParamFlowService', 'MachineService',
+  'ngDialog', 'FlowServiceV1', 'DegradeService', 'AuthorityRuleService', 'ParamFlowService', 'MachineService',
   '$interval', '$location', '$timeout',
   function ($scope, $stateParams, IdentityService, ngDialog,
     FlowService, DegradeService, AuthorityRuleService, ParamFlowService, MachineService, $interval, $location, $timeout) {
@@ -140,7 +140,7 @@ app.controller('IdentityCtl', ['$scope', '$stateParams', 'IdentityService',
       };
 
       degradeRuleDialogScope.degradeRuleDialog = {
-        title: '新增降级规则',
+        title: '新增熔断规则',
         type: 'add',
         confirmBtnText: '新增',
         saveAndContinueBtnText: '新增并继续添加'
