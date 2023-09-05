@@ -174,21 +174,8 @@ public class SwaggerAutoConfiguration implements BeanFactoryAware {
 		secretPar.name("client_secret").description("应用密钥").modelRef(new ModelRef("string")).parameterType("header")
 				.required(false).build();
 		
-		
-		ParameterBuilder tenantPar = new ParameterBuilder();
-		tenantPar.name("x-tenant-header").description("租户标识").modelRef(new ModelRef("string")).parameterType("header")
-				.required(false).build();
-		
-		
-		ParameterBuilder usernamePar = new ParameterBuilder();
-		tenantPar.name("x-user-header").description("用户名").modelRef(new ModelRef("string")).parameterType("header")
-				.required(false).build();
-		
 		pars.add(clientPar.build());
 		pars.add(secretPar.build());
-		pars.add(tenantPar.build());
-		pars.add(usernamePar.build());
-		
 
 		return new Docket(DocumentationType.SWAGGER_2).host(swaggerProperties.getHost()).apiInfo(apiInfo)
 				.globalOperationParameters(buildGlobalOperationParametersFromSwaggerProperties(
