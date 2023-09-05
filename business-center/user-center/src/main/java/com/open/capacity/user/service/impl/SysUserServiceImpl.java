@@ -266,11 +266,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		if (sysUser != null) {
 			LoginAppUser loginAppUser = new LoginAppUser();
 			BeanUtils.copyProperties(sysUser, loginAppUser);
-
 			List<SysRole> sysRoles = roleUserService.findRolesByUserId(sysUser.getId());
 			// 设置角色
 			loginAppUser.setRoles(sysRoles);
-
 			if (!CollectionUtils.isEmpty(sysRoles)) {
 				Set<Long> roleIds = sysRoles.stream().map(BaseEntity::getId).collect(Collectors.toSet());
 				List<SysMenu> menus = roleMenuMapper.findMenusByRoleIds(roleIds, CommonConstant.PERMISSION);

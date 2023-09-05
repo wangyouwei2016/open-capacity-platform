@@ -150,8 +150,8 @@ public class SysUserController implements UserFeignClient{
 	 */
 	@GetMapping("/users/{id}")
 	@ApiOperation(value = "根据id查询用户")
-	public  ResponseEntity<SysUser> findUserById(@PathVariable Long id) {
-		return ResponseEntity.succeed(sysUserService.getById(id));
+	public  ResponseEntity<LoginAppUser> findUserById(@PathVariable Long id) {
+		return ResponseEntity.succeed(sysUserService.getLoginAppUser(sysUserService.getById(id)));
 	}
 
 	/**
