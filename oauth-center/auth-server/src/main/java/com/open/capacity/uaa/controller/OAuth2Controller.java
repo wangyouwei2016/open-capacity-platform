@@ -1,5 +1,6 @@
 package com.open.capacity.uaa.controller;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -25,11 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -201,5 +199,23 @@ public class OAuth2Controller {
 			rsp.put("msg", e.getMessage());
 			ResponseUtil.renderJsonError(response, rsp, HttpStatus.UNAUTHORIZED.value());
 		}
+	}
+
+	/**
+	 * 授权码模式特例-创建code
+	 * @param approvalParameters client_id redirect_uri scope state
+	 * @param sessionStatus
+	 * @param principal
+	 * @return
+	 * @author xh
+	 * @since 2023-9-11 21:15:01
+	 */
+	@PostMapping(value = "/auth/v2/authorize")
+	public ResponseEntity authorize (@RequestBody Map<String, String> approvalParameters,
+											  SessionStatus sessionStatus, Principal principal) {
+
+		// TO-DO
+
+		return null;
 	}
 }
