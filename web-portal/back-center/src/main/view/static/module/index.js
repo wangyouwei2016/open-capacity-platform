@@ -211,7 +211,7 @@ layui.define(['config', 'admin', 'layer', 'laytpl', 'element', 'form'], function
         },
         // 页面元素绑定事件监听
         bindEvent: function () {
-			debugger;
+			// debugger;
             // 退出登录
             $('#btnLogout').click(function () {
                 layer.confirm('确定退出登录？', function () {

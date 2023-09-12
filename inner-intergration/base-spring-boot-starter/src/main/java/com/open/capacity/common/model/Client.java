@@ -47,5 +47,9 @@ public class Client extends BaseEntity<Client> {
    private Integer ifLimit ;
    
    private Long limitCount=10000L ;
+   // 公钥
+   private String publicKey;
+   // 私钥
+   private String privateKey;
    
 }

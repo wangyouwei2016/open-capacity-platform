@@ -32,6 +32,12 @@ public class DefaultClientDetails extends BaseClientDetails implements Serializa
 	// 限流次数
 	private long limitCount;
 
+	// 客户端自定义名称
+	private String clientName;
+
+	// publicKey
+	private String publicKey;
+
 	public DefaultClientDetails(String clientId, String resourceIds, String scopes, String grantTypes, String authorities,
 			String redirectUris) {
 		super(clientId, resourceIds, scopes, grantTypes, authorities, redirectUris);

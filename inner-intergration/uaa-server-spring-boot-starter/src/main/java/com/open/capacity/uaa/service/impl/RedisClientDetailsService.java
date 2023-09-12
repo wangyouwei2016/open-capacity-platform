@@ -41,12 +41,13 @@ import lombok.extern.slf4j.Slf4j;
 public class RedisClientDetailsService extends JdbcClientDetailsService {
 
 	private static final String SELECT_CLIENT_DETAILS_SQL = "select client_id, client_secret, resource_ids, scope, authorized_grant_types, "
-			+ "web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove ,if_limit, limit_count ,id "
+			+ "web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove ,if_limit, limit_count ,id" +
+			",client_name,public_key,private_key "
 			+ "from oauth_client_details where client_id = ?   ";
 	// 扩展 默认的 ClientDetailsService, 增加逻辑删除判断( status = 1)
 	private static final String SELECT_FIND_STATEMENT = "select client_id, client_secret,resource_ids, scope, "
 			+ "authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, "
-			+ "refresh_token_validity, additional_information, autoapprove ,if_limit, limit_count ,id  from oauth_client_details where 1 = 1 order by client_id ";
+			+ "refresh_token_validity, additional_information, autoapprove ,if_limit, limit_count ,id,client_name,public_key,private_key  from oauth_client_details where 1 = 1 order by client_id ";
 
 	private RedisTemplate<String, Object> redisTemplate;
 
@@ -137,6 +138,13 @@ public class RedisClientDetailsService extends JdbcClientDetailsService {
 			long limitCount = rs.getLong(13);
 			details.setLimitCount(limitCount);
 			details.setId(rs.getLong(14));
+			// 客户端自定义名称
+			String clientName = rs.getString(15);
+			details.setClientName(clientName);
+			// 公钥
+			String publicKey = rs.getString(16);
+			details.setPublicKey(publicKey);
+
 			if (scopes != null) {
 				details.setAutoApproveScopes(org.springframework.util.StringUtils.commaDelimitedListToSet(scopes));
 			}

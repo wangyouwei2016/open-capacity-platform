@@ -139,7 +139,10 @@ ocp:
         /user/login,
         /routes/**,
         /api-auth/tokens/key,
-        /api-user/demo/signatureValidation
+        /api-user/demo/signatureValidation,
+        /api-auth/auth/v2/token,
+        /api-auth/auth/v2/refresh/token,
+        /api-auth/auth/v2/userInfo
     auth:
       urlPermission:
         #是否开启url级别权限

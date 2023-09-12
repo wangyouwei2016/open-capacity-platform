@@ -109,6 +109,18 @@
             	<input type="radio" name="ifLimit" value="1" title="是"/>
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">公钥</label>
+            <div class="layui-input-block">
+                <input name="publicKey" id="publicKey" value="" placeholder="请输入公钥" type="text" class="layui-input" maxlength="1000"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">私钥</label>
+            <div class="layui-input-block">
+                <input name="privateKey"  id="privateKey" value="" placeholder="请输入私钥" type="text" class="layui-input " maxlength="1000"/>
+            </div>
+        </div>
         <div class="layui-form-item model-form-footer">
             <button class="layui-btn layui-btn-primary" ew-event="closeDialog" type="button">取消</button>
             <button class="layui-btn" lay-filter="app-form-submit" lay-submit>保存</button>
@@ -152,6 +164,8 @@
                     return d.ifLimit ? "是" : "否"
                 },width:130, sort: true, title: '是否限流'},
                 {field: 'limitCount',width:130, sort: true, title: '限流阈值'},
+                {field: 'publicKey', hide: true},
+                {field: 'privateKey', hide: true},
                 {fixed: 'right', align: 'center',width:150, toolbar: '#app-table-bar', title: '操作'}
             ]]
         });
@@ -231,6 +245,17 @@
                             }
                             $(this).prop("checked", isCheck);
                         });
+                    } else {
+                        // 新增操作-初始化公钥私钥
+                        // TO-DO 增加按钮可以复制
+                        admin.req('api-auth//auth/v2/getKeyPair', {}, function (data) {
+                            layer.closeAll('loading');
+                            if (data.statusCodeValue == 0) {
+                                $("#publicKey").val(data.data.publicKey);
+                                $("#privateKey").val(data.data.privateKey);
+                            }
+                            layer.msg(data.msg, {icon: 1, time: 500});
+                        }, 'GET');
                     }
                 }
             });
