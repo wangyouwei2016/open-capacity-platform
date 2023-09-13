@@ -80,7 +80,7 @@ public class DownloadZipEventLisener extends EventListener<DownloadEvent, Upload
 
 				}
 				out.flush();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				IoUtil.write(out, false, ko.getBytes(StandardCharsets.UTF_8));
 			} finally {
 				IoUtil.close(out);

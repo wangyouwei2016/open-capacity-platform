@@ -64,7 +64,7 @@ public class UploadEventLisener extends EventListener<UploadEvent, UploadContext
 				FileInfo fileInfo = fileServiceFactory.getService(event.getFileType()).upload(file);
 				IoUtil.write(out, false, objectMapper.writeValueAsString(fileInfo).getBytes(StandardCharsets.UTF_8));
 				out.flush();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				IoUtil.write(out, false, ko.getBytes(StandardCharsets.UTF_8));
 			} finally {
 				IoUtil.close(out);

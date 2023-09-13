@@ -15,7 +15,8 @@ import org.springframework.security.web.server.authorization.AuthorizationContex
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
-import com.open.capacity.common.feign.AsynMenuService;
+import com.open.capacity.common.context.TenantContextHolder;
+import com.open.capacity.common.feign.AsyncMenuFeignClient;
 import com.open.capacity.common.model.SysMenu;
 import com.open.capacity.uaa.common.service.impl.CustomerAccessServiceImpl;
 
@@ -35,28 +36,27 @@ import reactor.core.publisher.Mono;
 @SuppressWarnings("all")
 public class CustomerAccessManager extends CustomerAccessServiceImpl implements ReactiveAuthorizationManager<AuthorizationContext> {
     @Resource
-    private AsynMenuService asynMenuService;
+    private AsyncMenuFeignClient asyncMenuFeignClient;
 
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext authorizationContext) {
-        return authentication.map(auth -> {
+        return authentication.flatMap(auth -> {
             ServerWebExchange exchange = authorizationContext.getExchange();
             ServerHttpRequest request = exchange.getRequest();
             SecurityContextHolder.getContext().setAuthentication(auth);
-            boolean isPermission = super.hasPermission(auth, request.getMethodValue(), request.getURI().getPath());
+            Mono<Boolean> isPermission = super.hasPermission(auth, request.getMethodValue(), request.getURI().getPath());
             SecurityContextHolder.clearContext();
-            return new AuthorizationDecision(isPermission);
+            return isPermission.map(granted -> new AuthorizationDecision(granted));
         }).defaultIfEmpty(new AuthorizationDecision(false));
     }
-
     @Override
-    public List<SysMenu> findMenuByRoleCodes(String roleCodes) {
-        Future<List<SysMenu>> futureResult = asynMenuService.findByRoleCodes(roleCodes);
+    public Mono<List<SysMenu>> findMenuByRoleCodes(String tenant ,String roleCodes) {
+        Mono<List<SysMenu>> result = asyncMenuFeignClient.findByRoleCodes(tenant,roleCodes);
         try {
-            return futureResult.get();
+            return result;
         } catch (Exception e) {
             log.error("asynMenuService.findMenuByRoleCodes-error", e);
         }
-        return Collections.emptyList();
+        return Mono.just(Collections.emptyList());
     }
 }

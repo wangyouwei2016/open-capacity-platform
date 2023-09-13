@@ -70,7 +70,7 @@ public class BatchUploadEventLisener extends EventListener<UploadEvent, UploadCo
 				}
 				out.write(objectMapper.writeValueAsString(fileInfos).getBytes(StandardCharsets.UTF_8));
 				out.flush();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				IoUtil.write(out, false, ko.getBytes(StandardCharsets.UTF_8));
 			} finally {
 				IoUtil.close(out);

@@ -82,6 +82,7 @@
 		<baidu-api.version>4.15.3</baidu-api.version>
 		<swagger.io.version>1.0.67</swagger.io.version>
 		<modelmapper-version>2.3.3</modelmapper-version>
+		<feign.reactor.version>3.2.0</feign.reactor.version>
 		<thumbnailator.version>0.4.12</thumbnailator.version>
 		<docker.host>http://59.110.164.254:5555</docker.host>
 		<docker.image.prefix>owenwangwen</docker.image.prefix>
@@ -240,6 +241,23 @@
 				<artifactId>spring-cloud-square-retrofit-webclient</artifactId>
 				<version>0.4.1</version>
 			</dependency>
+
+			<dependency>
+				<groupId>com.playtika.reactivefeign</groupId>
+				<artifactId>feign-reactor-spring-configuration</artifactId>
+				<version>${feign.reactor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.playtika.reactivefeign</groupId>
+				<artifactId>feign-reactor-cloud</artifactId>
+				<version>${feign.reactor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.playtika.reactivefeign</groupId>
+				<artifactId>feign-reactor-webclient</artifactId>
+				<version>${feign.reactor.version}</version>
+			</dependency>
+
 			<!--密码校验框架 -->
 			<dependency>
 				<groupId>org.passay</groupId>
@@ -248,9 +266,9 @@
 			</dependency>
 			<!-- json -->
 			<dependency>
-			    <groupId>com.jsoniter</groupId>
-			    <artifactId>jsoniter</artifactId>
-			    <version>${jsoniter.version}</version>
+				<groupId>com.jsoniter</groupId>
+				<artifactId>jsoniter</artifactId>
+				<version>${jsoniter.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.alibaba</groupId>
@@ -301,9 +319,9 @@
 				<version>${hdiv.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>me.zhyd.oauth</groupId>
-			    <artifactId>JustAuth</artifactId>
-			    <version>${justauth.version}</version>
+				<groupId>me.zhyd.oauth</groupId>
+				<artifactId>JustAuth</artifactId>
+				<version>${justauth.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jasypt</groupId>
@@ -316,14 +334,14 @@
 				<version>${openid.version}</version>
 			</dependency>
 			<dependency>
-	  			<groupId>com.belerweb</groupId>
-	  			<artifactId>pinyin4j</artifactId>
-	  			<version>2.5.0</version>
+				<groupId>com.belerweb</groupId>
+				<artifactId>pinyin4j</artifactId>
+				<version>2.5.0</version>
 			</dependency>
 			<dependency>
-			    <groupId>com.massisframework</groupId>
-			    <artifactId>j-text-utils</artifactId>
-			    <version>0.3.4</version>
+				<groupId>com.massisframework</groupId>
+				<artifactId>j-text-utils</artifactId>
+				<version>0.3.4</version>
 			</dependency>
 			<!-- 序列化压缩工具 -->
 			<dependency>
@@ -337,9 +355,9 @@
 				<version>2.56</version>
 			</dependency>
 			<dependency>
-			  <groupId>org.furyio</groupId>
-			  <artifactId>fury-core</artifactId>
-			  <version>0.1.0-alpha.2</version>
+				<groupId>org.furyio</groupId>
+				<artifactId>fury-core</artifactId>
+				<version>0.1.0-alpha.2</version>
 			</dependency>
 			<dependency>
 				<groupId>com.esotericsoftware</groupId>
@@ -423,7 +441,7 @@
 				<artifactId>base-spring-boot-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
-			<!--敏感配置保护-->
+			<!--敏感配置保护 -->
 			<dependency>
 				<groupId>com.open.capacity</groupId>
 				<artifactId>jasypt-spring-boot-starter</artifactId>
@@ -486,13 +504,13 @@
 				<artifactId>swagger-spring-boot-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.open.capacity</groupId>
 				<artifactId>preview-spring-boot-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
-			
+
 			<!-- oss管理 -->
 			<dependency>
 				<groupId>com.open.capacity</groupId>
@@ -587,9 +605,9 @@
 				<version>${redisson-starter.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>com.espertech</groupId>
-			    <artifactId>esper</artifactId>
-			    <version>${esper.version}</version>
+				<groupId>com.espertech</groupId>
+				<artifactId>esper</artifactId>
+				<version>${esper.version}</version>
 			</dependency>
 			<!-- hutool java工具类库 -->
 			<dependency>
@@ -619,14 +637,14 @@
 				<version>${poi.version}</version>
 			</dependency>
 			<dependency>
-			  <groupId>tech.tablesaw</groupId>
-			  <artifactId>tablesaw-excel</artifactId>
-			  <version>0.43.1</version>
+				<groupId>tech.tablesaw</groupId>
+				<artifactId>tablesaw-excel</artifactId>
+				<version>0.43.1</version>
 			</dependency>
 			<dependency>
-			    <groupId>tech.tablesaw</groupId>
-			    <artifactId>tablesaw-core</artifactId>
-			    <version>0.43.1</version>
+				<groupId>tech.tablesaw</groupId>
+				<artifactId>tablesaw-core</artifactId>
+				<version>0.43.1</version>
 			</dependency>
 			<dependency>
 				<groupId>com.baomidou</groupId>
@@ -741,10 +759,10 @@
 				<version>${commons-chain.version}</version>
 			</dependency>
 			<dependency>
-	            <groupId>com.alibaba.cola</groupId>
-	            <artifactId>cola-component-statemachine</artifactId>
-	            <version>${statemachine.version}</version>
-	        </dependency>
+				<groupId>com.alibaba.cola</groupId>
+				<artifactId>cola-component-statemachine</artifactId>
+				<version>${statemachine.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
@@ -762,14 +780,14 @@
 				<version>${bboss.version}</version>
 			</dependency>
 			<dependency>
-			  	<groupId>org.joda</groupId>
-			  	<artifactId>joda-money</artifactId>
-			  	<version>1.0.3</version>
-			</dependency>	
+				<groupId>org.joda</groupId>
+				<artifactId>joda-money</artifactId>
+				<version>1.0.3</version>
+			</dependency>
 			<dependency>
-			    <groupId>org.zalando</groupId>
-			    <artifactId>jackson-datatype-money</artifactId>
-			    <version>1.3.0</version>
+				<groupId>org.zalando</groupId>
+				<artifactId>jackson-datatype-money</artifactId>
+				<version>1.3.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.xiaoymin</groupId>
@@ -1062,11 +1080,11 @@
 		</developer>
 		<developer>
 			<id>03</id>
-            <name>LeTao Zhu</name>
-            <email>zltdiablo@163.com</email>
-            <organizationUrl>https://github.com/zlt2000</organizationUrl>
-            <url>https://blog.csdn.net/zlt2000</url>
-        </developer>
+			<name>LeTao Zhu</name>
+			<email>zltdiablo@163.com</email>
+			<organizationUrl>https://github.com/zlt2000</organizationUrl>
+			<url>https://blog.csdn.net/zlt2000</url>
+		</developer>
 		<developer>
 			<id>04</id>
 			<name>caoheyang911016</name>

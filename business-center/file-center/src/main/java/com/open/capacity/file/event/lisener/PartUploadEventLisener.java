@@ -73,7 +73,7 @@ public class PartUploadEventLisener extends EventListener<UploadEvent, UploadCon
 						event.getChunks(), filepath);
 				IoUtil.write(out, false, ok.getBytes(StandardCharsets.UTF_8));
 				out.flush();
-			} catch (Exception e1) {
+			} catch (Exception e) {
 				IoUtil.write(out, false, ko.getBytes(StandardCharsets.UTF_8));
 			} finally {
 				IoUtil.close(out);

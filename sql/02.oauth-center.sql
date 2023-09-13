@@ -1,21 +1,6 @@
-/*
- Navicat Premium Data Transfer
+CREATE DATABASE IF NOT EXISTS `oauth-center` DEFAULT CHARACTER SET = utf8;
 
- Source Server         : 172.10.0.23
- Source Server Type    : MySQL
- Source Server Version : 50734
- Source Host           : 172.10.0.23:3306
- Source Schema         : oauth-center
-
- Target Server Type    : MySQL
- Target Server Version : 50734
- File Encoding         : 65001
-
- Date: 12/09/2023 17:10:10
-*/
-
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+Use `oauth-center`;
 
 -- ----------------------------
 -- Table structure for oauth_client_details

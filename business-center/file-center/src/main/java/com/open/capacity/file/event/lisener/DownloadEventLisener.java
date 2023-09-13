@@ -76,7 +76,7 @@ public class DownloadEventLisener extends EventListener<DownloadEvent, UploadCon
 				response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition,Content-Length");
 				IoUtil.write(out, false, downloadInfo.getBytes());
 				out.flush();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				IoUtil.write(out, false, ko.getBytes(StandardCharsets.UTF_8));
 			} finally {
 				IoUtil.close(out);
