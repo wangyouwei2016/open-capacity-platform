@@ -17,7 +17,7 @@
         <module>batch-center</module>
         <module>file-center</module>
         <!--工作流-->
-<!--        <module>workflow-center</module>-->
+        <module>workflow-center</module> 
     	<module>sms-center</module>
     	<module>codegen-center</module>
     </modules>
