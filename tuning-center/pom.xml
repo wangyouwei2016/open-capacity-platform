@@ -18,5 +18,6 @@
     <module>test-jmh-spring-boot-starter</module>
     <module>test-generator-starter</module>
     <module>test-liteFlow-spring-boot-starter</module>
+    <module>test-workflow-spring-boot-starter</module>
   </modules>
 </project>

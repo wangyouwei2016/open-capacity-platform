@@ -20,28 +20,28 @@ import java.util.Map;
  */
 @Slf4j
 public class RsaTools {
-
-    public static void main(String[] args) {
-        Map<String,String> dataMap = new HashMap<>();
-        // 生成token
-        dataMap.put("client_id","yqfk_pt");
-        dataMap.put("grant_type","authorization_code");
-        dataMap.put("auth_code","9lM-d3");
-        Map<String,String> dataMap1 = new HashMap<>();
-        // 获取用户信息
-        dataMap1.put("client_id","yqfk_pt");
-        dataMap1.put("auth_token","56dfe3fd-35b1-4fb4-982d-bec86643ad5c");
-
-        Map<String,String> dataMap2 = new HashMap<>();
-        // 刷新token
-        dataMap2.put("client_id","yqfk_pt");
-        dataMap2.put("grant_type","refresh_token");
-        dataMap2.put("refresh_token","a1aac4ec-67c5-42af-96b6-02f1e4e31da2");
-        String privateKey = "MIIBUwIBADANBgkqhkiG9w0BAQEFAASCAT0wggE5AgEAAkEAjpOegX3iFZ1KrZjPtQPqhP7IxCUCV+PetmWwucW26B01y/aDIYBXHat3iAI8V/k/Nh3L+DGHSjd7fq+HepaLawIDAQABAkB3zakKDFoWaXYfyuD1rNW6bVEMKEEA01QIFgjbAT0BapDy9mnS+v8HXpLYEmxgVjPLBqAXOs5R3H3x5WlnVgNxAiEAwo8Ks4TcncAZ9a3vg3d3FEsl4WiW0Q1Tq6fMj3k5B5kCIQC7mh8bGusERx8hGY4CNPffWhk/OoiKybIV4mi6vbl9owIgGykW6FrK5abUuOxwPF0oHYgkIKSWMVb38EW7k+frYzkCIGpX3VYiFiLgpha/Q66gk/n6OuGKrqft2ZNqOm/Q6Hr9AiBD0UPq2tXJHlVvetTDOS4TM9K1KR+WsSs+oT3BqmOyIw==";
-        System.out.println(getRsaSign(privateKey, dataMap));
-        System.out.println(getRsaSign(privateKey, dataMap1));
-        System.out.println(getRsaSign(privateKey, dataMap2));
-    }
+//
+//    public static void main(String[] args) {
+//        Map<String,String> dataMap = new HashMap<>();
+//        // 生成token
+//        dataMap.put("client_id","yqfk_pt");
+//        dataMap.put("grant_type","authorization_code");
+//        dataMap.put("auth_code","9lM-d3");
+//        Map<String,String> dataMap1 = new HashMap<>();
+//        // 获取用户信息
+//        dataMap1.put("client_id","yqfk_pt");
+//        dataMap1.put("auth_token","56dfe3fd-35b1-4fb4-982d-bec86643ad5c");
+//
+//        Map<String,String> dataMap2 = new HashMap<>();
+//        // 刷新token
+//        dataMap2.put("client_id","yqfk_pt");
+//        dataMap2.put("grant_type","refresh_token");
+//        dataMap2.put("refresh_token","a1aac4ec-67c5-42af-96b6-02f1e4e31da2");
+//        String privateKey = "MIIBUwIBADANBgkqhkiG9w0BAQEFAASCAT0wggE5AgEAAkEAjpOegX3iFZ1KrZjPtQPqhP7IxCUCV+PetmWwucW26B01y/aDIYBXHat3iAI8V/k/Nh3L+DGHSjd7fq+HepaLawIDAQABAkB3zakKDFoWaXYfyuD1rNW6bVEMKEEA01QIFgjbAT0BapDy9mnS+v8HXpLYEmxgVjPLBqAXOs5R3H3x5WlnVgNxAiEAwo8Ks4TcncAZ9a3vg3d3FEsl4WiW0Q1Tq6fMj3k5B5kCIQC7mh8bGusERx8hGY4CNPffWhk/OoiKybIV4mi6vbl9owIgGykW6FrK5abUuOxwPF0oHYgkIKSWMVb38EW7k+frYzkCIGpX3VYiFiLgpha/Q66gk/n6OuGKrqft2ZNqOm/Q6Hr9AiBD0UPq2tXJHlVvetTDOS4TM9K1KR+WsSs+oT3BqmOyIw==";
+//        System.out.println(getRsaSign(privateKey, dataMap));
+//        System.out.println(getRsaSign(privateKey, dataMap1));
+//        System.out.println(getRsaSign(privateKey, dataMap2));
+//    }
 
     /**
      * 检测字符串是否不为空(null,"","null")

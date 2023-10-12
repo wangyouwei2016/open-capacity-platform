@@ -1,0 +1,128 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.open.capacity</groupId>
+    <artifactId>test-workflow-spring-boot-starter</artifactId>
+    <version>${revision}</version>
+  </parent>
+  <artifactId>shopping-cart</artifactId>
+  
+  <dependencies>
+		<!-- 启动图标 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>banner-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 配置服务 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>config-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 关系型数据库配置 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>db-spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.maxmind.geoip2</groupId>
+					<artifactId>geoip2</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- 非关系型数据库配置 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>redis-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 日志中心 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>log-spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-stream</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-starter-stream-kafka</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-stream-binder-kafka</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- 通用基础能力模块 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>common-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- API文档配置 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>swagger-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 熔断限流组件 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>sentinel-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 负责均衡 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>loadbalancer-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 资源服务器 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>uaa-client-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 工作流 -->
+		 
+		<dependency>
+			<groupId>org.camunda.bpm.springboot</groupId>
+			<artifactId>camunda-bpm-spring-boot-starter-external-task-client</artifactId>
+		</dependency> 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.bull.javamelody</groupId>
+			<artifactId>javamelody-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- 测试框架 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.camunda.bpm.springboot</groupId>
+			<artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
+		</dependency>
+	</dependencies>
+  
+</project>
