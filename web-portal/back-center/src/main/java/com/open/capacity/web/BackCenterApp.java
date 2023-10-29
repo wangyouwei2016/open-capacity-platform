@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @SpringBootApplication
-public class BackCenterApplication {
+public class BackCenterApp {
 	
 	
 	public static void main(String[] args) {
-		SpringApplication.run(BackCenterApplication.class, args);
+		SpringApplication.run(BackCenterApp.class, args);
 	}
 }

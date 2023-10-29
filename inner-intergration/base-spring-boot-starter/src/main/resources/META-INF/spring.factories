@@ -10,7 +10,7 @@ com.open.capacity.common.geoip.GeoIP2AutoConfiguration,\
 com.open.capacity.common.config.DefaultPasswordValidator,\
 com.open.capacity.common.resolver.PermissionAspectResolver,\
 com.open.capacity.common.feign.fallback.UserFeignClientFallbackFactory,\
-com.open.capacity.common.feign.fallback.MenuFeignClientFallbackFactory,\
+com.open.capacity.common.joininmemory.JoinInMemoryAutoConfiguration,\
 com.open.capacity.ext.core.ResetDefinitionAutoConfig,\
 com.open.capacity.ext.feign.FeignUrlResetAutoConfig,\
 com.open.capacity.ext.util.SpringBeanUtils,\
