@@ -5,13 +5,13 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
+
 import com.open.capacity.common.model.SysMenu;
+import com.open.capacity.db.service.impl.ServiceImpl;
 import com.open.capacity.user.mapper.SysRoleMenuMapper;
 import com.open.capacity.user.model.SysRoleMenu;
 import com.open.capacity.user.service.ISysRoleMenuService;
-
-import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 

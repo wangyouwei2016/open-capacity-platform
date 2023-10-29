@@ -24,6 +24,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.open.capacity.common.constant.CommonConstant;
 
 import lombok.experimental.UtilityClass;
+import ognl.Ognl;
+import ognl.OgnlContext;
 
 /**
  * 基于 Jackson 的 json 工具类
@@ -218,5 +220,22 @@ public class JsonUtil {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+    /**
+    * @param json 原始的JSON数据
+    * @param path OGNL规则表达式
+    * @param clazz Value对应的目标类
+    * @return clazz对应数据
+    */
+    public <T> T getValue(String json,String path,Class<T> clazz) {
+    	try {
+    		Map<String,Object> map = toObject(json, Map.class);
+    		OgnlContext context = new OgnlContext();
+    		context.setRoot(map);
+    		T value = (T) Ognl.getValue(path, context,context.getRoot());
+    		return value;
+    	}catch (Exception e) {
+    		throw new RuntimeException(e);
+		}
     }
 }

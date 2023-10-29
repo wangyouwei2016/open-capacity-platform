@@ -1,12 +1,10 @@
 package com.open.capacity.user.service;
 
-import java.util.List;
 import java.util.Map;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.open.capacity.common.dto.PageResult;
-import com.open.capacity.common.dto.ResponseEntity;
 import com.open.capacity.common.model.SysRole;
+import com.open.capacity.db.service.IService;
 
 /**
  * @author someday

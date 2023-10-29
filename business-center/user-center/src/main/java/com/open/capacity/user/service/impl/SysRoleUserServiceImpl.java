@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
+
 import com.open.capacity.common.model.SysRole;
+import com.open.capacity.db.service.impl.ServiceImpl;
 import com.open.capacity.user.mapper.SysUserRoleMapper;
 import com.open.capacity.user.model.SysRoleUser;
 import com.open.capacity.user.service.ISysRoleUserService;
-
-import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -277,6 +277,11 @@
 				<artifactId>jsoniter</artifactId>
 				<version>${jsoniter.version}</version>
 			</dependency>
+			<dependency> 
+			  <groupId>ognl</groupId> 
+			  <artifactId>ognl</artifactId> 
+			  <version>3.1.6</version> 
+			</dependency> 
 			<dependency>
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>

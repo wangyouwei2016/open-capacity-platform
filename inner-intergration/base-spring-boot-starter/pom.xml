@@ -63,6 +63,10 @@
 			<artifactId>jsoniter</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>ognl</groupId>
+			<artifactId>ognl</artifactId>
+		</dependency> 
+		<dependency>
 			<groupId>eu.bitwalker</groupId>
 			<artifactId>UserAgentUtils</artifactId>
 		</dependency>

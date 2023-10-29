@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.open.capacity.common.dto.PageResult;
 import com.open.capacity.common.model.LoginAppUser;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.model.SysUser;
+import com.open.capacity.db.service.IService;
 import com.open.capacity.user.model.SysUserExcel;
 
 /**

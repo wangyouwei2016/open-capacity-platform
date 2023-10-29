@@ -21,7 +21,6 @@ import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.open.capacity.common.constant.CommonConstant;
 import com.open.capacity.common.constant.UserType;
 import com.open.capacity.common.dto.PageResult;
@@ -32,6 +31,7 @@ import com.open.capacity.common.model.SysMenu;
 import com.open.capacity.common.model.SysRole;
 import com.open.capacity.common.model.SysUser;
 import com.open.capacity.common.utils.EntityUtils;
+import com.open.capacity.db.service.impl.ServiceImpl;
 import com.open.capacity.user.mapper.SysRoleMenuMapper;
 import com.open.capacity.user.mapper.SysUserMapper;
 import com.open.capacity.user.model.SysRoleUser;

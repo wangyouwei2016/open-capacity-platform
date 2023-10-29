@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.open.capacity.common.constant.CommonConstant;
 import com.open.capacity.common.model.SysMenu;
+import com.open.capacity.db.service.impl.ServiceImpl;
 import com.open.capacity.user.mapper.SysMenuMapper;
 import com.open.capacity.user.model.SysRoleMenu;
 import com.open.capacity.user.service.ISysMenuService;
