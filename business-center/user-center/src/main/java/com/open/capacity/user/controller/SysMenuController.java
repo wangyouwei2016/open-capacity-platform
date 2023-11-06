@@ -12,13 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.open.capacity.common.annotation.Inner;
@@ -137,6 +131,18 @@ public class SysMenuController {
 	public PageResult<SysMenu> findOnes() {
 		List<SysMenu> list = menuService.findOnes();
 		return PageResult.<SysMenu>builder().data(list).statusCodeValue(0).count((long) list.size()).build();
+	}
+
+	/**
+	 * 查询菜单详情
+	 *
+	 * @param id
+	 * @return
+	 */
+	@ApiOperation(value = "查询菜单详情")
+	@GetMapping("/{id}")
+	public ResponseEntity<SysMenu> get(@PathVariable(name = "id") String id) {
+		return ResponseEntity.succeed(menuService.getById(id));
 	}
 
 	/**

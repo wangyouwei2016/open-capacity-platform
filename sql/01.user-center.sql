@@ -426,3 +426,9 @@ created timestamp   null comment 'created time',
 primary key(id)
 )
  comment='db workerid assigner for uid generator',engine = innodb;
+
+
+ALTER TABLE `user-center`.sys_menu ADD component_name varchar(64) DEFAULT '' NOT NULL COMMENT '组件名称';
+ALTER TABLE `user-center`.sys_menu ADD component varchar(64) DEFAULT '' NOT NULL COMMENT '组件路径';
+ALTER TABLE `user-center`.sys_menu ADD is_external tinyint(2) DEFAULT 0 NOT NULL COMMENT '是否外链';
+ALTER TABLE `user-center`.sys_menu ADD is_cache tinyint(2) DEFAULT 0 NOT NULL COMMENT '是否缓存';

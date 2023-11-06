@@ -33,7 +33,12 @@ public class SysMenu extends BaseEntity<SysMenu> {
 	private String pathMethod;
 
 	private Long parentId;
-	
+
+	private String componentName;
+	private String component;
+	private Boolean isExternal;
+	private Boolean isCache;
+
 	@TableField(exist = false)
 	private List<SysMenu> subMenus;
 	@TableField(exist = false)
