@@ -153,13 +153,32 @@
 <script type="text/javascript" src="assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="assets/libs/login.js"></script>
 <script type="text/javascript" src="module/Math.uuid.js"></script>
-
+<script type="text/javascript" src="module/fingerprint2.min.js"></script>
 <script>
+	debugger;
+	//页面唯一标识
+    let uuid = Math.uuid();
+	if (window.requestIdleCallback) {
+	   requestIdleCallback(function () {
+	       Fingerprint2.get(function (components) {
+	         var values = components.map(function (component) { return component.value });
+	         uuid = Fingerprint2.x64hash128(values.join(''), 31);
+	         console.log('visitorId: ', murmur);
+	       });
+	   })
+	} else {
+	   setTimeout(function () {
+	       Fingerprint2.get(function (components) {
+	         var values = components.map(function (component) { return component.value });
+	         uuid = Fingerprint2.x64hash128(values.join(''), 31);
+	         console.log('visitorId: ', murmur);
+	       }) ;
+	   }, 500);
+	}
+	
     layui.config({
         base: 'module/'
     }).use(['config', 'form','element', 'admin', 'index'], function () {
-        //页面唯一标识
-        let uuid = Math.uuid();
         let $ = layui.jquery;
         let form = layui.form;
         let config = layui.config;

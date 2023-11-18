@@ -103,12 +103,12 @@ public class SysMenuController {
 	@ApiOperation(value = "根据roleCodes获取对应的权限")
 	@Cacheable(value = "menu", key = "#roleCodes", unless = "#result == null")
 	public List<SysMenu> findMenuByRoles(@PathVariable String roleCodes) {
-		List<SysMenu> ResponseEntity = null;
+		List<SysMenu> responseEntity = null;
 		if (StringUtils.isNotEmpty(roleCodes)) {
 			Set<String> roleSet = Convert.toSet(String.class, roleCodes) ;
-			ResponseEntity = menuService.findByRoleCodes(roleSet, CommonConstant.PERMISSION);
+			responseEntity = menuService.findByRoleCodes(roleSet, CommonConstant.PERMISSION);
 		}
-		return ResponseEntity;
+		return responseEntity;
 	}
 
 	/**

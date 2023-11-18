@@ -129,16 +129,31 @@ public interface CommonConstant {
 	String UTF8 = "UTF-8";
 
     /**
-     * 公共日期格式
+     * 默认时区
      */
-    String MONTH_FORMAT = "yyyy-MM";
-    String DATE_FORMAT = "yyyy-MM-dd";
-    String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    String SIMPLE_MONTH_FORMAT = "yyyyMM";
-    String SIMPLE_DATE_FORMAT = "yyyyMMdd";
-    String SIMPLE_DATETIME_FORMAT = "yyyyMMddHHmmss";
-    String TIME_ZONE_GMT8 = "GMT+8";
+    public static final String DEFAULT_TIME_ZONE = "Asia/Shanghai";
 
+    /**
+     * 统一的日期格式
+     */
+    public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
+
+    /**
+     * 统一的日期时间格式
+     */
+    public static final String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * 统一的时间格式
+     */
+    public static final String TIME_FORMAT_PATTERN = "HH:mm:ss";
+
+    /**
+     * 格林威治时间格式
+     */
+    public static final String GMT_FORMAT_PATTERN = "EEE MMM dd HH:mm:ss z yyyy";
+    
+    
     String DEF_USER_PASSWORD = "123456";
 
     String LOCK_KEY_PREFIX = "LOCK_KEY";

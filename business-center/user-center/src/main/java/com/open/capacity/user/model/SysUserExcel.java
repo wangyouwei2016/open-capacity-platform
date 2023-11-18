@@ -28,9 +28,9 @@ public class SysUserExcel implements Serializable {
     @Excel(needMerge = true, name = "性别", replace = { "男_0", "女_1" }, isImportField = "true")
     private Integer sex;
 
-    @Excel(needMerge = true, name = "创建时间", format = CommonConstant.DATETIME_FORMAT, isImportField = "true", width = 20)
+    @Excel(needMerge = true, name = "创建时间", format = CommonConstant.DATE_TIME_FORMAT_PATTERN, isImportField = "true", width = 20)
     private Date createTime;
 
-    @Excel(needMerge = true,name = "修改时间", format = CommonConstant.DATETIME_FORMAT, isImportField = "true", width = 20)
+    @Excel(needMerge = true,name = "修改时间", format = CommonConstant.DATE_TIME_FORMAT_PATTERN, isImportField = "true", width = 20)
     private Date updateTime;
 }

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
+import com.baomidou.mybatisplus.core.toolkit.sql.StringEscape;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.open.capacity.common.context.TenantContextHolder;
 import com.open.capacity.common.properties.TenantProperties;
@@ -37,7 +38,7 @@ public class TenantAutoConfigure {
             public Expression getTenantId() {
                 String tenant = TenantContextHolder.getTenant();
                 if (tenant != null) {
-                    return new StringValue(TenantContextHolder.getTenant());
+                    return new StringValue(StringEscape.escapeString(tenant));
                 }
                 return new NullValue();
             }

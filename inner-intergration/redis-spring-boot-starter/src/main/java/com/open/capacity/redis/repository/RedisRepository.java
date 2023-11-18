@@ -1,5 +1,6 @@
 package com.open.capacity.redis.repository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,10 +18,12 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisServerCommands;
 import org.springframework.data.redis.connection.RedisStringCommands.SetOption;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.TimeoutUtils;
 import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -43,9 +46,9 @@ public class RedisRepository {
 	 */
 	private RedisTemplate<String, Object> redisTemplate;
 	/**
-     * json序列化方式
-     */
-    private static GenericJackson2JsonRedisSerializer redisObjectSerializer = new GenericJackson2JsonRedisSerializer();
+	 * json序列化方式
+	 */
+	private static GenericJackson2JsonRedisSerializer redisObjectSerializer = new GenericJackson2JsonRedisSerializer();
 
 	public RedisRepository(RedisTemplate<String, Object> redisTemplate) {
 		this.redisTemplate = redisTemplate;
@@ -118,8 +121,8 @@ public class RedisRepository {
 
 			public void potentiallyUsePsetEx(RedisConnection connection) {
 				if (!TimeUnit.MILLISECONDS.equals(timeUnit) || !failsafeInvokePsetEx(connection)) {
-					connection.set(rawKey, rawValue, Expiration.from( time , timeUnit), SetOption.upsert());
-					
+					connection.set(rawKey, rawValue, Expiration.from(time, timeUnit), SetOption.upsert());
+
 				}
 			}
 
@@ -171,12 +174,12 @@ public class RedisRepository {
 	}
 
 	/**
-     * 普通缓存放入
-     *
-     * @param key   键
-     * @param value 值
-     * @return true成功 false失败
-     */
+	 * 普通缓存放入
+	 *
+	 * @param key   键
+	 * @param value 值
+	 * @return true成功 false失败
+	 */
 	public boolean setString(String key, String value) {
 
 		redisTemplate.execute((RedisCallback<Long>) connection -> {
@@ -190,29 +193,28 @@ public class RedisRepository {
 		return true;
 
 	}
-	
-	
+
 	/**
-     * 普通缓存获取
-     *
-     * @param key 键
-     * @return 值
-     */
-    public String getString(String key) {
-        String value = redisTemplate.execute(new RedisCallback<String>() {
-            @Override
-            public String doInRedis(RedisConnection connection) throws DataAccessException {
+	 * 普通缓存获取
+	 *
+	 * @param key 键
+	 * @return 值
+	 */
+	public String getString(String key) {
+		String value = redisTemplate.execute(new RedisCallback<String>() {
+			@Override
+			public String doInRedis(RedisConnection connection) throws DataAccessException {
 
-                byte[] temp = null;
-                temp = connection.get(key.getBytes());
-                connection.close();
-                return (String) redisObjectSerializer.deserialize(temp);
-            }
-        });
+				byte[] temp = null;
+				temp = connection.get(key.getBytes());
+				connection.close();
+				return (String) redisObjectSerializer.deserialize(temp);
+			}
+		});
 
-        return value ;
-    }
-	
+		return value;
+	}
+
 	/**
 	 * 查询在以keyPatten的所有 key
 	 *
@@ -253,10 +255,6 @@ public class RedisRepository {
 		return redisTemplate.opsForValue().get(key);
 	}
 
-	
-	
-	
-	
 	/**
 	 * 根据key 获取过期时间
 	 *
@@ -622,28 +620,30 @@ public class RedisRepository {
 			return false;
 		}
 	}
+
 	/**
-     * 指定缓存失效时间
-     *
-     * @param key  键
-     * @param time 时间(秒)
-     * @return
-     */
-    public boolean expire(String key, long time) {
-        return redisTemplate.execute(new RedisCallback<Boolean>() {
-            @Override
-            public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
-                long rawTimeout = TimeoutUtils.toMillis(time, TimeUnit.SECONDS);
-                try {
-                    return connection.pExpire(key.getBytes(), rawTimeout);
-                } catch (Exception e) {
-                    // Driver may not support pExpire or we may be running on
-                    // Redis 2.4
-                    return connection.expire(key.getBytes(), TimeoutUtils.toSeconds(rawTimeout, TimeUnit.SECONDS));
-                }
-            }
-        });
-    }
+	 * 指定缓存失效时间
+	 *
+	 * @param key  键
+	 * @param time 时间(秒)
+	 * @return
+	 */
+	public boolean expire(String key, long time) {
+		return redisTemplate.execute(new RedisCallback<Boolean>() {
+			@Override
+			public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+				long rawTimeout = TimeoutUtils.toMillis(time, TimeUnit.SECONDS);
+				try {
+					return connection.pExpire(key.getBytes(), rawTimeout);
+				} catch (Exception e) {
+					// Driver may not support pExpire or we may be running on
+					// Redis 2.4
+					return connection.expire(key.getBytes(), TimeoutUtils.toSeconds(rawTimeout, TimeUnit.SECONDS));
+				}
+			}
+		});
+	}
+
 	/**
 	 * 添加经纬度信息 map.put("北京" ,new Point(116.405285 ,39.904989)) //redis 命令：geoadd
 	 * cityGeo 116.405285 39.904989 "北京"
@@ -741,6 +741,32 @@ public class RedisRepository {
 			return value;
 		}
 		return valueSerializer.deserialize(value);
+	}
+	public Set<String> keysForPage(String patternKey, int pageNum, int pageSize) {
+		Set<String> result = new HashSet<>(pageSize);
+		int startIndex = (pageNum - 1) * pageSize;
+		int endIndex = pageNum * pageSize - 1;
+		result = execute((RedisCallback<Set<String>>) connection -> {
+			ScanOptions options = ScanOptions.scanOptions().match(patternKey).build();
+			Set<String> resultSet = new HashSet<>(pageSize);
+			try (Cursor<byte[]> cursor = connection.scan(options)) {
+				int currentIndex = 0;
+				while (cursor.hasNext()) {
+					if (currentIndex >= startIndex && currentIndex <= endIndex) {
+						resultSet.add(new String(cursor.next()));
+					} else if (currentIndex > endIndex) {
+						break;
+					} else {
+						cursor.next();
+					}
+					currentIndex++;
+				}
+			} catch (Exception e) {
+				log.error("Redis Cursor close error", e);
+			}
+			return resultSet;
+		});
+		return result;
 	}
 
 }

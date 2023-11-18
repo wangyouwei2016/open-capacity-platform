@@ -109,6 +109,7 @@
 		<spring-social-security.version>1.1.6.RELEASE</spring-social-security.version>
 		<commons-io.version>2.7</commons-io.version>
 		<statemachine.version>4.3.1</statemachine.version>
+		<squirrel.version>0.3.8</squirrel.version>
 		<commons-chain.version>1.2</commons-chain.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
 		<knife4j.version>2.0.5</knife4j.version>
@@ -553,11 +554,10 @@
 				<artifactId>sentinel-spring-boot-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
-
 			<!-- 规则引擎 -->
 			<dependency>
 				<groupId>com.open.capacity</groupId>
-				<artifactId>rules-spring-boot-starter</artifactId>
+				<artifactId>liteflow-spring-boot-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<!-- feature flag -->
@@ -781,6 +781,21 @@
 				<version>${statemachine.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.squirrelframework</groupId>
+				<artifactId>squirrel-foundation</artifactId>
+				<version>${squirrel.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${servlet-api.version}</version>
@@ -933,13 +948,13 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
 				<version>1.2.4</version>
-				<configuration>
+                <configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>
 					<pomElements>
 						<dependencies>expand</dependencies>
 					</pomElements>
-				</configuration>
+                </configuration>
 				<executions>
 					<execution>
 						<id>flatten</id>
@@ -956,7 +971,14 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+            </plugin>
+			<plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
 		</plugins>
 		<resources>
 			<resource>

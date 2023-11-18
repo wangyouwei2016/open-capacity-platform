@@ -129,7 +129,7 @@ public class CustomerExceptionAdvice {
         return defHandler("不支持当前请求方法", e);
     }
 
-    /**
+	 /**
      * 返回状态码:415
      */
 	@ExceptionNoticeLog
@@ -138,6 +138,18 @@ public class CustomerExceptionAdvice {
     public ResponseEntity handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
         return defHandler("不支持当前媒体类型", e);
     }
+
+    /**
+     * 返回状态码:500
+     */
+	
+	@ExceptionNoticeLog
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({SignatrueValidationException.class})
+    public ResponseEntity handleSignatrueValidationException(SignatrueValidationException e) {
+        return defHandler("签名验证错误", e);
+    }
+	
 
     /**
      * SQLException sql异常处理

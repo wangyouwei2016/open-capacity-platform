@@ -39,7 +39,6 @@ public class JsonUtil {
     private final  ObjectMapper MAPPER = new ObjectMapper();
 
      static{
-    	 
     	MAPPER.setLocale(Locale.CHINA); 
         // 忽略在json字符串中存在，但是在java对象中不存在对应属性的情况
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -53,16 +52,16 @@ public class JsonUtil {
         MAPPER.configure(JsonReadFeature.ALLOW_LEADING_ZEROS_FOR_NUMBERS.mappedFeature(), true);
         // 允许字符串存在转义字符：\r \n \t
         MAPPER.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true);
-        // 排除空值字段
-        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        // 在序列化时字段为NULL也进行序列化
+        MAPPER.setSerializationInclusion(JsonInclude.Include.ALWAYS);
         // 使用驼峰式
         MAPPER.setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE);
         // 使用bean名称
         MAPPER.enable(MapperFeature.USE_STD_BEAN_NAMING);
-        // 所有日期格式都统一为固定格式
-        MAPPER.setDateFormat(new SimpleDateFormat(CommonConstant.DATETIME_FORMAT));
         //时区
-        MAPPER.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
+        MAPPER.setTimeZone(TimeZone.getTimeZone(CommonConstant.DEFAULT_TIME_ZONE));
+        // 所有日期格式都统一为固定格式
+        MAPPER.setDateFormat(new SimpleDateFormat(CommonConstant.DATE_TIME_FORMAT_PATTERN));
     }
 
     /**
