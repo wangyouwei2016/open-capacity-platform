@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.open.capacity.uaa.common.UAAClientAutoConfig
+com.open.capacity.uaa.common.UAAClientAutoConfig,\
+com.open.capacity.uaa.common.UAAMethodSecurityAutoConfig
